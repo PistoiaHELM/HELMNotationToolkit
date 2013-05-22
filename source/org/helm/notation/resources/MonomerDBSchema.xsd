@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="lmr" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:lmr="lmr">
+	<simpleType name="SHORT_STRING_TYPE">
+		<restriction base="string">
+			<maxLength value="50"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="MEDIUM_STRING_TYPE">
+		<restriction base="string">
+			<maxLength value="500"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="LONG_STRING_TYPE">
+		<restriction base="string">
+			<maxLength value="5000"/>
+		</restriction>
+	</simpleType>
+	
+	
+	<complexType name="MONOMER_DB_ROOT_TYPE">
+		<sequence>
+			<element name="POLYMER_LIST"  type="lmr:POLYMER_LIST_TYPE" />
+                        <element name="ATTACHMENT_LIST"  type="lmr:ATTACHMENT_LIST_TYPE" />
+		</sequence>
+	</complexType>
+        
+        <complexType name="POLYMER_LIST_TYPE">
+		<sequence>
+			<element name="POLYMER" type="lmr:POLYMER_TYPE" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+        
+        <complexType name="POLYMER_TYPE">
+		<sequence>
+			<element name="MONOMER" type="lmr:MONOMER_TYPE" maxOccurs="unbounded"/>
+		</sequence>
+                 <attribute name="polymerType" type="string" />
+	</complexType>
+		
+	<complexType name="MONOMER_TYPE">
+		<sequence>
+			<element name="MONOMER_ID" type="lmr:SHORT_STRING_TYPE" />
+			<element name="MONOMER_SMILES" type="lmr:LONG_STRING_TYPE" minOccurs="0"/>
+                        <element name="MONOMER_MOL_FILE" type="lmr:LONG_STRING_TYPE" minOccurs="0"/>
+			<element name="MONOMER_TYPE" type="lmr:SHORT_STRING_TYPE" />
+			<element name="POLYMER_TYPE" type="lmr:SHORT_STRING_TYPE" />
+                        <element name="NATURAL_ANALOG" type="lmr:SHORT_STRING_TYPE"  minOccurs="0"/>
+			<element name="MONOMER_NAME" type="lmr:MEDIUM_STRING_TYPE"  minOccurs="0"/>
+			<element name="ATTACHMENTS" type="lmr:ATTACHMENT_LIST_TYPE" />
+		</sequence>
+	</complexType>
+	
+	<complexType name="ATTACHMENT_LIST_TYPE">
+		<sequence>
+			<element name="ATTACHMENT" type="lmr:ATTACHMENT_TYPE" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ATTACHMENT_TYPE">
+		<sequence>
+                        <element name="ATTACHMENT_ID" type="lmr:SHORT_STRING_TYPE" />
+			<element name="ATTACHMENT_LABEL" type="lmr:SHORT_STRING_TYPE" minOccurs="0"/>
+			<element name="CAP_GROUP_NAME" type="lmr:MEDIUM_STRING_TYPE" minOccurs="0" />
+			<element name="CAP_GROUP_SMILES" type="lmr:MEDIUM_STRING_TYPE" minOccurs="0" />
+		</sequence>
+	</complexType>
+	
+	<element name="MONOMER_DB" type="lmr:MONOMER_DB_ROOT_TYPE"/>
+        
+</schema>
