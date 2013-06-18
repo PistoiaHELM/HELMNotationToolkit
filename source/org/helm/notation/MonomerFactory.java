@@ -21,11 +21,6 @@
  ******************************************************************************/
 package org.helm.notation;
 
-import org.helm.notation.tools.DeepCopy;
-import org.helm.notation.model.Attachment;
-import org.helm.notation.model.Monomer;
-import org.helm.notation.model.MonomerCache;
-import org.helm.notation.tools.MonomerParser;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,14 +39,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.helm.notation.model.Attachment;
+import org.helm.notation.model.Monomer;
+import org.helm.notation.model.MonomerCache;
+import org.helm.notation.tools.DeepCopy;
+import org.helm.notation.tools.MonomerParser;
+import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.Attribute;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
- * This is a factory class to build monomer database from MonomerDB.xml document
+ * This is a factory class to build monomer database from MonomerDBGZEnconded.xml document
  * @author zhangtianhong
  */
 public class MonomerFactory {
@@ -359,6 +361,53 @@ public class MonomerFactory {
 
         return cache;
     }
+    
+    private static String buildMonomerDbXMLFromCache(MonomerCache cache) throws MonomerException {
+        XMLOutputter outputer = new XMLOutputter(Format.getCompactFormat());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><MONOMER_DB xmlns=\"lmr\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+
+        Map<String, Map<String, Monomer>> mDB = cache.getMonomerDB();
+        Element polymerListElement = new Element(POLYMER_LIST_ELEMENT);
+        Set<String> polymerTypeSet = mDB.keySet();
+        for (Iterator i = polymerTypeSet.iterator();  i.hasNext();) {
+            String polymerType = (String) i.next();
+            Element polymerElement = new Element(POLYMER_ELEMENT);
+            Attribute att = new Attribute(POLYMER_TYPE_ATTRIBUTE, polymerType);
+            polymerElement.setAttribute(att);
+            polymerListElement.getChildren().add(polymerElement);
+
+            Map<String, Monomer> monomerMap = mDB.get(polymerType);
+            Set<String> monomerSet = monomerMap.keySet();
+
+            for(Iterator it = monomerSet.iterator(); it.hasNext();) {
+                String monomerID = (String) it.next();
+                Monomer m = monomerMap.get(monomerID);
+                Element monomerElement = MonomerParser.getMonomerElement(m);
+                polymerElement.getChildren().add(monomerElement);
+            }
+        }
+        String polymerListString = outputer.outputString(polymerListElement);
+        sb.append(polymerListString);
+
+
+        Map<String, Attachment> aDB = cache.getAttachmentDB();
+        Element attachmentListElement = new Element(ATTACHMENT_LIST_ELEMENT);
+        Set<String> attachmentSet = aDB.keySet();
+        for (Iterator itr = attachmentSet.iterator(); itr.hasNext();) {
+            String attachmentID = (String) itr.next();
+            Attachment attachment = aDB.get(attachmentID);
+            Element attachmentElement = MonomerParser.getAttachementElement(attachment);
+            attachmentListElement.getChildren().add(attachmentElement);
+        }
+        String attachmentListString = outputer.outputString(attachmentListElement);
+        sb.append(attachmentListString);
+
+        sb.append("</MONOMER_DB>");
+
+        return sb.toString();
+    }
 
     /**
      * This method is called during startup, use serialized version if exists, otherwise use XML version (First from local, then from jar)
@@ -424,7 +473,7 @@ public class MonomerFactory {
         cache.setSmilesMonomerDB(getSmilesMonomerDB());
         serializeMonomerCache(cache, MONOMER_CACHE_FILE_PATH);
 
-        String monomerDbXML = MonomerDBHandler.buildMonomerDbXMLFromCache(cache);
+        String monomerDbXML = buildMonomerDbXMLFromCache(cache);
         FileOutputStream fos = new FileOutputStream(MONOMER_DB_FILE_PATH);
         fos.write(monomerDbXML.getBytes());
     }

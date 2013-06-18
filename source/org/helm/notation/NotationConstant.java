@@ -27,7 +27,7 @@ package org.helm.notation;
  */
 public interface NotationConstant {
     public static final String NOTATION_SOURCE = "HELM Notation";
-    public static final String NOTATION_DIRECTORY = System.getProperty("user.home") + System.getProperty("file.separator") + ".notation";
+    public static final String NOTATION_DIRECTORY = System.getProperty("user.home") + System.getProperty("file.separator") + ".helm";
     
     //notation to smiles conversion will not be performed when total monomer count is above this threshold
     public static final int MONOMER_COUNT_THRESHOLD = 200;
