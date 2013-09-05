@@ -1204,9 +1204,12 @@ public class ComplexNotationParser {
 
         //all backbone cycles
         List<String> backboneCycleNodes = new ArrayList<String>();
+        List<String> branchCycleNodes = new ArrayList<String>();
         for (PolymerEdge edge : edgeList) {
             if (edge.isBackboneSelfCycle()) {
                 backboneCycleNodes.add(edge.getSourceNode());
+            } else if (edge.isSelfCycle()) {
+                branchCycleNodes.add(edge.getSourceNode());
             }
         }
 
@@ -1231,7 +1234,12 @@ public class ComplexNotationParser {
                 //find the edges of interest, could be more than one
                 if (edge.getSourceNode().equals(nodeId) || edge.getTargetNode().equals(nodeId)) {
                     if (edge.isBackboneSelfCycle()) {
-                        //do nothing
+                        //canonicalize connection
+                        List<String> connections = new ArrayList<String>();
+                        connections.add(edge.getConnection());
+                        connections.add(edge.getReverseConnection());
+                        Collections.sort(connections);
+                        edge.setConnection(connections.get(0));
                     } else {
                         //need to modify monomer positions in connection string
                         if (edge.getSourceNode().equals(nodeId)) {
@@ -1256,6 +1264,24 @@ public class ComplexNotationParser {
                             edge.setTargetMonomerNumber(newTarMonomerNumber);
                         }
                     }
+                }
+            }
+        }
+        
+        //deal with branch self cycles: self-connection edge should be canonicalized
+        for (String nodeId : branchCycleNodes) {
+            //deal with edges
+            for (PolymerEdge edge : edgeList) {
+                //find the edges of interest, could be more than one
+                if (edge.isSelfCycle()
+                        && !edge.isBackboneSelfCycle()
+                        && edge.getSourceNode().equals(nodeId)) {
+                    //canonicalize connection
+                    List<String> connections = new ArrayList<String>();
+                    connections.add(edge.getConnection());
+                    connections.add(edge.getReverseConnection());
+                    Collections.sort(connections);
+                    edge.setConnection(connections.get(0));
                 }
             }
         }
