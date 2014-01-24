@@ -31,7 +31,9 @@ import org.helm.notation.MonomerFactory;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.PolymerNode;
 import org.helm.notation.tools.ComplexNotationParser;
+import org.helm.notation.tools.MonomerParser;
 import org.helm.notation.tools.SimpleNotationParser;
+import org.jdom.output.XMLOutputter;
 
 public class xHELMSample {
 
@@ -60,6 +62,9 @@ public class xHELMSample {
 			System.out.println("\n Distinct monomers");
 			for (Monomer distinctmonomer: set) {
 				System.out.println(distinctmonomer.getName() +" | " + distinctmonomer.getAlternateId());
+				XMLOutputter outp = new XMLOutputter();
+				String s = outp.outputString(MonomerParser.getMonomerElement(distinctmonomer)); 
+				System.out.println(s);
 				
 			}
 
