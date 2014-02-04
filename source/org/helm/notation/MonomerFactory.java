@@ -68,10 +68,10 @@ public class MonomerFactory {
     public static final String XML_SCHEMA_VALIDATION_FEATURE = "http://apache.org/xml/features/validation/schema";
     public static final String EXTERNAL_SCHEMA_LOCATION_KEY = "http://apache.org/xml/properties/schema/external-schemaLocation";
     public static final String DEFAULT_NAME_SPACE = "lmr";
-    public static final String POLYMER_LIST_ELEMENT = "POLYMER_LIST";
-    public static final String POLYMER_ELEMENT = "POLYMER";
+    public static final String POLYMER_LIST_ELEMENT = "PolymerList";
+    public static final String POLYMER_ELEMENT = "Polymer";
     public static final String POLYMER_TYPE_ATTRIBUTE = "polymerType";
-    public static final String ATTACHMENT_LIST_ELEMENT = "ATTACHMENT_LIST";
+    public static final String ATTACHMENT_LIST_ELEMENT = "AttachmentList";
     private static MonomerFactory instance;
     /**
      * First key is polymer Type, such as "RNA"

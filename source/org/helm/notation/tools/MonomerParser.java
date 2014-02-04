@@ -52,21 +52,21 @@ import org.jdom.input.SAXBuilder;
  */
 public class MonomerParser {
 
-    public static final String MONOMER_ELEMENT = "MONOMER";
-    public static final String MONOMER_ID_ELEMENT = "MONOMER_ID";
-    public static final String MONOMER_SMILES_ELEMENT = "MONOMER_SMILES";
-    public static final String MONOMER_MOL_FILE_ELEMENT = "MONOMER_MOL_FILE";
-    public static final String MONOMER_TYPE_ELEMENT = "MONOMER_TYPE";
-    public static final String POLYMER_TYPE_ELEMENT = "POLYMER_TYPE";
-    public static final String NATURAL_ANALOG_ELEMENT = "NATURAL_ANALOG";
-    public static final String MONOMER_NAME_ELEMENT = "MONOMER_NAME";
-    public static final String ATTACHEMENTS_LIST_ELEMENT = "ATTACHMENT_LIST";
-    public static final String ATTACHEMENTS_ELEMENT = "ATTACHMENTS";
-    public static final String ATTACHEMENT_ELEMENT = "ATTACHMENT";
-    public static final String ATTACHEMENT_ID_ELEMENT = "ATTACHMENT_ID";
-    public static final String ATTACHEMENT_LABEL_ELEMENT = "ATTACHMENT_LABEL";
-    public static final String CAP_GROUP_NAME_ELEMENT = "CAP_GROUP_NAME";
-    public static final String CAP_GROUP_SMILES_ELEMENT = "CAP_GROUP_SMILES";
+    public static final String MONOMER_ELEMENT = "Monomer";
+    public static final String MONOMER_ID_ELEMENT = "MonomerID";
+    public static final String MONOMER_SMILES_ELEMENT = "MonomerSmiles";
+    public static final String MONOMER_MOL_FILE_ELEMENT = "MonomerMolFile";
+    public static final String MONOMER_TYPE_ELEMENT = "MonomerType";
+    public static final String POLYMER_TYPE_ELEMENT = "PolymerType";
+    public static final String NATURAL_ANALOG_ELEMENT = "NaturalAnalog";
+    public static final String MONOMER_NAME_ELEMENT = "MonomerName";
+    public static final String ATTACHEMENTS_LIST_ELEMENT = "AttachmentList";
+    public static final String ATTACHEMENTS_ELEMENT = "Attachments";
+    public static final String ATTACHEMENT_ELEMENT = "Attachment";
+    public static final String ATTACHEMENT_ID_ELEMENT = "AttachmentID";
+    public static final String ATTACHEMENT_LABEL_ELEMENT = "AttachmentLabel";
+    public static final String CAP_GROUP_NAME_ELEMENT = "CapGroupName";
+    public static final String CAP_GROUP_SMILES_ELEMENT = "CapGroupSmiles";
     private static List<String> polymerTypes = new ArrayList<String>();
 
     static {
