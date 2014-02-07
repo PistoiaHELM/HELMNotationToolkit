@@ -1,23 +1,23 @@
 package org.helm.notation.tools;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import junit.framework.*;
-
-import org.jdom.JDOMException;
-import org.junit.Test;
 import org.helm.notation.CalculationException;
 import org.helm.notation.MonomerException;
 import org.helm.notation.NotationException;
 import org.helm.notation.StructureException;
-import org.helm.notation.tools.*;
+import org.jdom.JDOMException;
+import org.junit.Before;
+import org.junit.Test;
 
-public class CalculatorTest extends TestCase{
+
+public class CalculatorTest {
 	
 	private ExtinctionCoefficientCalculator calculator;
 	
+	@Before
 	public void setUp() throws CalculationException{
 		calculator = ExtinctionCoefficientCalculator.getInstance();
 	}
@@ -44,9 +44,6 @@ public class CalculatorTest extends TestCase{
         input = "AGGWEEEEEEEEEEEEEEEEEEE";
         result = calculator.calculateFromAminoAcidSequence(input);
         assertEquals(result,5500.0,1e-15);
-		
-        
-		
 	}
 	
 	

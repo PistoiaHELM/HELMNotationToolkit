@@ -1,5 +1,8 @@
 package org.helm.notation.tools;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +19,8 @@ import org.jdom.JDOMException;
 import org.junit.Test;
 
 import chemaxon.marvin.plugin.PluginException;
-import junit.framework.*;
 
-public class SimpleNotationParserTest extends TestCase {
+public class SimpleNotationParserTest {
 
 	
 	public String getSimpleRNANotation(){		
@@ -188,7 +190,7 @@ public class SimpleNotationParserTest extends TestCase {
         
 	}
 	
-	
+	@Test
 	public void testNucleotideFunctions() throws NotationException, MonomerException, IOException, JDOMException, StructureException{
       String notation = "R(C)P.R(G)P.R(A)P.R(U)P.R(A)P.R(U)P.R(G)P.R(G)P.R(G)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(A)P.R(A)P.[dR](U)P.[dR](U)";
       System.out.println("getNucleotideList Start: " + System.currentTimeMillis());

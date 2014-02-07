@@ -42,7 +42,7 @@
 		<property name="toolkit.jar.file.name" value="${name}-${version}.jar"/>
 		<property name="test.src" value="${basedir}/test"/>
 		<property name="test.dest" value="${build.dir}/test"/>
-		<property name="reports" value="${test.desc}/reports"/>
+		<property name="reports" value="${test.dest}/reports"/>
 
 		<!-- Compilation class path, include every jar file in lib.dir -->
 		<path id="compile.class.path">
@@ -209,17 +209,19 @@
 	<!-- Compile JUnit test classes -->
 	<target name="javac-tests" depends="compile-sample" description="Compiles test code">
 		<mkdir dir="${test.dest}"/>
+		<mkdir dir="${reports}"/>
 		<javac srcdir="${test.src}" destdir="${test.dest}" source="1.6" target="1.6" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="run.class.path"/>
 		</javac>
 	</target>
 
-	<!-- Run JUNit tests -->
+	<!-- Run JUnit tests -->
 	<target name="test" depends="javac-tests" description="Run unit tests">
 		<junit printsummary="yes" haltonfailure="yes" showoutput="yes">
 			<classpath refid="run.class.path"/>
-			<batchtest fork="yes" todir="${reports}/raw">
+			<batchtest fork="yes" todir="${reports}">
 				<formatter type="xml"/>
+				<formatter type="plain"/>
 				<fileset dir="${test.src}">
 					<include name="**/*Test.java"/>
 				</fileset>
