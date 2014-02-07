@@ -142,13 +142,35 @@ public class ComplexNotationParserTest {
         notation = "PEPTIDE1{K.A.A.G.K}|PEPTIDE2{K.A.A.G.K}|RNA1{R(A)P.R(G)}|CHEM1{Alexa}$PEPTIDE1,PEPTIDE1,1:R1-5:R2$$PEPTIDE1{hc}|PEPTIDE2{lc}$";
         assertTrue(testGetCanonicalNotation(notation));
 
-        //chemical connection
-        notation = "RNA1{R(A)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(C)P.R(C)P.R(C)P.R(C)}|CHEM1{CovX-2}$RNA1,CHEM1,1:R1-1:R1$$$";
-        assertTrue(testGetCanonicalNotation(notation));
-
+        //chemical connection; CovX is not registered
+       	notation = "RNA1{R(A)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(C)P.R(C)P.R(C)P.R(C)}|CHEM1{CovX-2}$RNA1,CHEM1,1:R1-1:R1$$$";
+       	assertFalse(testGetCanonicalNotation(notation));
+        
         notation = "RNA1{R(A)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(G)P.R(C)P.R(C)P.R(C)P.R(C)}|PEPTIDE1{A.G.G.G.K.K.K.K}|CHEM1{CovX-2}|CHEM2{3Bio}$PEPTIDE1,CHEM2,8:R2-1:R1|RNA1,CHEM1,1:R1-1:R1$$$";
-        assertTrue(testGetCanonicalNotation(notation));
+        assertFalse(testGetCanonicalNotation(notation));
 }
+	
+	
+	@Test
+    public void testMoleculeInfo() {
+		try {
+			MonomerFactory.getInstance();
+			NucleotideFactory.getInstance();
+		} catch  (Exception ex) {
+            fail("Initialization");
+        }
+
+        //siRNA
+        String notation = "RNA1{R(A)P.R(U)P.R(C)P.R(C)P.R(A)P.R(A)P.R(A)P.R(G)P.R(A)P.R(U)P.R(A)P.R(C)P.R(U)P.R(A)P.R(G)P.R(C)P.R(U)P.R(U)P.R(U)P.R(G)P.R(C)P.R(A)P.R(G)P.R(A)P.R(A)P.R(U)P.R(G)}|RNA2{R(U)P.R(U)P.R(C)P.R(U)P.R(G)P.R(C)P.R(A)P.R(A)P.R(A)P.R(G)P.R(C)P.R(U)P.R(A)P.R(G)P.R(U)P.R(A)P.R(U)P.R(C)P.R(U)P.R(U)P.R(U)P.R(G)P.R(G)P.[dR](A)P.[dR](T)}$$RNA1,RNA2,2:pair-74:pair|RNA1,RNA2,5:pair-71:pair|RNA1,RNA2,8:pair-68:pair|RNA1,RNA2,11:pair-65:pair|RNA1,RNA2,14:pair-62:pair|RNA1,RNA2,17:pair-59:pair|RNA1,RNA2,20:pair-56:pair|RNA1,RNA2,23:pair-53:pair|RNA1,RNA2,26:pair-50:pair|RNA1,RNA2,29:pair-47:pair|RNA1,RNA2,32:pair-44:pair|RNA1,RNA2,35:pair-41:pair|RNA1,RNA2,38:pair-38:pair|RNA1,RNA2,41:pair-35:pair|RNA1,RNA2,44:pair-32:pair|RNA1,RNA2,47:pair-29:pair|RNA1,RNA2,50:pair-26:pair|RNA1,RNA2,53:pair-23:pair|RNA1,RNA2,56:pair-20:pair|RNA1,RNA2,59:pair-17:pair|RNA1,RNA2,62:pair-14:pair|RNA1,RNA2,65:pair-11:pair|RNA1,RNA2,68:pair-8:pair|RNA1,RNA2,71:pair-5:pair|RNA1,RNA2,74:pair-2:pair$$";
+        assertTrue(testGetMoleculeInfo(notation));
+        assertTrue(testGetMoleculeInfoViaSmiles(notation));
+
+        //conjugate
+        notation = "PEPTIDE1{A.G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$";
+        assertTrue(testGetMoleculeInfo(notation));
+        assertTrue(testGetMoleculeInfoViaSmiles(notation));
+}
+	
 
 	
 	private static boolean testComplexNotationValidity(String notation) {
@@ -162,10 +184,11 @@ public class ComplexNotationParserTest {
             System.out.println("Others String: " + ComplexNotationParser.getOtherString(notation));
             System.out.println("Notation Valid? " + ComplexNotationParser.validateComplexNotation(notation));
             System.out.println("*********************");
+            return true;
         } catch (Exception ex) {
-            fail("testComplexNotationValidity: " + notation);
+        	Logger.getLogger(ComplexNotationSample.class.getName()).log(Level.SEVERE, null, ex);
+        	return false;
         }
-        return true;
     }
 	
     private static boolean testGetCanonicalNotation(String notation) {
@@ -173,10 +196,11 @@ public class ComplexNotationParserTest {
             System.out.println("Testing getCanonicalNotation for: " + notation);
             System.out.println("Canonical Notation: " + ComplexNotationParser.getCanonicalNotation(notation));
             System.out.println("*********************");
+            return true;
         } catch (Exception ex) {
-            fail("testGetCanonicalNotation: " + notation);
+        	Logger.getLogger(ComplexNotationSample.class.getName()).log(Level.SEVERE, null, ex);
+        	return false;
         }
-        return true;
     }
     
     private static boolean testGetMoleculeInfo(String notation) {
@@ -192,11 +216,35 @@ public class ComplexNotationParserTest {
             System.out.println("Mass = " + mi.getExactMass());
             System.out.println("Time = " + (end - start));
             System.out.println("*********************");
+            return true;
         } catch (Exception ex) {
             Logger.getLogger(ComplexNotationSample.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-        return true;
     }
+    
+    
+    
+    private static boolean testGetMoleculeInfoViaSmiles(String notation) {
+        System.out.println("testGetMoleculeInfoViaSmiles...");
+        try {
+            long start = System.currentTimeMillis();
+            System.out.println("Start Time: " + start);
+            String smiles = ComplexNotationParser.getComplexPolymerSMILES(notation);
+            MoleculeInfo mi = StructureParser.getMoleculeInfo(smiles);
+            long end = System.currentTimeMillis();
+            System.out.println("End Time: " + end);
+            System.out.println("MW = " + mi.getMolecularWeight());
+            System.out.println("MF = " + mi.getMolecularFormula());
+            System.out.println("Mass = " + mi.getExactMass());
+            System.out.println("Time = " + (end - start));
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(ComplexNotationSample.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
 
 
 
