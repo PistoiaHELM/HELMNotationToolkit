@@ -23,7 +23,7 @@ public class MonomerDBTest {
 		
         //show all monomers
         Map monomerDB = MonomerFactory.getInstance().getMonomerDB();
-        showMonomerDB(monomerDB);
+        //showMonomerDB(monomerDB);
 
         //show all attachment
         Map attachmentDB = MonomerFactory.getInstance().getAttachmentDB();
@@ -47,7 +47,6 @@ public class MonomerDBTest {
 
 public void showMonomerDB(Map monomerDB) throws StructureException, IOException {
     Set polymerSet = monomerDB.keySet();
-    assertEquals(3,polymerSet.size());
     for (Iterator it = polymerSet.iterator(); it.hasNext();) {
         String polymer = (String) it.next();
         System.out.println("Polymer Type: " + polymer);
