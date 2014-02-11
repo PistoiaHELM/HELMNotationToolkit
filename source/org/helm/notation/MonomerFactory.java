@@ -551,4 +551,14 @@ public class MonomerFactory {
         }
         return true;
     }
+    
+    
+    public static void finalizeMonomerCache() {
+    	
+        monomerDB = null;
+        attachmentDB = null;
+        smilesMonomerDB = null;
+        instance = null;
+    }
+    
 }
