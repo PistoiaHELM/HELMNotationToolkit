@@ -16,6 +16,8 @@ import org.helm.notation.model.MoleculeInfo;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.Nucleotide;
 import org.jdom.JDOMException;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import chemaxon.marvin.plugin.PluginException;
@@ -39,10 +41,23 @@ public class SimpleNotationParserTest {
 		return "[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|";		
 	}
 	
-	public void setUp() throws MonomerException, IOException, JDOMException, NotationException{
+	@BeforeClass
+	public static void init() {
+		try {
+			MonomerFactory.finalizeMonomerCache();
 			MonomerFactory.getInstance();
 			NucleotideFactory.getInstance();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
+	@AfterClass
+	public static void finish() {
+		MonomerFactory.finalizeMonomerCache();
+	}
+
+
 	
 	
 	@Test

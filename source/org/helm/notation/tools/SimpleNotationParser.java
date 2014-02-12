@@ -36,6 +36,7 @@ import org.helm.notation.model.MoleculeInfo;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.Nucleotide;
 import org.helm.notation.model.RgroupStructure;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.jdom.JDOMException;
 
 /**
@@ -278,11 +280,7 @@ public class SimpleNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static Monomer getMonomer(String monomerID, String polymerType) throws NotationException, MonomerException, IOException, JDOMException {
-        MonomerFactory factory = MonomerFactory.getInstance();
-
-        Map monomerDB = factory.getMonomerDB();
-
-        Map monomers = (Map) monomerDB.get(polymerType);
+        Map<String, Monomer> monomers = MonomerFactory.getInstance().getCurrentMonomerDB().get(polymerType);
 
         if (!monomers.containsKey(monomerID)) {
             throw new NotationException("Unknow monomerID '" + monomerID + "' for " + polymerType);
@@ -876,7 +874,7 @@ public class SimpleNotationParser {
             throw new NotationException("New monomer ID is required for monomer replacement");
         }
 
-        Map<String, Monomer> monomers = MonomerFactory.getInstance().getMonomerDB().get(polymerType);
+        Map<String, Monomer> monomers = MonomerFactory.getInstance().getCurrentMonomerDB().get(polymerType);
         if (null == monomers || monomers.size() == 0) {
             throw new NotationException("Unknown polymer type [" + polymerType + "] found");
         }
@@ -1200,7 +1198,7 @@ public class SimpleNotationParser {
             throw new NotationException("Unable to initialize monomer factory", ex);
         }
 
-        Map<String, Monomer> chemMonomers = factory.getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
+        Map<String, Monomer> chemMonomers = factory.getCurrentMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
         Map<String, Monomer> smilesDB = factory.getSmilesMonomerDB();
 
         String alternateId = null;

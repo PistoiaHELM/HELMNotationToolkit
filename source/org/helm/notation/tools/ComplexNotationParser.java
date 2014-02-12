@@ -39,6 +39,7 @@ import org.helm.notation.model.RgroupStructure;
 import org.helm.notation.model.PolymerEdge;
 import org.helm.notation.model.PolymerNode;
 import org.helm.notation.model.RNAPolymerNode;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +51,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+
 import org.jdom.JDOMException;
 
 /**
@@ -1160,8 +1162,8 @@ public class ComplexNotationParser {
 
         //deal with ad hoc CHEM monomer here, use smiles instead of temp ID
         for (PolymerNode node : nodeList) {
-            if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE) && node.getLabel().startsWith(SimpleNotationParser.AD_HOC_CHEM_MONOMER_ID_PREFIX)) {
-                Monomer m = MonomerFactory.getInstance().getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
+            if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE) && node.getLabel().startsWith(SimpleNotationParser.AD_HOC_CHEM_MONOMER_ID_PREFIX)) {            	
+            	Monomer m = MonomerFactory.getInstance().getCurrentMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
                 String smiles = m.getCanSMILES();
                 String uniSmi = StructureParser.getUniqueExtendedSMILES(smiles);
 
@@ -1766,7 +1768,7 @@ public class ComplexNotationParser {
             ComplexNotationParser.validateComplexNotation(notation);
             return notation;
         } else {
-            Set<String> polymerTypes = MonomerFactory.getInstance().getMonomerDB().keySet();
+            Set<String> polymerTypes = MonomerFactory.getInstance().getCurrentMonomerDB().keySet();
             for (String polymerType : polymerTypes) {
                 try {
                     SimpleNotationParser.validateSimpleNotation(notation, polymerType);
