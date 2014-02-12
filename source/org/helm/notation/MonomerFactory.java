@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.helm.notation.model.Attachment;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.MonomerCache;
@@ -80,6 +81,7 @@ public class MonomerFactory {
     private static Map<String, Map<String, Monomer>> monomerDB;    //key is monomer SMILES, value is Monomer
     private static Map<String, Monomer> smilesMonomerDB;    //key is AttachementID, value is Attachment
     private static Map<String, Attachment> attachmentDB;
+    private static Map<String, Map<String, Monomer>> externalMonomerDB; 
     private static SAXBuilder builder;
     private static Logger logger = Logger.getLogger(MonomerFactory.class.toString());
 
@@ -89,6 +91,29 @@ public class MonomerFactory {
      */
     public synchronized Map<String, Map<String, Monomer>> getMonomerDB() {
         return monomerDB;
+    }
+
+    public synchronized  Map<String, Map<String, Monomer>> getCurrentMonomerDB() {
+    	if ( hasExternalMonomerDB()) {
+    		return getExternalMonomerDB();
+    	}
+    	else {
+    		return getMonomerDB();
+    	}
+    }
+    
+    public synchronized boolean hasExternalMonomerDB() {
+    	return externalMonomerDB != null;
+    }
+    
+    public synchronized Map<String, Map<String, Monomer>> getExternalMonomerDB() {
+        return externalMonomerDB;
+    }
+    public synchronized void setExternalMonomerDB(Map<String, Map<String, Monomer>> map) {
+    	externalMonomerDB=map;    	
+    }
+    public void clearExternalMonomerDB(){
+    	externalMonomerDB=null;
     }
 
     public synchronized Map<String, Attachment> getAttachmentDB() {
@@ -558,6 +583,7 @@ public class MonomerFactory {
         monomerDB = null;
         attachmentDB = null;
         smilesMonomerDB = null;
+        externalMonomerDB=null;
         instance = null;
     }
     
