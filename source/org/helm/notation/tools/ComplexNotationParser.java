@@ -1163,7 +1163,8 @@ public class ComplexNotationParser {
         //deal with ad hoc CHEM monomer here, use smiles instead of temp ID
         for (PolymerNode node : nodeList) {
             if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE) && node.getLabel().startsWith(SimpleNotationParser.AD_HOC_CHEM_MONOMER_ID_PREFIX)) {            	
-            	Monomer m = MonomerFactory.getInstance().getCurrentMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
+            	Monomer m = MonomerFactory.getInstance().getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
+            	
                 String smiles = m.getCanSMILES();
                 String uniSmi = StructureParser.getUniqueExtendedSMILES(smiles);
 
@@ -1768,7 +1769,7 @@ public class ComplexNotationParser {
             ComplexNotationParser.validateComplexNotation(notation);
             return notation;
         } else {
-            Set<String> polymerTypes = MonomerFactory.getInstance().getCurrentMonomerDB().keySet();
+            Set<String> polymerTypes = MonomerFactory.getInstance().getMonomerDB().keySet();
             for (String polymerType : polymerTypes) {
                 try {
                     SimpleNotationParser.validateSimpleNotation(notation, polymerType);

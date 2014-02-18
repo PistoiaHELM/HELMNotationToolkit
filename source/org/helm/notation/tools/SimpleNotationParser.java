@@ -280,12 +280,20 @@ public class SimpleNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static Monomer getMonomer(String monomerID, String polymerType) throws NotationException, MonomerException, IOException, JDOMException {
-        Map<String, Monomer> monomers = MonomerFactory.getInstance().getCurrentMonomerDB().get(polymerType);
+        MonomerFactory factory = MonomerFactory.getInstance();
+    	
+    	Map<String, Monomer> monomers = factory.getExternalMonomerDB().get(polymerType);
+    	
+        if (monomers!=null && monomers.containsKey(monomerID)) {
+            return monomers.get(monomerID);
+        }
+        
+    	monomers = factory.getMonomerDB().get(polymerType);
 
         if (!monomers.containsKey(monomerID)) {
-            throw new NotationException("Unknow monomerID '" + monomerID + "' for " + polymerType);
+        	throw new NotationException("Unknow monomerID '" + monomerID + "' for " + polymerType);    
         }
-        return (Monomer) monomers.get(monomerID);
+        return monomers.get(monomerID);
     }
 
     /**
@@ -874,7 +882,7 @@ public class SimpleNotationParser {
             throw new NotationException("New monomer ID is required for monomer replacement");
         }
 
-        Map<String, Monomer> monomers = MonomerFactory.getInstance().getCurrentMonomerDB().get(polymerType);
+        Map<String, Monomer> monomers = MonomerFactory.getInstance().getMonomerDB().get(polymerType);
         if (null == monomers || monomers.size() == 0) {
             throw new NotationException("Unknown polymer type [" + polymerType + "] found");
         }
@@ -1198,11 +1206,15 @@ public class SimpleNotationParser {
             throw new NotationException("Unable to initialize monomer factory", ex);
         }
 
-        Map<String, Monomer> chemMonomers = factory.getCurrentMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
+        Map<String, Monomer> chemMonomers = factory.getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
+        Map<String, Monomer> externalChemMonomers = factory.getExternalMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
         Map<String, Monomer> smilesDB = factory.getSmilesMonomerDB();
 
         String alternateId = null;
-        if (chemMonomers.containsKey(nodeDesc)) {
+        if (externalChemMonomers!=null && externalChemMonomers.containsKey(nodeDesc)) {
+            alternateId = nodeDesc;
+        }
+        else if (chemMonomers.containsKey(nodeDesc)) {
             alternateId = nodeDesc;
         } else {
             if (smilesDB.containsKey(nodeDesc)) {

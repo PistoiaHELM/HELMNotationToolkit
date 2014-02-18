@@ -92,21 +92,12 @@ public class MonomerFactory {
     public synchronized Map<String, Map<String, Monomer>> getMonomerDB() {
         return monomerDB;
     }
-
-    public synchronized  Map<String, Map<String, Monomer>> getCurrentMonomerDB() {
-    	if ( hasExternalMonomerDB()) {
-    		return getExternalMonomerDB();
-    	}
-    	else {
-    		return getMonomerDB();
-    	}
-    }
-    
-    public synchronized boolean hasExternalMonomerDB() {
-    	return externalMonomerDB != null;
-    }
+ 
     
     public synchronized Map<String, Map<String, Monomer>> getExternalMonomerDB() {
+    	if ( externalMonomerDB == null) {
+        	externalMonomerDB = new HashMap<String, Map<String, Monomer>>();
+    	}    	
         return externalMonomerDB;
     }
     public synchronized void setExternalMonomerDB(Map<String, Map<String, Monomer>> map) {
@@ -251,6 +242,32 @@ public class MonomerFactory {
             }
         }
     }
+    
+    public void addExternalMonomer( Monomer monomer) throws IOException, MonomerException {
+    	String polymerType = monomer.getPolymerType();
+    	String alternateId = monomer.getAlternateId();
+    	
+		 Map<String, Monomer> monomerMap = getExternalMonomerDB().get(polymerType);
+
+         Monomer copyMonomer = DeepCopy.copy(monomer);
+		 
+	     if (null == monomerMap) {
+	         monomerMap = new HashMap<String, Monomer>();
+	         externalMonomerDB.put(polymerType, monomerMap);
+	     }
+
+	     if (!monomerMap.containsKey(alternateId)) {
+             monomerMap.put(alternateId, copyMonomer);
+         }
+	     //TODO
+	     /*if (monomer.getCanSMILES() != null && monomer.getCanSMILES().length() > 0) {
+	         if (!smilesMonomerDB.containsKey(monomer.getCanSMILES())) {
+	             smilesMonomerDB.put(monomer.getCanSMILES(), monomer);
+	         }
+	     }*/
+	    }
+	
+	
 
     /**
      * Build an MonomerCache object with monomerDBXML String
