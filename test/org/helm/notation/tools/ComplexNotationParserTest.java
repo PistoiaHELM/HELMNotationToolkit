@@ -23,21 +23,25 @@
 package org.helm.notation.tools;
 
 import org.helm.notation.tools.*;
+import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
 import org.helm.notation.NotationException;
 import org.helm.notation.NucleotideFactory;
+import org.helm.notation.StructureException;
 import org.helm.notation.demo.tools.ComplexNotationSample;
 import org.helm.notation.model.MoleculeInfo;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.PolymerNode;
 import org.helm.notation.model.RNAPolymerNode;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,6 +57,32 @@ public class ComplexNotationParserTest {
 		}
 	}
 
+	
+	@Test
+	public void testInlineNotation() throws NotationException, MonomerException, IOException, StructureException, JDOMException {
+		//existing Format with inline notation in chem part
+		/*String notation = "PEPTIDE1{A.C.A.C.G.K}|CHEM1{[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|}$PEPTIDE1,CHEM1,generic:K-1:R1$$$";
+		assertTrue(testComplexNotationValidity(notation));
+		assertTrue(testGetCanonicalNotation(notation));
+		assertTrue(testGetMoleculeInfo(notation));
+		*/
+		//new inline notation
+		String notation = "PEPTIDE1{[[*]NCC([*])=O |$_R1;;;;_R2;$|].[C[C@H;](N[*])C([*])=O |r,$;;;_R1;;_R2;$|].[[*]NCC([*])=O |$_R1;;;;_R2;$|]}$$$$";
+		
+		/*assertTrue("validateNotationFormat", ComplexNotationParser.validateNotationFormat(notation));
+		assertEquals("getAllNodeString", "PEPTIDE1{[[*]NCC([*])=O |$_R1;;;;_R2;$|].[C[C@H;](N[*])C([*])=O |r,$;;;_R1;;_R2;$|].[[*]NCC([*])=O |$_R1;;;;_R2;$|]}", ComplexNotationParser.getAllNodeString(notation));
+		assertEquals("getAllEdgeString", "", ComplexNotationParser.getAllEdgeString(notation));
+		assertEquals("getAllBasePairString", "", ComplexNotationParser.getAllBasePairString(notation));
+		assertEquals("getAllNodeLabelString", "",  ComplexNotationParser.getAllNodeLabelString(notation));
+		assertEquals("getOtherString", "", ComplexNotationParser.getOtherString(notation));
+		*/
+		assertTrue("Notation Valid? ",ComplexNotationParser.validateComplexNotation(notation));
+		
+
+		
+	}
+	
+	
 	@Test
 	public void testGenericConnection() {
 		//generic connection between peptide and chem
@@ -333,37 +363,40 @@ public class ComplexNotationParserTest {
 				System.out.println(rtcNotation + " => " + cn);
 			}
 
-			/*
-			System.out.println("Hybridization bug fix:");
+			
+			//System.out.println("Hybridization bug fix:");
 			notation = "RNA1{[5A6][sP].R(G)P.R(U)P.R(C)P.R(A)P.R(U)P.R(C)P.R(A)P.R(C)P.R(A)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(C)P.R(A)P.R(A)[sP].R(U)}|RNA2{R(A)P.R(U)P.R(U)P.R(G)P.R(G)P.R(U)P.R(A)P.R(U)P.R(U)P.R(C)P.R(A)P.R(G)P.R(U)P.R(G)P.R(U)P.R(G)P.R(A)P.R(U)P.R(G)P.R(A)P.[mR](C)[sP].[mR](A)[sP].R(C)}$$$RNA1{ss}|RNA2{as}$";
 			hybridizedNotation = ComplexNotationParser.hybridize(notation);
-			System.out.println(hybridizedNotation);
-
-			System.out.println("Test for modification:");
+			assertEquals("Hybridization bug fix:","RNA1{[5A6][sP].R(G)P.R(U)P.R(C)P.R(A)P.R(U)P.R(C)P.R(A)P.R(C)P.R(A)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(C)P.R(A)P.R(A)[sP].R(U)}|RNA2{R(A)P.R(U)P.R(U)P.R(G)P.R(G)P.R(U)P.R(A)P.R(U)P.R(U)P.R(C)P.R(A)P.R(G)P.R(U)P.R(G)P.R(U)P.R(G)P.R(A)P.R(U)P.R(G)P.R(A)P.[mR](C)[sP].[mR](A)[sP].R(C)}$$RNA1,RNA2,4:pair-62:pair|RNA1,RNA2,7:pair-59:pair|RNA1,RNA2,10:pair-56:pair|RNA1,RNA2,13:pair-53:pair|RNA1,RNA2,16:pair-50:pair|RNA1,RNA2,19:pair-47:pair|RNA1,RNA2,22:pair-44:pair|RNA1,RNA2,25:pair-41:pair|RNA1,RNA2,28:pair-38:pair|RNA1,RNA2,31:pair-35:pair|RNA1,RNA2,34:pair-32:pair|RNA1,RNA2,37:pair-29:pair|RNA1,RNA2,40:pair-26:pair|RNA1,RNA2,43:pair-23:pair|RNA1,RNA2,46:pair-20:pair|RNA1,RNA2,49:pair-17:pair|RNA1,RNA2,52:pair-14:pair|RNA1,RNA2,55:pair-11:pair|RNA1,RNA2,58:pair-8:pair|RNA1,RNA2,61:pair-5:pair|RNA1,RNA2,64:pair-2:pair$RNA1{ss}|RNA2{as}$", hybridizedNotation);
+			
+			//System.out.println("Test for modification:");
 			notation = "RNA1{[5A6][sP].R(G)P.R(U)P.R(C)P.R(A)[sP].R(U)P.R(C)P.R(A)P.R(C)P.R(A)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(C)P.R(A)P.R(A)[sP].R(U)}|RNA2{R(A)P.R(U)P.R(U)P.R(G)P.R(G)P.R(U)P.R(A)P.R(U)P.R(U)P.R(C)P.R(A)P.R(G)P.R(U)P.R(G)P.R(U)P.R(G)P.R(A)P.R(U)P.R(G)P.R(A)P.[mR](C)[sP].[mR](A)[sP].R(C)}$$$RNA1{ss}|RNA2{as}$";
 			List<PolymerNode> polyNodeList = ComplexNotationParser.getPolymerNodeList(notation);
 			boolean hasMod = ComplexNotationParser.hasNucleotideModification(polyNodeList);
-			System.out.println("hasMod? of " + notation + " = " + hasMod);
-
-			System.out.println("Test for modification:");
+			assertTrue(hasMod);
+			
+			
+			//System.out.println("Test for modification:");
 			notation = "RNA1{R(G)P.R(U)P.R(C)P.R(A)P.R(U)P.R(C)P.R(A)P.R(C)P.R(A)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(C)P.R(A)P.R(A)P.R(U)P}|RNA2{R(A)P.R(U)P.R(U)P.R(G)P.R(G)P.R(U)P.R(A)P.R(U)P.R(U)P.R(C)P.R(A)P.R(G)P.R(U)P.R(G)P.R(U)P.R(G)P.R(A)P.R(U)P.R(G)P.R(A)P.R(C)P}$$$RNA1{ss}|RNA2{as}$";
 			polyNodeList = ComplexNotationParser.getPolymerNodeList(notation);
 			hasMod = ComplexNotationParser.hasNucleotideModification(polyNodeList);
-			System.out.println("hasMod? of " + notation + " = " + hasMod);
+			assertFalse(hasMod);
 
-			System.out.println("Test for modification:");
+			
+			//System.out.println("Test for modification:");
 			notation = "RNA1{R(G)P.R(A)P.R(U)P.R(A)P.R(C)P.R(U)P.R(A)P.R(G)P.R(C)P.R(U)P.R(U)P.R(U)P.R(G)P.R(C)P.R(A)P.R(G)P.R(A)P.R(A)P.R(U)P.R(G)P.R(C)}|RNA2{R(A)P.R(U)P.R(U)P.R(C)P.R(U)P.R(G)P.R(C)P.R(A)P.R(A)P.R(A)P.R(G)P.R(C)P.R(U)P.R(A)P.R(G)P.R(U)P.R(A)P.R(U)P.R(C)P.R(U)P.R(U)}$$RNA1,RNA2,2:pair-56:pair|RNA1,RNA2,5:pair-53:pair|RNA1,RNA2,8:pair-50:pair|RNA1,RNA2,11:pair-47:pair|RNA1,RNA2,14:pair-44:pair|RNA1,RNA2,17:pair-41:pair|RNA1,RNA2,20:pair-38:pair|RNA1,RNA2,23:pair-35:pair|RNA1,RNA2,26:pair-32:pair|RNA1,RNA2,29:pair-29:pair|RNA1,RNA2,32:pair-26:pair|RNA1,RNA2,35:pair-23:pair|RNA1,RNA2,38:pair-20:pair|RNA1,RNA2,41:pair-17:pair|RNA1,RNA2,44:pair-14:pair|RNA1,RNA2,47:pair-11:pair|RNA1,RNA2,50:pair-8:pair|RNA1,RNA2,53:pair-5:pair|RNA1,RNA2,56:pair-2:pair$RNA1{ss}|RNA2{as}$";
 			polyNodeList = ComplexNotationParser.getPolymerNodeList(notation);
 			hasMod = ComplexNotationParser.hasNucleotideModification(polyNodeList);
-			System.out.println("hasMod? of " + notation + " = " + hasMod);
+			assertTrue(hasMod);
 
-			System.out.println("Test for modification:");
+			
+			//System.out.println("Test for modification:");
 			notation = "RNA1{R(A)P.R(U)P.R(C)P.R(C)P.R(A)P.R(A)P.R(A)P.R(G)P.R(A)P.R(U)P.R(A)P.R(C)P.R(U)P.R(A)P.R(G)P.R(C)P.R(U)P.R(U)P.R(U)P.R(G)P.R(C)P.R(A)P.R(G)P.R(A)P.R(A)P.R(U)P.R(G)}|RNA2{R(U)P.R(U)P.R(C)P.R(U)P.R(G)P.R(C)P.R(A)P.R(A)P.R(A)P.R(G)P.R(C)P.R(U)P.R(A)P.R(G)P.R(U)P.R(A)P.R(U)P.R(C)P.R(U)P.R(U)P.R(U)P.R(G)P.R(G)P.[dR](A)P.[dR](T)}$$RNA1,RNA2,2:pair-74:pair|RNA1,RNA2,5:pair-71:pair|RNA1,RNA2,8:pair-68:pair|RNA1,RNA2,11:pair-65:pair|RNA1,RNA2,14:pair-62:pair|RNA1,RNA2,17:pair-59:pair|RNA1,RNA2,20:pair-56:pair|RNA1,RNA2,23:pair-53:pair|RNA1,RNA2,26:pair-50:pair|RNA1,RNA2,29:pair-47:pair|RNA1,RNA2,32:pair-44:pair|RNA1,RNA2,35:pair-41:pair|RNA1,RNA2,38:pair-38:pair|RNA1,RNA2,41:pair-35:pair|RNA1,RNA2,44:pair-32:pair|RNA1,RNA2,47:pair-29:pair|RNA1,RNA2,50:pair-26:pair|RNA1,RNA2,53:pair-23:pair|RNA1,RNA2,56:pair-20:pair|RNA1,RNA2,59:pair-17:pair|RNA1,RNA2,62:pair-14:pair|RNA1,RNA2,65:pair-11:pair|RNA1,RNA2,68:pair-8:pair|RNA1,RNA2,71:pair-5:pair|RNA1,RNA2,74:pair-2:pair$$";
 			polyNodeList = ComplexNotationParser.getPolymerNodeList(notation);
 			hasMod = ComplexNotationParser.hasNucleotideModification(polyNodeList);
-			System.out.println("hasMod? of " + notation + " = " + hasMod);
+			assertTrue(hasMod);
 			
-			*/
+			
 
 		} catch  (Exception ex){
 			fail("testNotationManipulation");
