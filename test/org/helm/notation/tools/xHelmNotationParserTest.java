@@ -3,12 +3,17 @@ package org.helm.notation.tools;
 import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
+import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationException;
 import org.helm.notation.StructureException;
+import org.helm.notation.model.MoleculeInfo;
+import org.helm.notation.model.Monomer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -17,43 +22,77 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import chemaxon.marvin.plugin.PluginException;
+
 public class xHelmNotationParserTest {
 
-	private FileInputStream in;
-	private SAXBuilder builder;
-	private Document doc;
-	private Element xHELMElement;
-	private String helmString;
+	private Element getXHELMRootElement( String resource) throws JDOMException, IOException {
+		
+		FileInputStream in = new FileInputStream( resource);
+		SAXBuilder builder = new SAXBuilder();
+		Document doc = builder.build(in);
 
+		return doc.getRootElement();
+	}
+	
 	@Test
 	public void testParseXHelmNotation() throws JDOMException, IOException,
-			MonomerException, NotationException, StructureException {
+			MonomerException, NotationException, StructureException, ClassNotFoundException, PluginException {
 
-		in = new FileInputStream("samples/PeptideLinkerNucleotide.xhelm");
-		builder = new SAXBuilder();
-		doc = builder.build(in);
-		xHELMElement = doc.getRootElement();
-		String helmString = xHelmNotationParser.extractComplexNotationString(
-				xHELMElement, true);
-
+		Element xHELMRootElement = getXHELMRootElement( "samples/PeptideLinkerNucleotide.xhelm");
+		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);
+		//read monomers to store
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);	
+				
+		
 		assertEquals(
 				"RNA1{[am6]P.R(C)P.R(U)P.R(U)P.R(G)P.R(A)P.R(G)P.R(G)}|PEPTIDE1{[aaa].C.G.K.E.D.K.R}|CHEM1{SMCC}$PEPTIDE1,CHEM1,2:R3-1:R2|RNA1,CHEM1,1:R1-1:R1$$$",
-				helmString);
+				helmString);		
+		
+		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
+	
+		String canonicalNotation=ComplexNotationParser.getCanonicalNotation(helmString, true,store);
+		
+		assertEquals("CHEM1{SMCC}|PEPTIDE1{[aaa].C.G.K.E.D.K.R}|RNA1{[am6]P.R(C)P.R(U)P.R(U)P.R(G)P.R(A)P.R(G)P.R(G)}$CHEM1,PEPTIDE1,1:R2-2:R3|CHEM1,RNA1,1:R1-1:R1$$$",canonicalNotation);
+		
+		
+		
+		
+		
+		
+		xHELMRootElement = getXHELMRootElement("samples/simple.xhelm" );
+		helmString = xHelmNotationParser.getComplexNotationString(
+				xHELMRootElement);
 
+		store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+		
+		assertEquals(
+				"PEPTIDE1{G.K.A.[A_copy]}$$$$",
+				helmString);
+		
+		
+		
+		canonicalNotation=ComplexNotationParser.getCanonicalNotation(helmString, true,store);
+		assertEquals("PEPTIDE1{G.K.A.[A_copy]}$$$$",canonicalNotation);
+
+			
+		
+	
 	}
 	
 	@Test
 	public void testXHelmValidation() throws JDOMException, IOException,
 			MonomerException, NotationException, StructureException {
 
+		Element xHELMRootElement = getXHELMRootElement("samples/bad.xhelm");
+		
+		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+		
+		
 		boolean exception=false;
 		try {
-			in = new FileInputStream("samples/bad.xhelm");
-			builder = new SAXBuilder();
-			doc = builder.build(in);
-			xHELMElement = doc.getRootElement();
-			helmString = xHelmNotationParser.extractComplexNotationString(
-					xHELMElement, true);			
+			ComplexNotationParser.validateComplexNotation( helmString, store);
 		}
 
 		catch (Exception e) {
@@ -65,17 +104,11 @@ public class xHelmNotationParserTest {
 
 	@BeforeClass
 	public static void init() {
-		try {
-			MonomerFactory.finalizeMonomerCache();
-			MonomerFactory.getInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	@AfterClass
 	public static void finish() {
-		MonomerFactory.finalizeMonomerCache();
 
 	}
 

@@ -81,7 +81,7 @@ public class MonomerFactory {
     private static Map<String, Map<String, Monomer>> monomerDB;    //key is monomer SMILES, value is Monomer
     private static Map<String, Monomer> smilesMonomerDB;    //key is AttachementID, value is Attachment
     private static Map<String, Attachment> attachmentDB;
-    private static Map<String, Map<String, Monomer>> externalMonomerDB; 
+   // private static Map<String, Map<String, Monomer>> externalMonomerDB; 
     private static SAXBuilder builder;
     private static Logger logger = Logger.getLogger(MonomerFactory.class.toString());
 
@@ -94,7 +94,7 @@ public class MonomerFactory {
     }
  
     
-    public synchronized Map<String, Map<String, Monomer>> getExternalMonomerDB() {
+    /*public synchronized Map<String, Map<String, Monomer>> getExternalMonomerDB() {
     	if ( externalMonomerDB == null) {
         	externalMonomerDB = new HashMap<String, Map<String, Monomer>>();
     	}    	
@@ -105,6 +105,17 @@ public class MonomerFactory {
     }
     public void clearExternalMonomerDB(){
     	externalMonomerDB=null;
+    }*/
+    
+    
+    
+    protected MonomerStore monomerStore;
+    
+    public synchronized MonomerStore getMonomerStore() {
+    	if ( monomerStore == null) {
+    		monomerStore = new MonomerStore( monomerDB, smilesMonomerDB);
+    	}
+    	return monomerStore;
     }
 
     public synchronized Map<String, Attachment> getAttachmentDB() {
@@ -243,7 +254,7 @@ public class MonomerFactory {
         }
     }
     
-    public void addExternalMonomer( Monomer monomer) throws IOException, MonomerException {
+    /*public void addExternalMonomer( Monomer monomer) throws IOException, MonomerException {
     	String polymerType = monomer.getPolymerType();
     	String alternateId = monomer.getAlternateId();
     	
@@ -260,12 +271,12 @@ public class MonomerFactory {
              monomerMap.put(alternateId, copyMonomer);
          }
 	     //TODO
-	     /*if (monomer.getCanSMILES() != null && monomer.getCanSMILES().length() > 0) {
+	     if (monomer.getCanSMILES() != null && monomer.getCanSMILES().length() > 0) {
 	         if (!smilesMonomerDB.containsKey(monomer.getCanSMILES())) {
 	             smilesMonomerDB.put(monomer.getCanSMILES(), monomer);
 	         }
-	     }*/
-	    }
+	     }
+	    }*/
 	
 	
 
@@ -600,7 +611,7 @@ public class MonomerFactory {
         monomerDB = null;
         attachmentDB = null;
         smilesMonomerDB = null;
-        externalMonomerDB=null;
+      //  externalMonomerDB=null;
         instance = null;
     }
     

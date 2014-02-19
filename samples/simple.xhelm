@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Xhelm>
-   <HelmNotation>PEPTIDE1{G.K.A.}$$$$</HelmNotation>
+   <HelmNotation>PEPTIDE1{G.K.A.[A_copy]}$$$$</HelmNotation>
    <Monomers>
       <Monomer>
          <MonomerID>A</MonomerID>
@@ -25,6 +25,29 @@
             </Attachment>
          </Attachments>
       </Monomer>
+      <Monomer>
+         <MonomerID>A_copy</MonomerID>
+         <MonomerSmiles>C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|</MonomerSmiles>
+         <MonomerMolFile>H4sIAAAAAAAAAKWSuw7CMAxF93yFJVhrOc57poipBXVgZ2RhYOD7SYIg6UOiCCtS1Hudo1snAqC73B/XGwBZNuSlZsstfEoIAAdgo1+tUiEEODMRifRlUHsfe6FRSNpz0gijS7CDMWJ5ZYpFJiVfFG3JL1Lkd0qQrmRRf2RJf9xoZG/qLP0vlJjFJQojs6qzHNdTHFrFZS6hogyb1ZRyRxptGM1lNYXz/GV9C1HVb2Paq+ZqlEz2pqqd9+r8BMdqBzAcTpmQjuQ9DVgmZ9+3QmxjiSe9Zxcz4AIAAA==</MonomerMolFile>
+         <MonomerType>Backbone</MonomerType>
+         <PolymerType>PEPTIDE</PolymerType>
+         <NaturalAnalog>A</NaturalAnalog>
+         <MonomerName>Alanine</MonomerName>
+         <Attachments>
+            <Attachment>
+               <AttachmentID>R2-OH</AttachmentID>
+               <AttachmentLabel>R2</AttachmentLabel>
+               <CapGroupName>OH</CapGroupName>
+               <CapGroupSmiles>O[*] |$;_R2$|</CapGroupSmiles>
+            </Attachment>
+            <Attachment>
+               <AttachmentID>R1-H</AttachmentID>
+               <AttachmentLabel>R1</AttachmentLabel>
+               <CapGroupName>H</CapGroupName>
+               <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
+            </Attachment>
+         </Attachments>
+      </Monomer>      
       <Monomer>
          <MonomerID>K</MonomerID>
          <MonomerSmiles>[*]N[C@@H](CCCCN[*])C([*])=O |$_R1;;;;;;;;_R3;;_R2;$|</MonomerSmiles>

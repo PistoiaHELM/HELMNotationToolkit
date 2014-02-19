@@ -27,6 +27,7 @@ import chemaxon.struc.Molecule;
 
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
+import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationConstant;
 import org.helm.notation.NotationException;
 import org.helm.notation.StructureException;
@@ -39,6 +40,7 @@ import org.helm.notation.model.RgroupStructure;
 import org.helm.notation.model.PolymerEdge;
 import org.helm.notation.model.PolymerNode;
 import org.helm.notation.model.RNAPolymerNode;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -101,9 +103,19 @@ public class ComplexNotationParser {
      * @throws org.helm.notation.StructureException
      * @throws org.jdom.JDOMException
      */
-    public static String getComplexPolymerSMILES(String extendedNotation) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
+    public static String getComplexPolymerSMILES(String extendedNotation) throws NotationException, IOException, MonomerException, StructureException, JDOMException   {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        
+    	return getComplexPolymerSMILES(extendedNotation,factory.getMonomerStore());
+    }
+    public static String getComplexPolymerSMILES(String extendedNotation,MonomerStore monomerStore) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
 
-        List<Molecule> list = getComplexPolymerStructure(extendedNotation);
+        List<Molecule> list = getComplexPolymerStructure(extendedNotation,monomerStore);
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < list.size(); i++) {
             Molecule m = list.get(i);
@@ -121,8 +133,20 @@ public class ComplexNotationParser {
     }
 
     public static String getComplexPolymerCanonicalSmiles(String extendedNotation) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	
+    	return getComplexPolymerCanonicalSmiles(extendedNotation,factory.getMonomerStore());
+    }
 
-        List<Molecule> list = getComplexPolymerStructure(extendedNotation);
+    
+    public static String getComplexPolymerCanonicalSmiles(String extendedNotation,MonomerStore monomerStore) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
+
+        List<Molecule> list = getComplexPolymerStructure(extendedNotation,monomerStore);
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < list.size(); i++) {
             Molecule m = list.get(i);
@@ -175,13 +199,23 @@ public class ComplexNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static List<Molecule> getComplexPolymerStructure(String extendedNotation) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
-        int totalMonomerCount = getTotalMonomerCount(extendedNotation);
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }        
+    	return getComplexPolymerStructure(extendedNotation,factory.getMonomerStore());
+    }
+    
+    public static List<Molecule> getComplexPolymerStructure(String extendedNotation,MonomerStore monomerStore) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
+        int totalMonomerCount = getTotalMonomerCount(extendedNotation,monomerStore);
         if (totalMonomerCount > NotationConstant.MONOMER_COUNT_THRESHOLD) {
             throw new NotationException("Total monomer count [" + totalMonomerCount + "] is above support threshold [" + NotationConstant.MONOMER_COUNT_THRESHOLD + "]");
         }
 
         ComplexPolymer complexPolymer = parse(extendedNotation);
-        validateComplexPolymer(complexPolymer);
+        validateComplexPolymer(complexPolymer,monomerStore);
 
         List<PolymerNode> nodeList = complexPolymer.getPolymerNodeList();
         List<PolymerEdge> edgeList = complexPolymer.getPolymerEdgeList();
@@ -199,7 +233,7 @@ public class ComplexNotationParser {
 
         //convert each polymer node into RgroupStructure
         //add original poymer ID into rgroup Atom key
-        Map<String, RgroupStructure> nodeStrucMap = getPolymerNodeStructureMap(nodeList);
+        Map<String, RgroupStructure> nodeStrucMap = getPolymerNodeStructureMap(nodeList,monomerStore);
         for (String nodeID : nodeStrucMap.keySet()) {
             RgroupStructure struc = nodeStrucMap.get(nodeID);
             Map<String, MolAtom> rgMap = struc.getRgroupMap();
@@ -319,11 +353,17 @@ public class ComplexNotationParser {
         }
 
         //remove all remaining R groups not used in inter polymer connection
-        List<Molecule> l = getMoleculeList(nodeList, groupStructureMap);
+        List<Molecule> l = getMoleculeList(nodeList, groupStructureMap,monomerStore);
         return l;
     }
 
-    private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList, Map<Integer, RgroupStructure> groupStructureMap) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+   /* private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList, Map<Integer, RgroupStructure> groupStructureMap) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+    	MonomerFactory factory =  MonomerFactory.getInstance();
+    	MonomerStore store=factory.getMonomerStore();    	        
+    	return getMoleculeList(nodeList,groupStructureMap,store);
+    }*/
+    
+    private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList, Map<Integer, RgroupStructure> groupStructureMap,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
         List<Molecule> l = new ArrayList<Molecule>();
         Collection<RgroupStructure> c = groupStructureMap.values();
         for (Iterator i = c.iterator(); i.hasNext();) {
@@ -338,11 +378,11 @@ public class ComplexNotationParser {
                 String nodeId = keyItems[0];
                 String polymerType = PolymerNode.getPolymerType(nodeId);
                 String nodeNotation = getPolymerNotation(nodeId, nodeList);
-                List<String> monomerIDList = SimpleNotationParser.getMonomerIDList(nodeNotation, polymerType);
+                List<String> monomerIDList = SimpleNotationParser.getMonomerIDList(nodeNotation, polymerType, monomerStore);
 
                 int monomerNumber = Integer.parseInt(keyItems[1]);
                 String monomerId = monomerIDList.get(monomerNumber - 1);
-                Monomer monomer = SimpleNotationParser.getMonomer(monomerId, polymerType);
+                Monomer monomer = SimpleNotationParser.getMonomer(monomerId, polymerType,monomerStore);
                 List<Attachment> attachments = monomer.getAttachmentList();
 
                 String rlabel = keyItems[2];
@@ -484,9 +524,19 @@ public class ComplexNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static boolean validateComplexNotation(String extendedNotation) throws NotationException, MonomerException, IOException, StructureException, JDOMException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return validateComplexNotation(extendedNotation,factory.getMonomerStore());        
+    }
+    
+    public static boolean validateComplexNotation(String extendedNotation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, StructureException, JDOMException {
         validateNotationFormat(extendedNotation);
-        ComplexPolymer cp = parse(extendedNotation);
-        validateComplexPolymer(cp);
+        ComplexPolymer cp = parse(extendedNotation,monomerStore);
+        validateComplexPolymer(cp,monomerStore);
         return true;
     }
 
@@ -501,6 +551,16 @@ public class ComplexNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static boolean validateComplexPolymer(ComplexPolymer complexPolymer) throws NotationException, IOException, MonomerException, StructureException, JDOMException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }     
+    	return validateComplexPolymer(complexPolymer,factory.getMonomerStore());
+    }
+        
+    public static boolean validateComplexPolymer(ComplexPolymer complexPolymer,MonomerStore monomerStore) throws NotationException, IOException, MonomerException, StructureException, JDOMException {
         List<PolymerNode> nodeList = complexPolymer.getPolymerNodeList();
         List<PolymerEdge> edgeList = complexPolymer.getPolymerEdgeList();
         List<PolymerEdge> bpList = complexPolymer.getBasePairList();
@@ -520,7 +580,7 @@ public class ComplexNotationParser {
         }
 
         //this call also validates simple polymers
-        Map<String, RgroupStructure> polymerNodeStructureMap = getPolymerNodeStructureMap(nodeList);
+        Map<String, RgroupStructure> polymerNodeStructureMap = getPolymerNodeStructureMap(nodeList,monomerStore);
 
         if (null != edgeList) {
             for (PolymerEdge edge : edgeList) {
@@ -639,10 +699,20 @@ public class ComplexNotationParser {
      * @throws org.helm.notation.MonomerException
      */
     public static ComplexPolymer parse(String extendendNotation) throws NotationException, MonomerException, JDOMException, IOException {
+      	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return parse(extendendNotation,factory.getMonomerStore());
+    }
+        
+    public static ComplexPolymer parse(String extendendNotation,MonomerStore monomerStore) throws NotationException, MonomerException, JDOMException, IOException {
         ComplexPolymer cp = new ComplexPolymer();
 
         String allNodeString = getAllNodeString(extendendNotation);
-        List<PolymerNode> nodes = getPolymerNodeList(allNodeString);
+        List<PolymerNode> nodes = getPolymerNodeList(allNodeString,monomerStore);
         cp.setPolymerNodeList(nodes);
 
         String allEdgeString = getAllEdgeString(extendendNotation);
@@ -748,6 +818,17 @@ public class ComplexNotationParser {
      * @throws org.helm.notation.NotationException
      */
     public static List<PolymerNode> getPolymerNodeList(String allNodeString) throws NotationException {
+     	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return getPolymerNodeList(allNodeString,factory.getMonomerStore());
+    }
+        
+    
+    public static List<PolymerNode> getPolymerNodeList(String allNodeString,MonomerStore monomerStore) throws NotationException {
         List<PolymerNode> list = new ArrayList<PolymerNode>();
         if (null != allNodeString && allNodeString.length() > 0) {
             String nodes = allNodeString;
@@ -765,7 +846,7 @@ public class ComplexNotationParser {
 
             while (delimiterStartPos > 0 && endPos > 0) {
                 nodeString = nodes.substring(nodeStartPos, endPos);
-                PolymerNode node = getPolymerNode(nodeString);
+                PolymerNode node = getPolymerNode(nodeString,monomerStore);
                 list.add(node);
 
                 nodeStartPos = endPos + 1;
@@ -782,7 +863,18 @@ public class ComplexNotationParser {
      * @return and object of PolymerNode
      * @throws org.helm.notation.NotationException
      */
+    
     private static PolymerNode getPolymerNode(String nodeString) throws NotationException {
+     	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return getPolymerNode(nodeString,factory.getMonomerStore());
+    }
+    
+    private static PolymerNode getPolymerNode(String nodeString,MonomerStore monomerStore) throws NotationException {
         int startSymbolPos = nodeString.indexOf(NODE_LABEL_START_SYMBOL);
         int endSymbolPos = nodeString.indexOf(NODE_LABEL_END_SYMBOL);
 
@@ -798,7 +890,7 @@ public class ComplexNotationParser {
 
         //add adhoc chem monomer into monomer database if adhoc
         if (id.startsWith(Monomer.CHEMICAL_POLYMER_TYPE)) {
-            label = SimpleNotationParser.preprocessChemNode(label);
+            label = SimpleNotationParser.preprocessChemNode(label,monomerStore);
         }
 
         PolymerNode node = new PolymerNode();
@@ -1134,7 +1226,17 @@ public class ComplexNotationParser {
      * @throws JDOMException 
      */
     public static String getCanonicalNotation(String complexNotation) throws NotationException, MonomerException, IOException, ClassNotFoundException, StructureException, JDOMException {
-        return getCanonicalNotation(complexNotation, false);
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return getCanonicalNotation(complexNotation,factory.getMonomerStore());
+    }
+    
+    public static String getCanonicalNotation(String complexNotation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, ClassNotFoundException, StructureException, JDOMException {
+        return getCanonicalNotation(complexNotation, false,monomerStore);
     }
 
     /**
@@ -1149,12 +1251,23 @@ public class ComplexNotationParser {
      * @throws StructureException
      * @throws JDOMException 
      */
+   
     public static String getCanonicalNotation(String complexNotation, boolean includeValidation) throws NotationException, MonomerException, IOException, ClassNotFoundException, StructureException, JDOMException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }       
+    	return getCanonicalNotation(complexNotation,includeValidation,factory.getMonomerStore());
+    }
+    	   
+    public static String getCanonicalNotation(String complexNotation, boolean includeValidation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, ClassNotFoundException, StructureException, JDOMException {
         validateNotationFormat(complexNotation);
         ComplexPolymer cp = parse(complexNotation);
 
         if (includeValidation) {
-            validateComplexPolymer(cp);
+            validateComplexPolymer(cp,monomerStore);
         }
 
         List<PolymerNode> nodeList = cp.getPolymerNodeList();
@@ -1163,7 +1276,8 @@ public class ComplexNotationParser {
         //deal with ad hoc CHEM monomer here, use smiles instead of temp ID
         for (PolymerNode node : nodeList) {
             if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE) && node.getLabel().startsWith(SimpleNotationParser.AD_HOC_CHEM_MONOMER_ID_PREFIX)) {            	
-            	Monomer m = MonomerFactory.getInstance().getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
+            	//Monomer m = MonomerFactory.getInstance().getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
+            	Monomer m = monomerStore.getMonomer(Monomer.CHEMICAL_POLYMER_TYPE, node.getLabel());
             	
                 String smiles = m.getCanSMILES();
                 String uniSmi = StructureParser.getUniqueExtendedSMILES(smiles);
@@ -1760,13 +1874,24 @@ public class ComplexNotationParser {
      * @throws org.helm.notation.StructureException
      */
     public static String standardize(String notation) throws MonomerException, IOException, JDOMException, NotationException, StructureException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return standardize(notation,factory.getMonomerStore());
+    	        
+    }
+        
+    public static String standardize(String notation,MonomerStore monomerStore) throws MonomerException, IOException, JDOMException, NotationException, StructureException {
         if (null == notation || notation.length() == 0) {
             return notation;
         }
 
         //convert to complex notation from simple notation
         if (notation.indexOf(ComplexNotationParser.TOP_LEVEL_DELIMITER) >= 0) {
-            ComplexNotationParser.validateComplexNotation(notation);
+            ComplexNotationParser.validateComplexNotation(notation,monomerStore);
             return notation;
         } else {
             Set<String> polymerTypes = MonomerFactory.getInstance().getMonomerDB().keySet();
@@ -1814,13 +1939,23 @@ public class ComplexNotationParser {
     }
 
     public static int getTotalMonomerCount(String notation) throws NotationException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getTotalMonomerCount(notation, factory.getMonomerStore());	
+    }
+    
+    public static int getTotalMonomerCount(String notation, MonomerStore monomerStore) throws NotationException {
         int totalMonomerCount = 0;
 
         List<PolymerNode> nodes = ComplexNotationParser.getPolymerNodeList(notation);
         for (PolymerNode node : nodes) {
             String polymerType = node.getType();
             String label = node.getLabel();
-            int monomerCount = SimpleNotationParser.getMonomerCount(label, polymerType);
+            int monomerCount = SimpleNotationParser.getMonomerCount(label, polymerType,monomerStore);
             totalMonomerCount = totalMonomerCount + monomerCount;
         }
         return totalMonomerCount;
@@ -1837,8 +1972,19 @@ public class ComplexNotationParser {
      * @throws PluginException
      * @throws StructureException
      */
+    
     public static MoleculeInfo getMoleculeInfo(String extendedNotation) throws NotationException, MonomerException, IOException, JDOMException, PluginException, StructureException {
-        return getMoleculeInfo(extendedNotation, false);
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return getMoleculeInfo(extendedNotation,factory.getMonomerStore());
+    }
+    
+    public static MoleculeInfo getMoleculeInfo(String extendedNotation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, PluginException, StructureException {
+        return getMoleculeInfo(extendedNotation, false,monomerStore);
     }
 
     /**
@@ -1856,10 +2002,21 @@ public class ComplexNotationParser {
      * @throws StructureException 
      */
     public static MoleculeInfo getMoleculeInfo(String extendedNotation, boolean includeValidation) throws NotationException, MonomerException, IOException, JDOMException, PluginException, StructureException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getMoleculeInfo(extendedNotation,includeValidation,factory.getMonomerStore());
+    }
+    	  
+    
+    public static MoleculeInfo getMoleculeInfo(String extendedNotation, boolean includeValidation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, PluginException, StructureException {
         ComplexPolymer cp = parse(extendedNotation);
 
         if (includeValidation) {
-            validateComplexPolymer(cp);
+            validateComplexPolymer(cp,monomerStore);
         }
 
         List<PolymerNode> nodeList = cp.getPolymerNodeList();
@@ -1893,7 +2050,7 @@ public class ComplexNotationParser {
         for (PolymerNode node : nodeList) {
             String polymerType = node.getType();
             String label = node.getLabel();
-            MoleculeInfo tmpMI = SimpleNotationParser.getMoleculeInfo(label, polymerType);
+            MoleculeInfo tmpMI = SimpleNotationParser.getMoleculeInfo(label, polymerType,monomerStore);
             chunks.add(tmpMI);
         }
 
@@ -1918,14 +2075,24 @@ public class ComplexNotationParser {
         return null;
     }
 
-    private static Map<String, RgroupStructure> getPolymerNodeStructureMap(List<PolymerNode> nodeList) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
+    /*private static Map<String, RgroupStructure> getPolymerNodeStructureMap(List<PolymerNode> nodeList) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
+    	MonomerFactory factory = null;
+        try {
+ 		factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }        
+    	return getPolymerNodeStructureMap(nodeList,factory.getMonomerStore());
+    }*/
+        
+    private static Map<String, RgroupStructure> getPolymerNodeStructureMap(List<PolymerNode> nodeList,MonomerStore monomerStore) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
         Map<String, RgroupStructure> nodeStrucMap = new HashMap<String, RgroupStructure>();
         for (int i = 0; i < nodeList.size(); i++) {
             PolymerNode node = nodeList.get(i);
             String nodeId = node.getId();
             String nodeLabel = node.getLabel();
             String polymerType = PolymerNode.getPolymerType(nodeId);
-            RgroupStructure struc = SimpleNotationParser.getSimplePolymerStructure(nodeLabel, polymerType);
+            RgroupStructure struc = SimpleNotationParser.getSimplePolymerStructure(nodeLabel, polymerType,monomerStore);
             if (null == struc.getMolecule()) {
                 throw new NotationException("Polymer notation contains non-specific monomer structure");
             }
