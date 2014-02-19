@@ -84,7 +84,17 @@ public class SimpleNotationParser {
      * @throws org.helm.notation.MonomerException
      */
     public static String getSimplePolymerSMILES(String polymerNotation, String polymerType) throws IOException, NotationException, StructureException, MonomerException, JDOMException {
-        RgroupStructure struc = getSimplePolymerStructure(polymerNotation, polymerType);
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getSimplePolymerSMILES(polymerNotation,polymerType,factory.getMonomerStore());
+    }
+        
+    public static String getSimplePolymerSMILES(String polymerNotation, String polymerType,MonomerStore store) throws IOException, NotationException, StructureException, MonomerException, JDOMException {
+        RgroupStructure struc = getSimplePolymerStructure(polymerNotation, polymerType,store);
         if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
             if (struc.getMolecule() == null) {
                 throw new NotationException("Polymer notation contain non-specifc monomer structure");
@@ -180,6 +190,7 @@ public class SimpleNotationParser {
         }
     	return getSimplePolymerStructure(polymerNotation,polymerType,factory.getMonomerStore());
     }
+    
     public static RgroupStructure getSimplePolymerStructure(String polymerNotation, String polymerType,MonomerStore monomerStore) throws IOException, NotationException, MonomerException, StructureException, JDOMException {
         List<Monomer> monomerList = getMonomerList(polymerNotation, polymerType,monomerStore);
         if (monomerList == null || monomerList.size() == 0) {
@@ -380,7 +391,18 @@ public class SimpleNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static List<Nucleotide> getNucleotideList(String polymerNotation) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
-        return getNucleotideList(polymerNotation, true);
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getNucleotideList(polymerNotation, true,factory.getMonomerStore());
+    }
+
+    
+    public static List<Nucleotide> getNucleotideList(String polymerNotation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+        return getNucleotideList(polymerNotation, true,monomerStore);
     }
 
     /**
@@ -394,6 +416,16 @@ public class SimpleNotationParser {
      * @throws org.jdom.JDOMException
      */
     public static List<Nucleotide> getNucleotideList(String polymerNotation, boolean validate) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getNucleotideList(polymerNotation,validate,factory.getMonomerStore());
+    }
+    
+    public static List<Nucleotide> getNucleotideList(String polymerNotation, boolean validate,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
         if (validate) {
             validateSimpleNotationForRNA(polymerNotation);
         }
@@ -424,7 +456,7 @@ public class SimpleNotationParser {
                     if (base.length() == 1) {
                         symbol = base;
                     } else {
-                        Monomer monomer = SimpleNotationParser.getMonomer(base, Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+                        Monomer monomer = SimpleNotationParser.getMonomer(base, Monomer.NUCLIEC_ACID_POLYMER_TYPE,monomerStore);
                         if (null == monomer.getNaturalAnalog()) {
                             symbol = "X";
                         } else {
@@ -828,10 +860,7 @@ public class SimpleNotationParser {
      * @param simpleNotation
      * @param polymerType
      * @return the total number of monomers in the notation
-     * @throws org.helm.notation.NotationException
-     * @throws JDOMException 
-     * @throws IOException 
-     * @throws MonomerException 
+     * @throws org.helm.notation.NotationException     
      */
     public static int getMonomerCount(String simpleNotation, String polymerType) throws NotationException {
     	MonomerFactory factory = null;
@@ -863,8 +892,18 @@ public class SimpleNotationParser {
      * @throws org.helm.notation.NotationException
      */
     public static String replaceMonomer(String simpleNotation, String polymerType, String existingMonomerID, String newMonomerID) throws MonomerException, IOException, JDOMException, NotationException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return replaceMonomer(simpleNotation,polymerType,existingMonomerID,newMonomerID,factory.getMonomerStore());
+    }
+    
+    public static String replaceMonomer(String simpleNotation, String polymerType, String existingMonomerID, String newMonomerID,MonomerStore monomerStore) throws MonomerException, IOException, JDOMException, NotationException {
         boolean valid = validateMonomerReplacement(polymerType, existingMonomerID, newMonomerID);
-        List<String> monomerIDs = getMonomerIDList(simpleNotation, polymerType);
+        List<String> monomerIDs = getMonomerIDList(simpleNotation, polymerType,monomerStore);
         for (int i = 0; i < monomerIDs.size(); i++) {
             String tmp = monomerIDs.get(i);
             if (tmp.equals(existingMonomerID)) {
@@ -875,10 +914,20 @@ public class SimpleNotationParser {
     }
 
     private static String getSimpleNotation(List<String> monomerIDList, String polymerType) throws NotationException, MonomerException, JDOMException, IOException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getSimpleNotation(monomerIDList,polymerType,factory.getMonomerStore());
+    }
+    
+    private static String getSimpleNotation(List<String> monomerIDList, String polymerType,MonomerStore monomerStore) throws NotationException, MonomerException, JDOMException, IOException {
         StringBuffer sb = new StringBuffer();
         if (polymerType.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
             for (String id : monomerIDList) {
-                Monomer monomer = getMonomer(id, polymerType);
+                Monomer monomer = getMonomer(id, polymerType,monomerStore);
                 String monomerType = monomer.getMonomerType();
                 String naturalAnalog = monomer.getNaturalAnalog();
 
@@ -1001,7 +1050,17 @@ public class SimpleNotationParser {
      * @throws org.helm.notation.StructureException
      */
     public static String getPeptideSequence(String polymerNotation) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
-        List<Monomer> list = getMonomerList(polymerNotation, Monomer.PEPTIDE_POLYMER_TYPE);
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getPeptideSequence(polymerNotation,factory.getMonomerStore());
+    }
+    
+    public static String getPeptideSequence(String polymerNotation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+        List<Monomer> list = getMonomerList(polymerNotation, Monomer.PEPTIDE_POLYMER_TYPE,monomerStore);
         StringBuffer sb = new StringBuffer();
         for (Monomer monomer : list) {
             String single = monomer.getNaturalAnalog();
@@ -1025,7 +1084,17 @@ public class SimpleNotationParser {
      * @throws org.helm.notation.StructureException
      */
     public static String getModifiedPeptideSequence(String polymerNotation, String delimiter) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
-        List<Monomer> list = getMonomerList(polymerNotation, Monomer.PEPTIDE_POLYMER_TYPE);
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getModifiedPeptideSequence(polymerNotation,delimiter,factory.getMonomerStore());
+    }
+    
+    public static String getModifiedPeptideSequence(String polymerNotation, String delimiter,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+        List<Monomer> list = getMonomerList(polymerNotation, Monomer.PEPTIDE_POLYMER_TYPE,monomerStore);
         StringBuffer sb = new StringBuffer();
         String separator = "";
         if (null == delimiter) {
@@ -1043,13 +1112,24 @@ public class SimpleNotationParser {
         return sb.toString();
     }
 
+    
     public static String getSimpleCanonicalNotationForRNA(String simpleNotation) throws NotationException, MonomerException, StructureException, JDOMException, IOException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return getSimpleCanonicalNotationForRNA(simpleNotation,factory.getMonomerStore());
+    }
+
+    public static String getSimpleCanonicalNotationForRNA(String simpleNotation,MonomerStore monomerStore) throws NotationException, MonomerException, StructureException, JDOMException, IOException {
         validateSimpleNotation(simpleNotation, Monomer.NUCLIEC_ACID_POLYMER_TYPE);
 
         //check for cycle info
         //if first nucleotide starts with sugar monomer, last nucloetide must end with phosphate monomer
         //if first nucleotide starts with phosphate monomer, last nculeotide must not contain phosphate monomer
-        List<Nucleotide> nList = getNucleotideList(simpleNotation, false);
+        List<Nucleotide> nList = getNucleotideList(simpleNotation, false,monomerStore);
         Nucleotide firstNuc = nList.get(0);
         Nucleotide lastNuc = nList.get(nList.size() - 1);
         String standardNotation = simpleNotation;
@@ -1111,9 +1191,19 @@ public class SimpleNotationParser {
     }
 
     public static Map.Entry<Integer, String> getSimpleCanonicalNotationMapEntry(String simpleNotation, String polymerType) throws NotationException, MonomerException, JDOMException, IOException, StructureException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return getSimpleCanonicalNotationMapEntry(simpleNotation,polymerType,factory.getMonomerStore());
+    }
+    
+    public static Map.Entry<Integer, String> getSimpleCanonicalNotationMapEntry(String simpleNotation, String polymerType,MonomerStore monomerStore) throws NotationException, MonomerException, JDOMException, IOException, StructureException {
         List<String> list = new ArrayList<String>();
         if (Monomer.NUCLIEC_ACID_POLYMER_TYPE.equals(polymerType)) {
-            List<Nucleotide> nucList = getNucleotideList(simpleNotation, false);
+            List<Nucleotide> nucList = getNucleotideList(simpleNotation, false,monomerStore);
             Nucleotide firstNuc = nucList.get(0);
             Nucleotide lastNuc = nucList.get(nucList.size() - 1);
             int offset = 0;
@@ -1152,7 +1242,7 @@ public class SimpleNotationParser {
             }
 
         } else if (Monomer.PEPTIDE_POLYMER_TYPE.equals(polymerType) || Monomer.CHEMICAL_POLYMER_TYPE.equals(polymerType)) {
-            List<String> monomerIDList = getMonomerIDList(simpleNotation, polymerType);
+            List<String> monomerIDList = getMonomerIDList(simpleNotation, polymerType,monomerStore);
             List<String> tmpList = new ArrayList<String>();
             for (String id : monomerIDList) {
                 tmpList.add(id);
@@ -1232,23 +1322,23 @@ public class SimpleNotationParser {
         //R2 caps
         for (int i = 0; i < chunks.size() - 1; i++) {
             String tmpNotation = chunks.get(i);
-            List<String> monomerIDList = getMonomerIDList(tmpNotation, polymerType);
-            Monomer monomer = getMonomer(monomerIDList.get(monomerIDList.size() - 1), polymerType);
+            List<String> monomerIDList = getMonomerIDList(tmpNotation, polymerType,monomerStore);
+            Monomer monomer = getMonomer(monomerIDList.get(monomerIDList.size() - 1), polymerType,monomerStore);
             capMiList.add(monomer.getCapMoleculeInfo("R2"));
         }
 
         //R1 caps
         for (int i = 1; i < chunks.size(); i++) {
             String tmpNotation = chunks.get(i);
-            List<String> monomerIDList = getMonomerIDList(tmpNotation, polymerType);
-            Monomer monomer = getMonomer(monomerIDList.get(0), polymerType);
+            List<String> monomerIDList = getMonomerIDList(tmpNotation, polymerType,monomerStore);
+            Monomer monomer = getMonomer(monomerIDList.get(0), polymerType,monomerStore);
             capMiList.add(monomer.getCapMoleculeInfo("R1"));
         }
         
         if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
             String tmpNotation = chunks.get(0);
-            List<String> monomerIDList = getMonomerIDList(tmpNotation, polymerType);
-            Monomer monomer = getMonomer(monomerIDList.get(0), polymerType);
+            List<String> monomerIDList = getMonomerIDList(tmpNotation, polymerType,monomerStore);
+            Monomer monomer = getMonomer(monomerIDList.get(0), polymerType,monomerStore);
             List<Attachment> attachments = monomer.getAttachmentList();
             for (Attachment att : attachments) {
                 String label = att.getLabel();
