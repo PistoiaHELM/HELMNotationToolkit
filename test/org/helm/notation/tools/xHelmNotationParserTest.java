@@ -72,12 +72,29 @@ public class xHelmNotationParserTest {
 		
 		
 		
-		canonicalNotation=ComplexNotationParser.getCanonicalNotation(helmString, true,store);
-		assertEquals("PEPTIDE1{G.K.A.[A_copy]}$$$$",canonicalNotation);
+		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
 
 			
 		
+
+		
+		xHELMRootElement = getXHELMRootElement("samples/InlineSmiles.xhelm" );
+		helmString = xHelmNotationParser.getComplexNotationString(
+				xHELMRootElement);
+
+		store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+		
+		assertEquals(
+				"PEPTIDE1{A.C.A.C.G.K.E.E}|PEPTIDE2{A.C.A.C.G.K.E.E}|CHEM1{[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|}|CHEM2{PEG2}$PEPTIDE1+PEPTIDE2,CHEM1,generic:K-1:R1|PEPTIDE1+PEPTIDE2,CHEM2,generic:Q1+Q2-1:R1$$$",
+				helmString);
+		
+		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
+		
 	
+
+		
+		
+		
 	}
 	
 	@Test

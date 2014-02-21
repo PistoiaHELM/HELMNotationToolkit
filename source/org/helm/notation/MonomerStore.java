@@ -52,7 +52,7 @@ public class MonomerStore {
 	 }
 	 
 	 
-	 boolean alreadyInSMILESMap = hasSmilesString && (!smilesMonomerDB.containsKey(smilesString));
+	 boolean alreadyInSMILESMap = hasSmilesString && (smilesMonomerDB.containsKey(smilesString));
 
 	 if (!alreadyInSMILESMap) {
     	 smilesMonomerDB.put(smilesString, monomer);

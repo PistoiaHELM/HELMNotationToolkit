@@ -363,7 +363,7 @@ public class ComplexNotationParser {
     	return getMoleculeList(nodeList,groupStructureMap,store);
     }*/
     
-    private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList, Map<Integer, RgroupStructure> groupStructureMap,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+    private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList, Map<Integer, RgroupStructure> groupStructureMap, MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
         List<Molecule> l = new ArrayList<Molecule>();
         Collection<RgroupStructure> c = groupStructureMap.values();
         for (Iterator i = c.iterator(); i.hasNext();) {
@@ -817,7 +817,7 @@ public class ComplexNotationParser {
      * @return List<PolymerNode>
      * @throws org.helm.notation.NotationException
      */
-    public static List<PolymerNode> getPolymerNodeList(String allNodeString) throws NotationException {
+   public static List<PolymerNode> getPolymerNodeList(String allNodeString) throws NotationException {
      	MonomerFactory factory = null;
         try {
  		factory = MonomerFactory.getInstance();
@@ -1264,7 +1264,7 @@ public class ComplexNotationParser {
     	   
     public static String getCanonicalNotation(String complexNotation, boolean includeValidation,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, ClassNotFoundException, StructureException, JDOMException {
         validateNotationFormat(complexNotation);
-        ComplexPolymer cp = parse(complexNotation);
+        ComplexPolymer cp = parse(complexNotation,monomerStore);
 
         if (includeValidation) {
             validateComplexPolymer(cp,monomerStore);
@@ -1829,9 +1829,20 @@ public class ComplexNotationParser {
      * @throws org.jdom.JDOMException
      * @throws org.helm.notation.NotationException
      */
+    
     public static String replaceMonomer(String complexNotation, String polymerType, String existingMonomerID, String newMonomerID) throws MonomerException, IOException, JDOMException, NotationException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+    	return replaceMonomer(complexNotation,polymerType,existingMonomerID,newMonomerID,factory.getMonomerStore());
+    }
+    
+    public static String replaceMonomer(String complexNotation, String polymerType, String existingMonomerID, String newMonomerID,MonomerStore monomerStore) throws MonomerException, IOException, JDOMException, NotationException {
 
-        SimpleNotationParser.validateMonomerReplacement(polymerType, existingMonomerID, newMonomerID);
+        SimpleNotationParser.validateMonomerReplacement(polymerType, existingMonomerID, newMonomerID,monomerStore);
         if (null == complexNotation || complexNotation.length() == 0) {
             return complexNotation;
         }
@@ -1853,7 +1864,7 @@ public class ComplexNotationParser {
 
             if (polymer.getType().equals(polymerType)) {
                 String notation = polymer.getLabel();
-                String result = SimpleNotationParser.replaceMonomer(notation, polymerType, existingMonomerID, newMonomerID);
+                String result = SimpleNotationParser.replaceMonomer(notation, polymerType, existingMonomerID, newMonomerID,monomerStore);
                 sb.append(result);
             } else {
                 sb.append(polymer.getLabel());
@@ -1919,7 +1930,18 @@ public class ComplexNotationParser {
      * @throws JDOMException
      * @throws StructureException
      */
+    
     public static boolean hasNucleotideModification(List<PolymerNode> polymerNodes) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
+    	MonomerFactory factory = null;
+        try {
+        	factory = MonomerFactory.getInstance();
+        } catch (Exception ex) {
+            throw new NotationException("Unable to initialize monomer factory", ex);
+        }
+        return hasNucleotideModification(polymerNodes,factory.getMonomerStore());
+    }
+    
+    public static boolean hasNucleotideModification(List<PolymerNode> polymerNodes,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException {
         for (PolymerNode node : polymerNodes) {
             String oneNodeID = node.getId();
             String notation = node.getLabel();
@@ -1927,7 +1949,7 @@ public class ComplexNotationParser {
             if (oneNodeID.startsWith(Monomer.CHEMICAL_POLYMER_TYPE)) {
             } else if (oneNodeID.startsWith(Monomer.PEPTIDE_POLYMER_TYPE)) {
             } else {
-                List<Nucleotide> nucleotidelist = SimpleNotationParser.getStrictNucleotideList(notation, false);
+                List<Nucleotide> nucleotidelist = SimpleNotationParser.getStrictNucleotideList(notation, false,monomerStore);
                 for (Nucleotide oneNucleotide : nucleotidelist) {
                     if (oneNucleotide.isModified()) {
                         return true;

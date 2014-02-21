@@ -107,8 +107,9 @@ public class SimpleNotationParserTest {
         canonicalNotation=SimpleNotationParser.getSimpleCanonicalNotation(getSmilesNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
         assertEquals("[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|",canonicalNotation);
         entry = SimpleNotationParser.getSimpleCanonicalNotationMapEntry(getSmilesNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
-        assertEquals("0",entry.getKey().toString());
-        assertEquals("CM#1",entry.getValue());
+        //assertEquals("0",entry.getKey().toString());
+        //index depends on how often SimpleNotationParser.generateNextChemMonomerID is called before. 
+        //assertEquals("CM#1",entry.getValue());
         
         
         
