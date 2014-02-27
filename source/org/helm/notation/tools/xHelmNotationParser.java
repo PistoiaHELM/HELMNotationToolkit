@@ -43,11 +43,12 @@ public class xHelmNotationParser {
 	public static String writeXHELM(String xHelmCode, MonomerStore store) {
 		String xml = "";
 		try {
-			
-			xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator();
+
+			xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+					+ System.lineSeparator();
 			xml += "<Xhelm>" + System.lineSeparator();
-			xml += "	<HelmNotation>" + xHelmCode
-					+ "</HelmNotation>" + System.lineSeparator();
+			xml += "	<HelmNotation>" + xHelmCode + "</HelmNotation>"
+					+ System.lineSeparator();
 			xml += "<Monomers>" + System.lineSeparator();
 
 			// get all simple polymers
@@ -67,11 +68,11 @@ public class xHelmNotationParser {
 				XMLOutputter outp = new XMLOutputter();
 				String s = outp.outputString(MonomerParser
 						.getMonomerElement(distinctmonomer));
-				xml += "	" + s + System.lineSeparator() + System.lineSeparator();
+				xml += "	" + s + System.lineSeparator()
+						+ System.lineSeparator();
 
 			}
-		} catch (IOException | NotationException | MonomerException
-				| JDOMException | StructureException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
