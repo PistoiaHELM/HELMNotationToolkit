@@ -246,8 +246,9 @@ public class MonomerFactory {
 		} catch (ClassNotFoundException cnfe) {
 			throw new MonomerException(
 					"Unable to deserialize monomer cache from file");
+		} finally {
+			ois.close();
 		}
-		ois.close();
 		fis.close();
 		return cache;
 	}
