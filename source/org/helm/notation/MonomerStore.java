@@ -3,6 +3,7 @@ package org.helm.notation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.helm.notation.model.Monomer;
 import org.helm.notation.tools.DeepCopy;
@@ -114,5 +115,8 @@ public class MonomerStore {
 
 		return str;
 	}
-
+	
+	 public Set<String> getPolymerTypeSet(){
+	    	return monomerDB.keySet();    
+	    }
 }

@@ -25,7 +25,7 @@ public class xHelmNotationExporter {
     public static final String HELM_NOTATION_ELEMENT 	= "HelmNotation";
     
      
-	// URL: http://www.mkyong.com/java/how-to-create-xml-file-in-java-jdom-parser/
+	
 	 public static Document buildXHelmDocument(String helmNotation,MonomerStore monomerStore) throws MonomerException {
 	        Element root = new Element(XHELM_ELEMENT);
 			

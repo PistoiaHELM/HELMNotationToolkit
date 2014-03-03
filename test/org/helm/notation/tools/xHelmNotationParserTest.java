@@ -73,6 +73,12 @@ public class xHelmNotationParserTest {
 		
 		
 		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
+		
+		
+		Document doc=xHelmNotationExporter.buildXHelmDocument(helmString,store);
+		
+		
+		System.out.println(doc.toString());
 
 			
 		
