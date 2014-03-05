@@ -58,30 +58,6 @@ public class ComplexNotationParserTest {
 	}
 
 	
-	@Test
-	public void testInlineNotation() throws NotationException, MonomerException, IOException, StructureException, JDOMException {
-		//existing Format with inline notation in chem part
-		/*String notation = "PEPTIDE1{A.C.A.C.G.K}|CHEM1{[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|}$PEPTIDE1,CHEM1,generic:K-1:R1$$$";
-		assertTrue(testComplexNotationValidity(notation));
-		assertTrue(testGetCanonicalNotation(notation));
-		assertTrue(testGetMoleculeInfo(notation));
-		*/
-		//new inline notation
-		String notation = "PEPTIDE1{[[*]NCC([*])=O |$_R1;;;;_R2;$|].[C[C@H;](N[*])C([*])=O |r,$;;;_R1;;_R2;$|].[[*]NCC([*])=O |$_R1;;;;_R2;$|]}$$$$";
-		
-		/*assertTrue("validateNotationFormat", ComplexNotationParser.validateNotationFormat(notation));
-		assertEquals("getAllNodeString", "PEPTIDE1{[[*]NCC([*])=O |$_R1;;;;_R2;$|].[C[C@H;](N[*])C([*])=O |r,$;;;_R1;;_R2;$|].[[*]NCC([*])=O |$_R1;;;;_R2;$|]}", ComplexNotationParser.getAllNodeString(notation));
-		assertEquals("getAllEdgeString", "", ComplexNotationParser.getAllEdgeString(notation));
-		assertEquals("getAllBasePairString", "", ComplexNotationParser.getAllBasePairString(notation));
-		assertEquals("getAllNodeLabelString", "",  ComplexNotationParser.getAllNodeLabelString(notation));
-		assertEquals("getOtherString", "", ComplexNotationParser.getOtherString(notation));
-		*/
-		assertTrue("Notation Valid? ",ComplexNotationParser.validateComplexNotation(notation));
-		
-
-		
-	}
-	
 	
 	@Test
 	public void testGenericConnection() {
