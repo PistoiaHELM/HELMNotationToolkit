@@ -18,15 +18,14 @@ import org.jdom.output.XMLOutputter;
 
 public class xHelmNotationParser {
 	public static String getComplexNotationString(Element rootElement)
-			throws MonomerException, IOException, JDOMException,
-			NotationException, StructureException {
+	{
 		Element helmNotationElement = rootElement.getChild("HelmNotation");
 		return helmNotationElement.getText();
 	}
 
 	// read monomers to monomerStore
 	public static MonomerStore getMonomerStore(Element rootElement)
-			throws MonomerException, IOException, JDOMException {
+			throws MonomerException, IOException {
 		MonomerStore monomerStore = new MonomerStore();
 		Element monomerListElement = rootElement.getChild("Monomers");
 		@SuppressWarnings("unchecked")

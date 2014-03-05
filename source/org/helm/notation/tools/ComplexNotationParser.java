@@ -102,8 +102,10 @@ public class ComplexNotationParser {
 	private static MonomerStore checkForMonomerStore(MonomerStore monomerStore) {
 		// check for default value
 		MonomerStore combinedMonomerStore = monomerStore;
-		if (combinedMonomerStore == null
-				|| combinedMonomerStore.isMonomerStoreEmpty()) {
+		//SM 2014-03-03 unit test xHelmNotationParserTest.testXHelmValidation fails
+		//do we need to check for empty monomer store? 
+		//if an invalid xhelm format (empty monomer section) is parsed, the validation is not working anymore because the local monomerStore is used  
+		if (combinedMonomerStore == null){//|| combinedMonomerStore.isMonomerStoreEmpty()) {
 			MonomerFactory factory = null;
 			try {
 				factory = MonomerFactory.getInstance();
@@ -1469,14 +1471,13 @@ public class ComplexNotationParser {
 
 		List<PolymerNode> nodeList = cp.getPolymerNodeList();
 		List<PolymerEdge> edgeList = cp.getPolymerEdgeList();
-
+		//TODO deal with adhoc monomers in all polymer types
 		// deal with ad hoc CHEM monomer here, use smiles instead of temp ID
 		for (PolymerNode node : nodeList) {
 			if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE)
 					&& node.getLabel().startsWith(
 							SimpleNotationParser.AD_HOC_CHEM_MONOMER_ID_PREFIX)) {
-				// Monomer m =
-				// MonomerFactory.getInstance().getMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE).get(node.getLabel());
+
 				Monomer m = monomerStoreToUse.getMonomer(
 						Monomer.CHEMICAL_POLYMER_TYPE, node.getLabel());
 

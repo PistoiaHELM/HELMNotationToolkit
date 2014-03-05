@@ -3,17 +3,13 @@ package org.helm.notation.tools;
 import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
-import java.util.Map;
 
 import org.helm.notation.MonomerException;
-import org.helm.notation.MonomerFactory;
 import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationException;
 import org.helm.notation.StructureException;
-import org.helm.notation.model.MoleculeInfo;
-import org.helm.notation.model.Monomer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -75,10 +71,16 @@ public class xHelmNotationParserTest {
 		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
 		
 		
-		Document doc=xHelmNotationExporter.buildXHelmDocument(helmString,store);
+		/*Document doc=xHelmNotationExporter.buildXHelmDocument(helmString,store);
 		
+		XMLOutputter xmlOutput = new XMLOutputter();	 
+		// display nice 
+		xmlOutput.setFormat(Format.getPrettyFormat());
+	
 		
-		System.out.println(doc.toString());
+		String xml=xmlOutput.outputString(doc);
+		
+		System.out.println(xml);*/
 
 			
 		
@@ -104,27 +106,27 @@ public class xHelmNotationParserTest {
 	}
 	
 	@Test
-	public void testXHelmValidation() throws JDOMException, IOException,
-			MonomerException, NotationException, StructureException {
+	public void testXHelmValidation() throws JDOMException, IOException, MonomerException    {
 
 		Element xHELMRootElement = getXHELMRootElement("samples/bad.xhelm");
 		
 		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
 		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
-		
-		
-		boolean exception=false;
+	
 		try {
 			ComplexNotationParser.validateComplexNotation( helmString, store);
+			fail("xHelm document is not valid-should have thrown exception");
 		}
 
 		catch (Exception e) {
-			exception=true;
+			assertTrue("xHelm doc validation failed as expected",true);
 		}		
-		assertTrue("Validation should have thrown an error",exception);
+	
 
 	}
 
+	
+	
 	@BeforeClass
 	public static void init() {
 
