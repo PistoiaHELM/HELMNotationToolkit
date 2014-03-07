@@ -25,7 +25,6 @@ import chemaxon.marvin.plugin.PluginException;
 import chemaxon.struc.MolAtom;
 import chemaxon.struc.Molecule;
 
-
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
 import org.helm.notation.MonomerStore;
@@ -47,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.jdom.JDOMException;
 
@@ -65,11 +65,13 @@ public class SimpleNotationParser {
 
     public static final String GROUP_LEVEL_DELIMITER_REGEX = "\\.";
     public static final String GROUP_LEVEL_DELIMITER = ".";
-    public static final String MODIFICATION_START_SYMBOL = "[";
-    public static final String MODIFICATION_END_SYMBOL = "]";
+    public static final char MODIFICATION_START_SYMBOL = '[';
+    public static final char MODIFICATION_END_SYMBOL = ']';
+    
     public static final String MODIFICATION_DELIMITER_REGEX = "[\\[|\\]]";
-    public static final String BRANCH_START_SYMBOL = "(";
-    public static final String BRANCH_END_SYMBOL = ")";
+    public static final char BRANCH_START_SYMBOL = '(';
+    public static final char BRANCH_END_SYMBOL = ')';
+    
     public static final String BRANCH_DELIMITER_REGEX = "[(|)]";
     public static final String RNA_SENSE_STRAND_ANNOTATION = "ss";
     public static final String RNA_ANTISENSE_STRAND_ANNOTATION = "as";
@@ -465,9 +467,11 @@ public class SimpleNotationParser {
 
         List<Nucleotide> ids = new ArrayList<Nucleotide>();
         Map<String, String> reverseNucMap = NucleotideFactory.getInstance().getReverseNucleotideTemplateMap();
+
         String[] notations = polymerNotation.split(GROUP_LEVEL_DELIMITER_REGEX);
         for (int i = 0; i < notations.length; i++) {
             String notation = notations[i];
+           
             String symbol = null;
 
             //last nucleotide will be handled differently
@@ -605,71 +609,188 @@ public class SimpleNotationParser {
     public static List<String> getMonomerIDList(String polymerNotation, String polymerType,MonomerStore monomerStore) throws NotationException {
         List<String> ids = new ArrayList<String>();
 
-        //CHEMICAL can have only one monomer
-        if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
-            String id = preprocessChemNode(polymerNotation,monomerStore);
-            ids.add(id);
-        } else {
-            if (polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE) && polymerNotation.indexOf(BRANCH_START_SYMBOL) >= 0) {
+
+		//CHEMICAL can have only one monomer
+      if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
+          String id = processNode(polymerNotation,polymerType,monomerStore);
+          ids.add(id);
+      } else {
+      /*if (polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE) && polymerNotation.indexOf(BRANCH_START_SYMBOL) >= 0) {
                 throw new NotationException("Invalid Polymer Notation: Peptide polymer cannot have branches");
-            }
+            }*/
 
-            String notation = polymerNotation.replaceAll(GROUP_LEVEL_DELIMITER_REGEX, "");
-            char[] chars = notation.toCharArray();
-
-            String curId = null;
-            String prevLetter = null;
-
-            for (int i = 0; i < chars.length; i++) {
-                String letter = String.valueOf(chars[i]);
-                if (letter.equals(MODIFICATION_START_SYMBOL)) {
-                    i++;
-                    StringBuffer sb = new StringBuffer();
-                    while (!(String.valueOf(chars[i]).equals(MODIFICATION_END_SYMBOL))) {
-                        sb.append(String.valueOf(chars[i]));
-                        i++;
-                    }
-                    curId = sb.toString();
-
-                } else if (letter.equals(BRANCH_START_SYMBOL)) {
-                    if (i == 0) {
-                        throw new NotationException("Invalid Polymer Notation: branch monomer is not allowed at the beginnig of notation");
-                    }
-
-                    if (null != prevLetter && prevLetter.equals(BRANCH_END_SYMBOL)) {
-                        throw new NotationException("Invalid Polymer Notation: branch monomers cannot be connected with each other");
-                    }
-
-                    i++;
-                    StringBuffer sb = new StringBuffer();
-                    while (!(String.valueOf(chars[i]).equals(BRANCH_END_SYMBOL))) {
-                        sb.append(String.valueOf(chars[i]));
-                        i++;
-                    }
-
-                    if (sb.length() > 1) {
-
-                        if (sb.toString().startsWith(MODIFICATION_START_SYMBOL) && sb.toString().endsWith(MODIFICATION_END_SYMBOL)) {
-                            curId = sb.toString().replaceAll(MODIFICATION_DELIMITER_REGEX, "");
-                        } else {
-                            throw new NotationException("Invalid Polymer Notation: modified monomer must be enclosed by square brackets");
-                        }
-
-                    } else if (sb.length() == 1) {
-                        curId = sb.toString();
-                    } else {
-                        throw new NotationException("Invalid Polymer Notation: branch monomer not found");
-                    }
-                } else {
-                    curId = letter;
-                }
-
-                ids.add(curId);
-                prevLetter = String.valueOf(chars[i]);
-            }
+            SimpleNotationGroupIterator groupIterator = new SimpleNotationGroupIterator(polymerNotation);
+            
+            while ( groupIterator.hasNextGroup()) {
+	            String notation = groupIterator.nextGroup();
+	            char[] chars = notation.toCharArray();
+	
+	            String curId = null;
+	            char prevLetter = 0;
+	
+	            for (int i = 0; i < chars.length; i++) {
+	                char letter = chars[i];
+	                if (letter == MODIFICATION_START_SYMBOL) {
+	                    int matchingPos=getMatchingBracketPosition(chars, i, MODIFICATION_START_SYMBOL, MODIFICATION_END_SYMBOL);
+	                    i++;
+	
+	                    if (matchingPos==-1){
+	                    	throw new NotationException("Invalid Polymer Notation: modified monomer must be enclosed by square brackets");
+	                    }
+	                    else {
+		                    curId = notation.substring(i, matchingPos);
+	                    }
+	                    i=matchingPos;
+	                    /*while (!(String.valueOf(chars[i]).equals(MODIFICATION_END_SYMBOL))) {
+	                        sb.append(String.valueOf(chars[i]));
+	                        i++;
+	                    }*/
+	                    
+	
+	                } else if (letter == BRANCH_START_SYMBOL) {
+	                    if (i == 0) {
+	                        throw new NotationException("Invalid Polymer Notation: branch monomer is not allowed at the beginnig of notation");
+	                    }
+	
+	                    if ( prevLetter == BRANCH_END_SYMBOL) {
+	                        throw new NotationException("Invalid Polymer Notation: branch monomers cannot be connected with each other");
+	                    }
+	
+	                   	                    
+	                    String string = null;
+	                    
+	                    int matchingPos=getMatchingBracketPosition(chars, i, BRANCH_START_SYMBOL, BRANCH_END_SYMBOL);
+	                    i++;
+	                    if (matchingPos==-1){
+	                    	throw new NotationException("Invalid Polymer Notation: modified monomer must be enclosed by brackets");
+	                    }
+	                    else {
+	                    	string =notation.substring(i, matchingPos);
+	                    }
+	                    i=matchingPos;
+	                    
+	                   /* while (!(String.valueOf(chars[i]).equals(BRANCH_END_SYMBOL))) {
+	                        sb.append(String.valueOf(chars[i]));
+	                        i++;
+	                    }*/
+	
+	                    if (string.length() > 1) {
+	                    	if ( (string.charAt(0) == MODIFICATION_START_SYMBOL) 
+	                    		 && (string.charAt(string.length()-1) == MODIFICATION_END_SYMBOL)) {
+	                    		curId = string.substring(1, string.length()-1);
+	                        } else {
+	                            throw new NotationException("Invalid Polymer Notation: modified monomer must be enclosed by square brackets");
+	                        }
+	
+	                    } else if (string.length() == 1) {
+	                        curId = string;
+	                    } else {
+	                        throw new NotationException("Invalid Polymer Notation: branch monomer not found");
+	                    }
+	                } else {
+	                    curId = String.valueOf(letter);
+	                }
+	
+	                curId=processNode(curId,polymerType,monomerStore);
+	                
+	                ids.add(curId);
+	                prevLetter = letter;
+	            }
+	        }
         }
         return ids;
     }
+    
+    
+
+	private static String processNode(String id, String polymerType,
+			MonomerStore monomerStore) throws NotationException {
+
+		boolean isSmilesCode = Pattern.matches(".*\\$\\|$", id);
+
+		if (!isSmilesCode) {
+			return id;
+		}
+
+//		Map<String, Monomer> monomers = monomerStore
+//				.getMonomers(Monomer.CHEMICAL_POLYMER_TYPE);
+		Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();
+
+		String alternateId = null;
+
+		if (smilesDB.containsKey(id)) {
+			alternateId = smilesDB.get(id).getAlternateId();
+
+		} else {
+
+			MonomerFactory factory;
+			try {
+				factory = MonomerFactory.getInstance();
+			} catch (Exception ex) {
+				throw new NotationException(
+						"Unable to initialize monomer factory", ex);
+			}
+
+			alternateId = generateNextMonomerID(polymerType, monomerStore);
+
+			Map<String, Attachment> ids = factory.getAttachmentDB();
+			Attachment R1HAtt = ids.get("R1-H");
+
+			// TODO what type makes sense here for inline smiles in rna and
+			// peptide?
+			Monomer m = null;
+			if (polymerType == Monomer.CHEMICAL_POLYMER_TYPE) {
+				m = new Monomer(polymerType, Monomer.UNDEFINED_MOMONER_TYPE,
+						null, alternateId);
+			} else {
+				m = new Monomer(polymerType, Monomer.BACKBONE_MOMONER_TYPE,
+						null, alternateId);
+			}
+			m.setCanSMILES(id);
+
+			List<Attachment> al = new ArrayList<Attachment>();
+			int start = 0;
+			int pos = id.indexOf("R", start);
+			String number = "";
+			while (pos >= 0) {
+				pos++;
+				String letter = id.substring(pos, pos + 1);
+				while (letter.matches("\\d")) {
+					number = number + letter;
+					pos++;
+					letter = id.substring(pos, pos + 1);
+				}
+
+				try {
+					Attachment tmpAtt = DeepCopy.copy(R1HAtt);
+					tmpAtt.setLabel("R" + number);
+					tmpAtt.setAlternateId("R" + number + "-H");
+					String oldSmi = tmpAtt.getCapGroupSMILES();
+					String newSmi = oldSmi.replace("R1", "R" + number);
+					tmpAtt.setCapGroupSMILES(newSmi);
+					al.add(tmpAtt);
+				} catch (Exception ex) {
+					throw new NotationException(
+							"Unable to create attachment by copying from attachment database",
+							ex);
+				}
+
+				start = pos;
+				pos = id.indexOf("R", start);
+				number = "";
+			}
+
+			m.setAttachmentList(al);
+			try {
+				monomerStore.addNewMonomer(m);
+			} catch (Exception ex) {
+				throw new NotationException(
+						"Unable to add adhoc new monomer into monomer databse",
+						ex);
+			}
+		}
+		return alternateId;
+	}
     
     /**
      * This method returns the RgroupStructure object for the monomer. R group ID must be unique in each monomer
@@ -1314,6 +1435,7 @@ public class SimpleNotationParser {
         int start = 0;
         list.add(simpleNotation);
         int current = simpleNotation.indexOf(GROUP_LEVEL_DELIMITER, start);
+        
         while (current > 0) {
             String backPart = simpleNotation.substring(current + 1);
             String frontPart = simpleNotation.substring(0, current);
@@ -1431,25 +1553,41 @@ public class SimpleNotationParser {
     }
         
     public static MoleculeInfo getMoleculeInfo(String notation, String polymerType,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, PluginException, StructureException {
-        if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
-            notation = preprocessChemNode(notation,monomerStore);
+        
+    	if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
+            notation = processNode(notation,Monomer.CHEMICAL_POLYMER_TYPE,monomerStore);
+    		//notation = preprocessChemNode(notation,monomerStore);
         }
+    	
 
         List<String> chunks = new ArrayList<String>();
 
-        String[] groups = notation.split(GROUP_LEVEL_DELIMITER_REGEX);
         StringBuilder tmpNotationBuilder = new StringBuilder();
-        for (int i = 1; i <= groups.length; i++) {
+        
+        
+        SimpleNotationGroupIterator groupIterator = new SimpleNotationGroupIterator(notation);
+        List<String> groups = new ArrayList<String>();
+        //String[] groups = notation.split(GROUP_LEVEL_DELIMITER_REGEX);
+        
+        
+        while ( groupIterator.hasNextGroup()) {
+            groups.add(groupIterator.nextGroup());
+            
+        }
+        
+
+        for (int i = 1; i <= groups.size(); i++) {
             if (tmpNotationBuilder.length() > 0) {
                 tmpNotationBuilder.append(GROUP_LEVEL_DELIMITER);
             }
-            tmpNotationBuilder.append(groups[i - 1]);
+            tmpNotationBuilder.append(groups.get(i - 1));
 
             if ((i % NotationConstant.MONOMER_GROUP_COUNT_INTERVAL) == 0) {
                 chunks.add(tmpNotationBuilder.toString());
                 tmpNotationBuilder = new StringBuilder();
             }
         }
+        
 
         if (tmpNotationBuilder.length() > 0) {
             chunks.add(tmpNotationBuilder.toString());
@@ -1548,7 +1686,7 @@ public class SimpleNotationParser {
                      throw new NotationException("Unable to initialize monomer factory", ex);
                  }
 
-                alternateId = generateNextChemMonomerID(chemMonomers);
+                alternateId = generateNextMonomerID( Monomer.CHEMICAL_POLYMER_TYPE, monomerStore);
 
                 Map<String, Attachment> ids = factory.getAttachmentDB();
                 Attachment R1HAtt = ids.get("R1-H");
@@ -1595,15 +1733,52 @@ public class SimpleNotationParser {
         return alternateId;
     }
     private static int seed = 0;
-    protected static String AD_HOC_CHEM_MONOMER_ID_PREFIX = "CM#";
+    protected static String AD_HOC_MONOMER_ID_PREFIX = "AM#";
 
-    private static String generateNextChemMonomerID(Map<String, Monomer> chemMonomers) {
+    private static String generateNextMonomerID(String polymerType, MonomerStore store) {
+    	Map<String, Monomer> monomers = store.getMonomers(polymerType);
         seed++;
-        String result = AD_HOC_CHEM_MONOMER_ID_PREFIX + seed;
-        if (chemMonomers.containsKey(result)) {
-            return generateNextChemMonomerID(chemMonomers);
+        String result = AD_HOC_MONOMER_ID_PREFIX + seed;
+        if (monomers.containsKey(result)) {
+            return generateNextMonomerID(polymerType, store);
         } else {
             return result;
         }
     }
+    
+    
+    //TODO need to reset seed for unit tests
+    public static void resetSeed(){
+    	seed=0;
+    }
+    
+    public static int getMatchingBracketPosition( char[] characters, int position, char openingBracket, char closingBracket) {
+		if ( position < (characters.length - 1) 
+			&& characters[position] == openingBracket) {
+			int currentPosition = position;
+			int openingBracketCount = 1;
+			
+			do {
+				char currentCharacter = characters[++currentPosition];
+				if (  currentCharacter == openingBracket) {
+					openingBracketCount++;
+				}
+				else if ( currentCharacter == closingBracket) {
+					openingBracketCount--;
+				}
+			} while( openingBracketCount > 0 && currentPosition < (characters.length-1) );
+			
+			if ( characters[currentPosition] == closingBracket) {
+				return currentPosition;
+			}
+			else {
+				return -1;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+    
+    
 }
