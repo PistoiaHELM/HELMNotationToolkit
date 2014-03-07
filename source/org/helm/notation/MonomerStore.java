@@ -110,7 +110,7 @@ public class MonomerStore {
 				str += mon.getAlternateId() + "(" + mon.getPolymerType()
 						+ "); ";
 			}
-			str += System.lineSeparator();
+			str += System.getProperty("line.separator");
 		}
 
 		return str;

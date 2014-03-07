@@ -44,11 +44,11 @@ public class xHelmNotationParser {
 		try {
 
 			xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-					+ System.lineSeparator();
-			xml += "<Xhelm>" + System.lineSeparator();
+					+ System.getProperty("line.separator");;
+			xml += "<Xhelm>" + System.getProperty("line.separator");;
 			xml += "	<HelmNotation>" + xHelmCode + "</HelmNotation>"
-					+ System.lineSeparator();
-			xml += "<Monomers>" + System.lineSeparator();
+					+ System.getProperty("line.separator");
+			xml += "<Monomers>" + System.getProperty("line.separator");
 
 			// get all simple polymers
 			Set<Monomer> set = new HashSet<Monomer>();
@@ -67,8 +67,8 @@ public class xHelmNotationParser {
 				XMLOutputter outp = new XMLOutputter();
 				String s = outp.outputString(MonomerParser
 						.getMonomerElement(distinctmonomer));
-				xml += "	" + s + System.lineSeparator()
-						+ System.lineSeparator();
+				xml += "	" + s + System.getProperty("line.separator")
+						+ System.getProperty("line.separator");
 
 			}
 		} catch (Exception e) {
@@ -76,8 +76,8 @@ public class xHelmNotationParser {
 			return null;
 		}
 
-		xml += "</Monomers>" + System.lineSeparator();
-		xml += "</Xhelm>" + System.lineSeparator();
+		xml += "</Monomers>" + System.getProperty("line.separator");
+		xml += "</Xhelm>" + System.getProperty("line.separator");
 		return xml;
 	}
 
