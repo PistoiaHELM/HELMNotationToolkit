@@ -18,7 +18,7 @@ import org.jdom.output.XMLOutputter;
 
 public class xHelmNotationExporter {
 
-	public static final String XHELM_ELEMENT 			= "xHelm";
+	public static final String XHELM_ELEMENT 			= "Xhelm";
 	public static final String MONOMER_LIST_ELEMENT		= "Monomers";
     public static final String MONOMER_ELEMENT 			= "Monomer";
   
@@ -30,8 +30,9 @@ public class xHelmNotationExporter {
 	        Element root = new Element(XHELM_ELEMENT);
 			
 	        Document doc = new Document(root);
-			doc.setRootElement(root);
-	        
+
+			
+			
 	        Element helmElement=new Element(HELM_NOTATION_ELEMENT);
 	        helmElement.setText(helmNotation);	        
 	        
