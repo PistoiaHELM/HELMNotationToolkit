@@ -469,6 +469,35 @@ public class ComplexNotationParserTest {
 	}
 
 
+	@Test
+	public void testInlineNotation() throws NotationException, IOException, MonomerException, StructureException, JDOMException  {
+		
+		String notation = "PEPTIDE1{A.G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$";
+		String smiles = ComplexNotationParser.getComplexPolymerSMILES(notation);
 
+		//replaced A with Smiles String
+		notation = "PEPTIDE1{[C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$";
+		String smilesInline = ComplexNotationParser.getComplexPolymerSMILES(notation);
+		assertEquals(smiles,smilesInline);
+		
+		
+		boolean valid=ComplexNotationParser.validateComplexNotation(notation);
+		assertTrue(valid);
+		valid=ComplexNotationParser.validateNotationFormat(notation);
+		assertTrue(valid);
+		
+		
+		//replaced A with slightly modified A
+		notation = "PEPTIDE1{[C[C@H](N[*])C(=O)C[*] |$;;;_R1;;;;_R2$|].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$";
+		valid=ComplexNotationParser.validateNotationFormat(notation);
+		assertTrue(valid);
+		valid=ComplexNotationParser.validateComplexNotation(notation);
+		assertTrue(valid);
+		
+		smilesInline = ComplexNotationParser.getComplexPolymerSMILES(notation);
+		assertEquals("[H]NCCCC[C@H](NC(=O)[C@H](CS[H])NC(=O)[C@H](CS[H])NC(=O)CNC(=O)CNC(=O)CNCC(=O)[C@H](C)N[H])C(=O)N[C@@H](CCCCN[H])C(=O)N[C@@H](CCCCN[H])C(=O)N[C@@H](CCCCNC(=O)C1CCC(CN2C(=O)C=CC2=O)CC1)C(O)=O",smilesInline);
+		
+		
+	}
 
 }
