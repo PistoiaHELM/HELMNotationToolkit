@@ -3,7 +3,6 @@ package org.helm.notation.tools;
 import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
-
 import java.io.IOException;
 
 import org.helm.notation.MonomerException;
@@ -103,6 +102,22 @@ public class xHelmNotationParserTest {
 		
 		
 		
+	}
+	
+	@Test
+	public void testXHelmWithInlineSmiles() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
+		Element xHELMRootElement = getXHELMRootElement("samples/simpleWithInlineSmiles.xhelm");
+		
+		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+	
+		boolean valid=ComplexNotationParser.validateComplexNotation( helmString, store);
+		assertTrue(valid);
+		String smiles=ComplexNotationParser.getComplexPolymerSMILES(helmString, store);
+		
+		assertEquals("[H]NCCCC[C@H](NC(=O)CN[H])C(=O)N[C@@H](C)C(=O)CN[C@@H](C)C(O)=O",smiles);
+		
+
 	}
 	
 	@Test

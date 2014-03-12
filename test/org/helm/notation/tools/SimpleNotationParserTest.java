@@ -29,8 +29,22 @@ public class SimpleNotationParserTest {
 		return "P.R(A)[sP].RP.R(G)P.[LR]([5meC])";
 	}
 	
+	
+	public String getInlineSmilesRNANotation(){		
+		//Smiles is P
+		return "[OP([*])([*])=O |$;;_R1;_R2;$|].R(A)[sP].RP.R(G)[OP([*])([*])=O |$;;_R1;_R2;$|].[LR]([5meC])";
+	}
+	
+	
+	
 	public String getSimplePeptideNotation(){		
 		return "G.G.K.A.A.[seC]";
+	}
+	
+	
+	public String getInlineSmilesPeptideNotation(){		
+	//Smiles is A
+		return "G.G.K.A.[C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|].[seC]";
 	}
 	
 	public String getSimpleChemNotation(){
@@ -39,7 +53,12 @@ public class SimpleNotationParserTest {
 	
 	public String getSmilesNotation(){
 		return "[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|";		
+		
 	}
+	
+	
+	
+	
 	
 	@BeforeClass
 	public static void init() {
@@ -67,11 +86,20 @@ public class SimpleNotationParserTest {
         int count=SimpleNotationParser.getMonomerCount(getSimpleRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
         assertEquals(11,count);
         
+        count=SimpleNotationParser.getMonomerCount(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+        assertEquals(11,count);
+        
+        
         count=SimpleNotationParser.getMonomerCount(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
         assertEquals(6,count);
         
+        count=SimpleNotationParser.getMonomerCount(getInlineSmilesPeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
+        assertEquals(6,count);
+        
+        
         count=SimpleNotationParser.getMonomerCount(getSimpleChemNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
         assertEquals(1,count);
+        
         
         count=SimpleNotationParser.getMonomerCount(getSmilesNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
         assertEquals(1,count);
@@ -89,12 +117,22 @@ public class SimpleNotationParserTest {
         assertEquals("R(A)[sP].RP.R(G)P.[LR]([5meC])P",entry.getValue());
         
         
+        canonicalNotation=SimpleNotationParser.getSimpleCanonicalNotation(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+        assertEquals("R(A)[sP].RP.R(G)[OP([*])([*])=O |$;;_R1;_R2;$|].[LR]([5meC])[OP([*])([*])=O |$;;_R1;_R2;$|]",canonicalNotation);
         
+    	
 		canonicalNotation=SimpleNotationParser.getSimpleCanonicalNotation(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
         assertEquals("A.A.[seC].G.G.K",canonicalNotation);
         entry = SimpleNotationParser.getSimpleCanonicalNotationMapEntry(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
         assertEquals("3",entry.getKey().toString());
         assertEquals("A.A.[seC].G.G.K",entry.getValue());
+        
+        canonicalNotation=SimpleNotationParser.getSimpleCanonicalNotation(getInlineSmilesPeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
+        assertEquals("A.[C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|].[seC].G.G.K", canonicalNotation);
+
+        
+        
+        
         
         
         canonicalNotation=SimpleNotationParser.getSimpleCanonicalNotation(getSimpleChemNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
@@ -106,6 +144,7 @@ public class SimpleNotationParserTest {
         
         canonicalNotation=SimpleNotationParser.getSimpleCanonicalNotation(getSmilesNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
         assertEquals("[*]OCCOCCOCCO[*] |$_R1;;;;;;;;;;;_R3$|",canonicalNotation);
+        
         entry = SimpleNotationParser.getSimpleCanonicalNotationMapEntry(getSmilesNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
         //assertEquals("0",entry.getKey().toString());
         //index depends on how often SimpleNotationParser.generateNextChemMonomerID is called before. 
@@ -119,10 +158,20 @@ public class SimpleNotationParserTest {
 		
 		String complexNotation=SimpleNotationParser.getComplexNotation(getSimpleRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
         assertEquals("RNA1{P.R(A)[sP].RP.R(G)P.[LR]([5meC])}$$$$",complexNotation);
+
+        
+        complexNotation=SimpleNotationParser.getComplexNotation(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+        assertEquals("RNA1{[OP([*])([*])=O |$;;_R1;_R2;$|].R(A)[sP].RP.R(G)[OP([*])([*])=O |$;;_R1;_R2;$|].[LR]([5meC])}$$$$",complexNotation);
         
 		
         complexNotation=SimpleNotationParser.getComplexNotation(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
         assertEquals("PEPTIDE1{G.G.K.A.A.[seC]}$$$$",complexNotation);
+        
+        
+        complexNotation=SimpleNotationParser.getComplexNotation(getInlineSmilesPeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
+        assertEquals("PEPTIDE1{G.G.K.A.[C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|].[seC]}$$$$",complexNotation);        
+        
+        
         
         complexNotation=SimpleNotationParser.getComplexNotation(getSimpleChemNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
         assertEquals("CHEM1{PEG2}$$$$",complexNotation);
@@ -144,8 +193,7 @@ public class SimpleNotationParserTest {
 		assertEquals("G.G.K.Q.Q.[seC]",result);
 		
 		result=SimpleNotationParser.replaceMonomer(getSimpleChemNotation(), Monomer.CHEMICAL_POLYMER_TYPE, "PEG2", "SS3");
-		assertEquals("SS3",result);
-		
+		assertEquals("SS3",result);			
 		
 	}
 	
@@ -155,8 +203,16 @@ public class SimpleNotationParserTest {
 		String result=SimpleNotationParser.getSimplePolymerSMILES(getSimpleRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
 		assertEquals("Cc1cn([C@H]2O[C@@]3(COP(O)(=O)O[C@@H]4[C@@H](COP(O)(=O)O[C@@H]5[C@@H](COP(S)(=O)O[C@@H]6[C@@H](COP(O)([*])=O)O[C@@H]([C@@H]6O)n6cnc7c(N)ncnc67)O[C@@H]([*])[C@@H]5O)O[C@@H]([C@@H]4O)n4cnc5c4nc(N)[nH]c5=O)CO[C@@H]2[C@@H]3O[*])c(=O)nc1N |r,$;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;_R1;;;;;;;;;;;;;;;;;;_R3;;;;;;;;;;;;;;;;;;;;;;;_R2;;;;;$|",result);
 		
+		result=SimpleNotationParser.getSimplePolymerSMILES(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+		assertEquals("Cc1cn([C@H]2O[C@@]3(COP(O)(=O)O[C@@H]4[C@@H](COP(O)(=O)O[C@@H]5[C@@H](COP(S)(=O)O[C@@H]6[C@@H](COP(O)([*])=O)O[C@@H]([C@@H]6O)n6cnc7c(N)ncnc67)O[C@@H]([*])[C@@H]5O)O[C@@H]([C@@H]4O)n4cnc5c4nc(N)[nH]c5=O)CO[C@@H]2[C@@H]3O[*])c(=O)nc1N |r,$;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;_R1;;;;;;;;;;;;;;;;;;_R3;;;;;;;;;;;;;;;;;;;;;;;_R2;;;;;$|",result);
+		
+		
 		result=SimpleNotationParser.getSimplePolymerSMILES(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
 		assertEquals("C[C@H](NC(=O)[C@H](C)NC(=O)[C@H](CCCCN[*])NC(=O)CNC(=O)CN[*])C(=O)N[C@@H](C[SeH])C([*])=O |r,$;;;;;;;;;;;;;;;;_R3;;;;;;;;;;_R1;;;;;;;;_R2;$|",result);
+		
+		result=SimpleNotationParser.getSimplePolymerSMILES(getInlineSmilesPeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
+		assertEquals("C[C@H](NC(=O)[C@H](C)NC(=O)[C@H](CCCCN[*])NC(=O)CNC(=O)CN[*])C(=O)N[C@@H](C[SeH])C([*])=O |r,$;;;;;;;;;;;;;;;;_R3;;;;;;;;;;_R1;;;;;;;;_R2;$|",result);
+		
 		
 		result=SimpleNotationParser.getSimplePolymerSMILES(getSimpleChemNotation(), Monomer.CHEMICAL_POLYMER_TYPE);
 		assertEquals("[*]OCCOCCO[*] |$_R1;;;;;;;;_R2$|",result);
@@ -170,7 +226,11 @@ public class SimpleNotationParserTest {
 		
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getSimpleRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE));
 		
+		assertTrue(SimpleNotationParser.validateSimpleNotation(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE));
+		
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE));
+		
+		assertTrue(SimpleNotationParser.validateSimpleNotation(getInlineSmilesPeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE));
 		
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getSimpleChemNotation(), Monomer.CHEMICAL_POLYMER_TYPE));
 		
@@ -186,7 +246,18 @@ public class SimpleNotationParserTest {
         assertEquals("C36H49N13O27P4S1",mi.getMolecularFormula());
         assertEquals(1251.153200165,mi.getExactMass(),1e-15);
         
+        mi=SimpleNotationParser.getMoleculeInfo(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+        assertEquals(1251.805,mi.getMolecularWeight(),1e-15);
+        assertEquals("C36H49N13O27P4S1",mi.getMolecularFormula());
+        assertEquals(1251.153200165,mi.getExactMass(),1e-15);
+        
+        
         mi=SimpleNotationParser.getMoleculeInfo(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
+        assertEquals(552.48,mi.getMolecularWeight(),1e-15);
+        assertEquals("C19H35N7O7Se1",mi.getMolecularFormula());
+        assertEquals(553.176318337,mi.getExactMass(),1e-15);
+        
+        mi=SimpleNotationParser.getMoleculeInfo(getInlineSmilesPeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
         assertEquals(552.48,mi.getMolecularWeight(),1e-15);
         assertEquals("C19H35N7O7Se1",mi.getMolecularFormula());
         assertEquals(553.176318337,mi.getExactMass(),1e-15);
@@ -206,42 +277,23 @@ public class SimpleNotationParserTest {
         
 	}
 	
+	
+	
+	
 	@Test
-	public void testNucleotideFunctions() throws NotationException, MonomerException, IOException, JDOMException, StructureException{
+	public void testGetNucleotideList() throws NotationException, MonomerException, IOException, JDOMException, StructureException{
       String notation = "R(C)P.R(G)P.R(A)P.R(U)P.R(A)P.R(U)P.R(G)P.R(G)P.R(G)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(A)P.R(A)P.[dR](U)P.[dR](U)";
+      
       System.out.println("getNucleotideList Start: " + System.currentTimeMillis());
-      List<Nucleotide> nucleotideList = SimpleNotationParser.getNucleotideList(notation);
+      List<Nucleotide> nucleotideList = SimpleNotationParser.getNucleotideList(notation);      
       System.out.println("getNucleotideList End: " + System.currentTimeMillis());
 
       System.out.println("getNucleotideList wo validation Start : " + System.currentTimeMillis());
       nucleotideList = SimpleNotationParser.getNucleotideList(notation, false);
       System.out.println("getNucleotideList wo validation End: " + System.currentTimeMillis());
 
-      for (int i = 0; i < nucleotideList.size(); i++) {
-          Nucleotide nuc = nucleotideList.get(i);
-          System.out.println("Symbol: " + nuc.getSymbol());
-          System.out.println("Modified: " + nuc.isModified());
-          System.out.println("Notation: " + nuc.getNotation());
-      }
-      
       assertEquals(21,nucleotideList.size());
       
-      String nucleotideSeq =SimpleNotationParser.getNucleotideSequence(notation);
-      System.out.println("Sequence: " + nucleotideSeq);
-      
-      assertEquals("CGAUAUGGGCUGAAUACAAUU",nucleotideSeq);
-
-      notation = "K.C.C.C.W.K.[seC]";
-      System.out.println("Peptide Sequence: " + SimpleNotationParser.getPeptideSequence(notation));
-      assertEquals("KCCCWKC",SimpleNotationParser.getPeptideSequence(notation));
-      System.out.println("Modified Peptide Sequence: " + SimpleNotationParser.getModifiedPeptideSequence(notation, "|"));
-      assertEquals("K|C|C|C|W|K|seC",SimpleNotationParser.getModifiedPeptideSequence(notation, "|"));
-
-
-      notation = "R(A)[sP].R(G)P.R(C).PEG.[LR]([5meC])[sP].R(PEG)";
-      //valid = SimpleNotationParser.getStrictNucleotideList(notation, true);
-      System.out.println("Input sequence " + notation);
-      nucleotideList = SimpleNotationParser.getStrictNucleotideList(notation, false);
       StringBuffer outputList = new StringBuffer();
       for (int i = 0; i < nucleotideList.size(); i++) {
           Nucleotide nuc = nucleotideList.get(i);
@@ -250,14 +302,98 @@ public class SimpleNotationParserTest {
           System.out.println("Notation: " + nuc.getNotation());
           outputList.append(nuc.getSymbol());
       }
+      
+      
+      assertEquals("CGAUAUGGGCUGAAUACAAdUdU",outputList.toString());
+      
+            
+
+      notation = "R(A)[sP].R(G)P.R(C).PEG.[LR]([5meC])[sP].R(PEG)";
+           
+      
+      
+      nucleotideList = SimpleNotationParser.getStrictNucleotideList(notation, false);
+      outputList = new StringBuffer();
+      for (int i = 0; i < nucleotideList.size(); i++) {
+          Nucleotide nuc = nucleotideList.get(i);
+          System.out.println("Symbol: " + nuc.getSymbol());
+          System.out.println("Modified: " + nuc.isModified());
+          System.out.println("Notation: " + nuc.getNotation());
+          outputList.append(nuc.getSymbol());
+      }
       assertEquals(6,nucleotideList.size());
-      System.out.println("Output List: " + outputList.toString());
+      
       assertEquals("modAGmodCXmodCendX",outputList.toString());
 		
 	}
 	
 	
-	 
+	
+	@Test
+	public void testGetNucleotideSequence() throws NotationException, MonomerException, IOException, JDOMException, StructureException{
+		
+		String notation = "R(C)P.R(G)P.R(A)P.R(U)P.R(A)P.R(U)P.R(G)P.R(G)P.R(G)P.R(C)P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(A)P.R(A)P.[dR](U)P.[dR](U)";
+		String nucleotideSeq =SimpleNotationParser.getNucleotideSequence(notation);
+	      
+	    assertEquals("CGAUAUGGGCUGAAUACAAUU",nucleotideSeq);
+	    
+	    //replaced a C with 5meC (modified C)
+	    notation = "R(C)P.R(G)P.R(A)P.R(U)P.R(A)P.R(U)P.R(G)P.R(G)P.R(G)P.R([5meC])P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(A)P.R(A)P.[dR](U)P.[dR](U)";
+		nucleotideSeq =SimpleNotationParser.getNucleotideSequence(notation);
+	      
+	    assertEquals("CGAUAUGGGCUGAAUACAAUU",nucleotideSeq);
+	    
+	    
+	    //replace a C with Inline Smiles 
+	    //TODO not working yet
+	    /*notation = "R([Cc1cn([*])c(=O)nc1N |$;;;;_R1;;;;;$|])P.R(G)P.R(A)P.R(U)P.R(A)P.R(U)P.R(G)P.R(G)P.R(G)P.R([5meC])P.R(U)P.R(G)P.R(A)P.R(A)P.R(U)P.R(A)P.R(C)P.R(A)P.R(A)P.[dR](U)P.[dR](U)";
+		nucleotideSeq =SimpleNotationParser.getNucleotideSequence(notation);
+	    
+		assertEquals("CGAUAUGGGCUGAAUACAAUU",nucleotideSeq);*/
+	    
+
+	}
+	
+	
+	
+	@Test
+	public void testGetPeptideSequence() throws NotationException,
+			MonomerException, IOException, JDOMException, StructureException {
+		
+		SimpleNotationParser.resetSeed();
+		
+		String notation = "K.C.C.C.W.K.[seC]";
+		
+		assertEquals("KCCCWKC",
+				SimpleNotationParser.getPeptideSequence(notation));
+		
+		assertEquals("K|C|C|C|W|K|seC",
+				SimpleNotationParser.getModifiedPeptideSequence(notation, "|"));
+	
+		//Smiles is Alanine 
+		String peptide="G.G.K.A.[C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|].[seC]";
+		assertEquals("GGKAAC",
+				SimpleNotationParser.getPeptideSequence(peptide));
+	
+		
+		assertEquals("G|G|K|A|A|seC",
+				SimpleNotationParser.getModifiedPeptideSequence(peptide,"|"));
+	
+		
+		//Smiles is not in local db
+		peptide="G.G.K.A.[C[C@H](N[*])C(=O)C[*] |$;;;_R1;;;;_R2$|].[seC]";
+		assertEquals("GGKAXC",
+				SimpleNotationParser.getPeptideSequence(peptide));
+		
+		assertEquals("G|G|K|A|AM#1|seC",
+				SimpleNotationParser.getModifiedPeptideSequence(peptide,"|"));
+	
+		
+	}
+	
+	
+	
+		 
 	    
 
 
