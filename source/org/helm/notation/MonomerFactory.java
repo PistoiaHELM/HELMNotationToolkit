@@ -214,6 +214,10 @@ public class MonomerFactory {
 		return instance;
 	}
 
+	public static void setDBChanged(boolean isChanged) {
+	    dbChanged = isChanged;	
+	}
+	
 	/**
 	 * Returns whether one of the stored databases has changed, for example by
 	 * adding or removing monomers.

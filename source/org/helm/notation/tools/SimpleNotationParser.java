@@ -1725,6 +1725,7 @@ public class SimpleNotationParser {
                 m.setAttachmentList(al);
                 try {
                     monomerStore.addNewMonomer(m);
+                    MonomerFactory.setDBChanged(true);
                 } catch (Exception ex) {
                     throw new NotationException("Unable to add adhoc new monomer into monomer databse", ex);
                 }

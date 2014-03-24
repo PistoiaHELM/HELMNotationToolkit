@@ -627,6 +627,7 @@ public class ComplexNotationParser {
 		validateNotationFormat(extendedNotation);
 		ComplexPolymer cp = parse(extendedNotation, monomerStoreToUse);
 		validateComplexPolymer(cp, monomerStoreToUse);
+		
 		return true;
 	}
 
