@@ -211,7 +211,7 @@
 		<mkdir dir="${test.dest}"/>
 		<mkdir dir="${reports}"/>
 		<copy todir="${test.dest}"   filtering="yes">
-			<fileset dir="${src.dir}">
+			<fileset dir="${test.src}">
 				<include name="**/*.xhelm" />
 			</fileset>
 		</copy>
