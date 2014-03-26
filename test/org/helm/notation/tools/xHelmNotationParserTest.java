@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
 
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerStore;
@@ -23,7 +25,7 @@ public class xHelmNotationParserTest {
 
 	private Element getXHELMRootElement( String resource) throws JDOMException, IOException {
 		
-		FileInputStream in = new FileInputStream( resource);
+		InputStream in = this.getClass().getResourceAsStream( resource);
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(in);
 
@@ -34,7 +36,7 @@ public class xHelmNotationParserTest {
 	public void testParseXHelmNotation() throws JDOMException, IOException,
 			MonomerException, NotationException, StructureException, ClassNotFoundException, PluginException {
 
-		Element xHELMRootElement = getXHELMRootElement( "samples/PeptideLinkerNucleotide.xhelm");
+		Element xHELMRootElement = getXHELMRootElement( "resources/PeptideLinkerNucleotide.xhelm");
 		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);
 		//read monomers to store
 		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);	
@@ -55,7 +57,7 @@ public class xHelmNotationParserTest {
 		
 		
 		
-		xHELMRootElement = getXHELMRootElement("samples/simple.xhelm" );
+		xHELMRootElement = getXHELMRootElement("resources/simple.xhelm" );
 		helmString = xHelmNotationParser.getComplexNotationString(
 				xHELMRootElement);
 
@@ -85,7 +87,7 @@ public class xHelmNotationParserTest {
 		
 
 		
-		xHELMRootElement = getXHELMRootElement("samples/InlineSmiles.xhelm" );
+		xHELMRootElement = getXHELMRootElement("resources/InlineSmiles.xhelm" );
 		helmString = xHelmNotationParser.getComplexNotationString(
 				xHELMRootElement);
 
@@ -106,7 +108,7 @@ public class xHelmNotationParserTest {
 	
 	@Test
 	public void testXHelmWithInlineSmiles() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
-		Element xHELMRootElement = getXHELMRootElement("samples/simpleWithInlineSmiles.xhelm");
+		Element xHELMRootElement = getXHELMRootElement("resources/simpleWithInlineSmiles.xhelm");
 		
 		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
 		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
@@ -123,7 +125,7 @@ public class xHelmNotationParserTest {
 	@Test
 	public void testXHelmValidation() throws JDOMException, IOException, MonomerException    {
 
-		Element xHELMRootElement = getXHELMRootElement("samples/bad.xhelm");
+		Element xHELMRootElement = getXHELMRootElement("resources/bad.xhelm");
 		
 		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
 		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);

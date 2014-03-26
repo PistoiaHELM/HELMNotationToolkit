@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerStore;
@@ -27,7 +28,7 @@ public class xHelmNotationExporterTest {
 	public void testExport() throws JDOMException, IOException, MonomerException {
 		
 		//import
-		FileInputStream in = new FileInputStream("samples/PeptideLinkerNucleotide.xhelm");
+		InputStream in = this.getClass().getResourceAsStream("resources/PeptideLinkerNucleotide.xhelm");
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(in);
 		
@@ -39,7 +40,8 @@ public class xHelmNotationExporterTest {
 		
 		XMLOutputter outputter=new XMLOutputter(Format.getPrettyFormat()) ;
 		String exportedDocString=outputter.outputString(exportedDoc);	
-
+		
+		
 		
 		String expectedDocString=outputter.outputString(doc);
 				
