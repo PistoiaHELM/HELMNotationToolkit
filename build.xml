@@ -210,6 +210,11 @@
 	<target name="javac-tests" depends="compile-sample" description="Compiles test code">
 		<mkdir dir="${test.dest}"/>
 		<mkdir dir="${reports}"/>
+		<copy todir="${test.dest}"   filtering="yes">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xhelm" />
+			</fileset>
+		</copy>
 		<javac srcdir="${test.src}" destdir="${test.dest}" source="1.6" target="1.6" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="run.class.path"/>
 		</javac>
