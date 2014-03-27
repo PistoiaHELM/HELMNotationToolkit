@@ -28,13 +28,15 @@ public class xHelmNotationParser {
 			throws MonomerException, IOException {
 		MonomerStore monomerStore = new MonomerStore();
 		Element monomerListElement = rootElement.getChild("Monomers");
-		@SuppressWarnings("unchecked")
-		List<Element> elementList = (List<Element>) monomerListElement
-				.getChildren("Monomer");
-
-		for (Element monomerElement : elementList) {
-			Monomer m = MonomerParser.getMonomer(monomerElement);
-			monomerStore.addMonomer(m);
+		if ( monomerListElement != null) {
+			@SuppressWarnings("unchecked")
+			List<Element> elementList = (List<Element>) monomerListElement
+					.getChildren("Monomer");
+	
+			for (Element monomerElement : elementList) {
+				Monomer m = MonomerParser.getMonomer(monomerElement);
+				monomerStore.addMonomer(m);
+			}
 		}
 		return monomerStore;
 	}

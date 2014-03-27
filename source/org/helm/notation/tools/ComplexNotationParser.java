@@ -266,7 +266,7 @@ public class ComplexNotationParser {
 					+ NotationConstant.MONOMER_COUNT_THRESHOLD + "]");
 		}
 
-		ComplexPolymer complexPolymer = parse(extendedNotation);
+		ComplexPolymer complexPolymer = parse(extendedNotation, monomerStoreToUse);
 		validateComplexPolymer(complexPolymer, monomerStoreToUse);
 
 		List<PolymerNode> nodeList = complexPolymer.getPolymerNodeList();
@@ -1047,8 +1047,10 @@ public class ComplexNotationParser {
 
 		// add adhoc chem monomer into monomer database if adhoc
 		if (id.startsWith(Monomer.CHEMICAL_POLYMER_TYPE)) {
-			label = SimpleNotationParser.preprocessChemNode(label,
-					monomerStoreToUse);
+//			label = SimpleNotationParser.preprocessChemNode(label,
+//					monomerStoreToUse);
+			
+			label = SimpleNotationParser.processNode(label,Monomer.CHEMICAL_POLYMER_TYPE,monomerStoreToUse);
 		}
 
 		PolymerNode node = new PolymerNode();
@@ -2262,7 +2264,7 @@ public class ComplexNotationParser {
 		int totalMonomerCount = 0;
 
 		List<PolymerNode> nodes = ComplexNotationParser
-				.getPolymerNodeList(notation);
+				.getPolymerNodeList(notation, monomerStoreToUse);
 		for (PolymerNode node : nodes) {
 			String polymerType = node.getType();
 			String label = node.getLabel();
@@ -2438,5 +2440,36 @@ public class ComplexNotationParser {
 			nodeStrucMap.put(nodeId, struc);
 		}
 		return nodeStrucMap;
+	}
+	
+	/*
+	 * This function replaces smiles in complex notation with temporary ids
+	 * 
+	 */
+	public static String getNotationByReplacingSmiles(String helmString,MonomerStore monomerStore) throws NotationException, MonomerException, JDOMException, IOException{
+		
+		String allNodeString = getAllNodeString(helmString);
+		String restOfNotation = helmString.substring(allNodeString
+				.length());
+		List<PolymerNode> polymers = getPolymerNodeList(allNodeString);
+		StringBuffer sb = new StringBuffer();
+		for (PolymerNode polymer : polymers) {
+			if (sb.length() > 0) {
+				sb.append(ComplexNotationParser.LIST_LEVEL_DELIMITER);
+			}
+			sb.append(polymer.getId());
+			sb.append(ComplexNotationParser.NODE_LABEL_START_SYMBOL);
+
+			String notation = polymer.getLabel();
+			String result = SimpleNotationParser.getNotationByReplacingSmiles(notation, polymer.getType(), monomerStore);
+			sb.append(result);
+			
+			sb.append(ComplexNotationParser.NODE_LABEL_END_SYMBOL);
+		}
+		return sb.toString() + restOfNotation;
+		
+		
+		
+		
 	}
 }
