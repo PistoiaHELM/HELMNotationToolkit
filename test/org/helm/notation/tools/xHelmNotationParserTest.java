@@ -113,6 +113,25 @@ public class xHelmNotationParserTest {
 	}
 	
 	@Test
+	public void testQRPeptide() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
+		Element xHELMRootElement = getXHELMRootElement("resources/qr_peptide.xhelm" );
+		String helmString = xHelmNotationParser.getComplexNotationString(
+				xHELMRootElement);
+
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+		
+		assertEquals(
+				"PEPTIDE1{[QR]}$$$$",
+				helmString);
+		
+		
+		
+		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
+	}
+		
+	
+	
+	@Test
 	public void testXHelmWithInlineSmiles() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
 		Element xHELMRootElement = getXHELMRootElement("resources/simpleWithInlineSmiles.xhelm");
 		

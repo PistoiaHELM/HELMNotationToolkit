@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Xhelm>
+   <HelmNotation>PEPTIDE1{[QR]}$$$$</HelmNotation>
+   <Monomers>
+        <Monomer>
+         <MonomerID>QR</MonomerID>
+         <MonomerSmiles>CCC1CCC2CCCCC3CCC(C)CC4CCCCC(C1)C1C2C3C41</MonomerSmiles>         
+         <MonomerMolFile>H4sIAAAAAAAAAK2WvW7DMAyEdz2Fhq4VSMrWz5ykaIemW9//UXpO0FgJmUWMYCTCB/rAO1pOQoxf54+fw+fpO96WHCPjixNt64Jo3IcQpcaMGjKv3nv8FZQHVL9zqiSbHgTXNcsuFw/xmcR4PahQ6rz0WRVBC9d7l9J4ToVS4Up+FYiI19Gu4kl3dyTpf86edB0quENqKc507zKdV+GUWybnjAYVx4yGDl6TrmfS47OLY5mdKncnatoRnj8quTnTdancJu1yND518+mOb8wXqHgc7W8GT7p7By4VTguaue5Ko+lfkl5b3Xae03hTwa5RW2dUMBy5fD7SpikKs6ZAi0W3uT9SFK4WZYMCFZN2TVFYLcpGZ9X01iOTSXVnKGTtDVS0AgpZ5wvEOklQ0S5QaLhAW6zTAWJDoUQxFGpknQMQ63yBDG8YsGhvQKK9ARk9bFTnCyTKG/5gns7HEN6wwh+ATvPdeAoAAA==</MonomerMolFile>
+         <MonomerType>Backbone</MonomerType>
+         <PolymerType>PEPTIDE</PolymerType>
+         <NaturalAnalog>X</NaturalAnalog>
+         <MonomerName>QRTest</MonomerName>
+         <Attachments>
+            <Attachment>
+               <AttachmentID>R2-OH</AttachmentID>
+               <AttachmentLabel>R2</AttachmentLabel>
+               <CapGroupName>OH</CapGroupName>
+               <CapGroupSmiles>O[*] |$;_R2$|</CapGroupSmiles>
+            </Attachment>
+            <Attachment>
+               <AttachmentID>R1-H</AttachmentID>
+               <AttachmentLabel>R1</AttachmentLabel>
+               <CapGroupName>H</CapGroupName>
+               <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
+            </Attachment>
+         </Attachments>
+      </Monomer>
+   </Monomers>
+</Xhelm>
+
