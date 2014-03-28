@@ -174,6 +174,7 @@ public class ExtinctionCoefficientCalculator {
      * @throws StructureException
      * @throws CalculationException 
      */
+    
     public float calculateFromComplexNotation(String complexNotation, int unitType,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException, CalculationException {
         
     	float result = 0.0f;
@@ -188,7 +189,7 @@ public class ExtinctionCoefficientCalculator {
                     ext = ext*1000;
                 }
             } else if (polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE)) {
-                ext = calculateFromPeptidePolymerNotation(notation);
+                ext = calculateFromPeptidePolymerNotation(notation,monomerStore);
                 if (unitType == RNA_UNIT_TYPE) {
                     ext = ext/1000;
                 }
@@ -326,9 +327,22 @@ public class ExtinctionCoefficientCalculator {
         }
         return calculate(ids);
     }
-
+    
+    
     public float calculateFromPeptidePolymerNotation(String simpleNotation) throws NotationException, MonomerException, CalculationException, IOException, JDOMException, StructureException {
-        List<Monomer> monomers = SimpleNotationParser.getMonomerList(simpleNotation, Monomer.PEPTIDE_POLYMER_TYPE);
+    	MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return calculateFromPeptidePolymerNotation(simpleNotation,factory.getMonomerStore());
+    }
+    
+
+    public float calculateFromPeptidePolymerNotation(String simpleNotation,MonomerStore monomerStore) throws NotationException, MonomerException, CalculationException, IOException, JDOMException, StructureException {
+        List<Monomer> monomers = SimpleNotationParser.getMonomerList(simpleNotation, Monomer.PEPTIDE_POLYMER_TYPE,monomerStore);
         List<String> ids = new ArrayList<String>();
         for (Monomer monomer : monomers) {
             String id = monomer.getNaturalAnalog();

@@ -148,10 +148,10 @@ public class ComplexNotationParser {
 			MonomerStore monomerStore) throws IOException, NotationException,
 			MonomerException, StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		List<Molecule> list = getComplexPolymerStructure(extendedNotation,
-				monomerStoreToUse);
+				monomerStore);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			Molecule m = list.get(i);
@@ -180,10 +180,10 @@ public class ComplexNotationParser {
 			throws IOException, NotationException, MonomerException,
 			StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		List<Molecule> list = getComplexPolymerStructure(extendedNotation,
-				monomerStoreToUse);
+				monomerStore);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			Molecule m = list.get(i);
@@ -198,6 +198,13 @@ public class ComplexNotationParser {
 		return StructureParser.getUniqueSmiles(mixtureSmiles);
 	}
 
+	
+	public static boolean containsGenericStructure(String extendendNotation)
+			throws NotationException, MonomerException, IOException,
+			JDOMException {
+		return containsGenericStructure(extendendNotation,null);
+	}
+	
 	/**
 	 * This method determines if the extendendNotation contains generic
 	 * structure (cannot generate SMILES)
@@ -206,17 +213,19 @@ public class ComplexNotationParser {
 	 *            the complete structure extendendNotation
 	 * @return true or false
 	 */
-	public static boolean containsGenericStructure(String extendendNotation)
+	public static boolean containsGenericStructure(String extendendNotation,MonomerStore monomerStore)
 			throws NotationException, MonomerException, IOException,
 			JDOMException {
+		monomerStore=checkForMonomerStore(monomerStore);
+	
 		String allNodeString = getAllNodeString(extendendNotation);
-		List<PolymerNode> nodeList = getPolymerNodeList(allNodeString);
+		List<PolymerNode> nodeList = getPolymerNodeList(allNodeString,monomerStore);
 		for (int i = 0; i < nodeList.size(); i++) {
 			PolymerNode node = nodeList.get(i);
 			if (node.getId().startsWith(Monomer.CHEMICAL_POLYMER_TYPE)) {
 				String monomerID = node.getLabel();
 				Monomer monomer = SimpleNotationParser.getMonomer(monomerID,
-						Monomer.CHEMICAL_POLYMER_TYPE);
+						Monomer.CHEMICAL_POLYMER_TYPE,monomerStore);
 
 				if (null == monomer.getCanSMILES()
 						|| monomer.getCanSMILES().length() == 0) {
@@ -256,18 +265,18 @@ public class ComplexNotationParser {
 			throws IOException, NotationException, MonomerException,
 			StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		int totalMonomerCount = getTotalMonomerCount(extendedNotation,
-				monomerStoreToUse);
+				monomerStore);
 		if (totalMonomerCount > NotationConstant.MONOMER_COUNT_THRESHOLD) {
 			throw new NotationException("Total monomer count ["
 					+ totalMonomerCount + "] is above support threshold ["
 					+ NotationConstant.MONOMER_COUNT_THRESHOLD + "]");
 		}
 
-		ComplexPolymer complexPolymer = parse(extendedNotation, monomerStoreToUse);
-		validateComplexPolymer(complexPolymer, monomerStoreToUse);
+		ComplexPolymer complexPolymer = parse(extendedNotation, monomerStore);
+		validateComplexPolymer(complexPolymer, monomerStore);
 
 		List<PolymerNode> nodeList = complexPolymer.getPolymerNodeList();
 		List<PolymerEdge> edgeList = complexPolymer.getPolymerEdgeList();
@@ -287,7 +296,7 @@ public class ComplexNotationParser {
 		// convert each polymer node into RgroupStructure
 		// add original poymer ID into rgroup Atom key
 		Map<String, RgroupStructure> nodeStrucMap = getPolymerNodeStructureMap(
-				nodeList, monomerStoreToUse);
+				nodeList, monomerStore);
 		for (String nodeID : nodeStrucMap.keySet()) {
 			RgroupStructure struc = nodeStrucMap.get(nodeID);
 			Map<String, MolAtom> rgMap = struc.getRgroupMap();
@@ -423,7 +432,7 @@ public class ComplexNotationParser {
 
 		// remove all remaining R groups not used in inter polymer connection
 		List<Molecule> l = getMoleculeList(nodeList, groupStructureMap,
-				monomerStoreToUse);
+				monomerStore);
 		return l;
 	}
 
@@ -626,12 +635,12 @@ public class ComplexNotationParser {
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, IOException, StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		// validate
 		validateNotationFormat(extendedNotation);
-		ComplexPolymer cp = parse(extendedNotation, monomerStoreToUse);
-		validateComplexPolymer(cp, monomerStoreToUse);
+		ComplexPolymer cp = parse(extendedNotation, monomerStore);
+		validateComplexPolymer(cp, monomerStore);
 
 		return true;
 	}
@@ -659,7 +668,7 @@ public class ComplexNotationParser {
 			MonomerStore monomerStore) throws NotationException, IOException,
 			MonomerException, StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		List<PolymerNode> nodeList = complexPolymer.getPolymerNodeList();
 		List<PolymerEdge> edgeList = complexPolymer.getPolymerEdgeList();
@@ -683,7 +692,7 @@ public class ComplexNotationParser {
 
 		// this call also validates simple polymers
 		Map<String, RgroupStructure> polymerNodeStructureMap = getPolymerNodeStructureMap(
-				nodeList, monomerStoreToUse);
+				nodeList, monomerStore);
 
 		if (null != edgeList) {
 			for (PolymerEdge edge : edgeList) {
@@ -976,7 +985,7 @@ public class ComplexNotationParser {
 	public static List<PolymerNode> getPolymerNodeList(String allNodeString,
 			MonomerStore monomerStore) throws NotationException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		List<PolymerNode> list = new ArrayList<PolymerNode>();
 		if (null != allNodeString && allNodeString.length() > 0) {
@@ -996,7 +1005,7 @@ public class ComplexNotationParser {
 
 			while (delimiterStartPos > 0 && endPos > 0) {
 				nodeString = nodes.substring(nodeStartPos, endPos);
-				PolymerNode node = getPolymerNode(nodeString, monomerStoreToUse);
+				PolymerNode node = getPolymerNode(nodeString, monomerStore);
 				list.add(node);
 
 				nodeStartPos = endPos + 1;
@@ -1028,7 +1037,7 @@ public class ComplexNotationParser {
 	private static PolymerNode getPolymerNode(String nodeString,
 			MonomerStore monomerStore) throws NotationException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		int startSymbolPos = nodeString.indexOf(NODE_LABEL_START_SYMBOL);
 		int endSymbolPos = nodeString.indexOf(NODE_LABEL_END_SYMBOL);
@@ -1048,9 +1057,9 @@ public class ComplexNotationParser {
 		// add adhoc chem monomer into monomer database if adhoc
 		if (id.startsWith(Monomer.CHEMICAL_POLYMER_TYPE)) {
 //			label = SimpleNotationParser.preprocessChemNode(label,
-//					monomerStoreToUse);
+//					monomerStore);
 			
-			label = SimpleNotationParser.processNode(label,Monomer.CHEMICAL_POLYMER_TYPE,monomerStoreToUse);
+			label = SimpleNotationParser.processNode(label,Monomer.CHEMICAL_POLYMER_TYPE,monomerStore);
 		}
 
 		PolymerNode node = new PolymerNode();
@@ -1138,6 +1147,14 @@ public class ComplexNotationParser {
 	public static List<RNAPolymerNode> getRNAPolymerNodeList(
 			String complexNotation) throws NotationException, MonomerException,
 			IOException, JDOMException, StructureException {
+		return getRNAPolymerNodeList(complexNotation,null);
+	}
+	
+	
+	public static List<RNAPolymerNode> getRNAPolymerNodeList(
+			String complexNotation,MonomerStore monomerStore) throws NotationException, MonomerException,
+			IOException, JDOMException, StructureException {
+		monomerStore=checkForMonomerStore(monomerStore);
 		List<PolymerNode> list = getPolymerNodeList(getAllNodeString(complexNotation));
 		String allNodeAnnotationString = getAllNodeLabelString(complexNotation);
 		Map<String, String> map = getPolymerNodeIDAnnotationMap(allNodeAnnotationString);
@@ -1147,7 +1164,7 @@ public class ComplexNotationParser {
 			if (node.getType().equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
 				RNAPolymerNode rnaNode = new RNAPolymerNode(node);
 				List<Nucleotide> nucList = SimpleNotationParser
-						.getNucleotideList(node.getLabel());
+						.getNucleotideList(node.getLabel(),monomerStore);
 				String seq = SimpleNotationParser
 						.getNucleotideSequence(nucList);
 				rnaNode.setSequence(seq);
@@ -1468,13 +1485,13 @@ public class ComplexNotationParser {
 			throws NotationException, MonomerException, IOException,
 			ClassNotFoundException, StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		validateNotationFormat(complexNotation);
-		ComplexPolymer cp = parse(complexNotation, monomerStoreToUse);
+		ComplexPolymer cp = parse(complexNotation, monomerStore);
 
 		if (includeValidation) {
-			validateComplexPolymer(cp, monomerStoreToUse);
+			validateComplexPolymer(cp, monomerStore);
 		}
 
 		List<PolymerNode> nodeList = cp.getPolymerNodeList();
@@ -1486,7 +1503,7 @@ public class ComplexNotationParser {
 					&& node.getLabel().startsWith(
 							SimpleNotationParser.AD_HOC_MONOMER_ID_PREFIX)) {
 
-				Monomer m = monomerStoreToUse.getMonomer(
+				Monomer m = monomerStore.getMonomer(
 						Monomer.CHEMICAL_POLYMER_TYPE, node.getLabel());
 
 				String smiles = m.getCanSMILES();
@@ -1552,11 +1569,11 @@ public class ComplexNotationParser {
 				if (node.getId().equals(nodeId)) {
 					Map.Entry<Integer, String> canEntry = SimpleNotationParser
 							.getSimpleCanonicalNotationMapEntry(
-									node.getLabel(), node.getType());
+									node.getLabel(), node.getType(),monomerStore);
 					node.setLabel(canEntry.getValue());
 					offset = canEntry.getKey().intValue();
 					monomerCount = SimpleNotationParser.getMonomerCount(
-							node.getLabel(), node.getType());
+							node.getLabel(), node.getType(),monomerStore);
 					break;
 				}
 			}
@@ -1743,6 +1760,11 @@ public class ComplexNotationParser {
 		return sb.toString();
 	}
 
+	
+	public static String getCombinedComlexNotation(String complexNotation1,
+			String complexNotation2) throws NotationException, MonomerException {
+		return getCombinedComlexNotation(complexNotation1,complexNotation2,null);
+	}
 	/**
 	 * The method generates the complex the notation for two complex notations
 	 * combined. There will be no chemcial conection and base pairing between
@@ -1757,7 +1779,8 @@ public class ComplexNotationParser {
 	 * @throws org.helm.notation.MonomerException
 	 */
 	public static String getCombinedComlexNotation(String complexNotation1,
-			String complexNotation2) throws NotationException, MonomerException {
+			String complexNotation2,MonomerStore monomerStore) throws NotationException, MonomerException {
+		monomerStore=checkForMonomerStore(monomerStore);
 		if (null == complexNotation1 || complexNotation1.trim().length() == 0) {
 			return complexNotation2;
 		}
@@ -1772,7 +1795,7 @@ public class ComplexNotationParser {
 		String edgeString1 = getAllEdgeString(complexNotation1);
 		String basePairString1 = getAllBasePairString(complexNotation1);
 		String nodeLabelString1 = getAllNodeLabelString(complexNotation1);
-		List<PolymerNode> nodeList1 = getPolymerNodeList(nodeString1);
+		List<PolymerNode> nodeList1 = getPolymerNodeList(nodeString1,monomerStore);
 		for (PolymerNode node : nodeList1) {
 			String type = node.getType();
 			if (type.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
@@ -1792,7 +1815,7 @@ public class ComplexNotationParser {
 		String edgeString2 = getAllEdgeString(complexNotation2);
 		String basePairString2 = getAllBasePairString(complexNotation2);
 		String nodeLabelString2 = getAllNodeLabelString(complexNotation2);
-		List<PolymerNode> nodeList2 = getPolymerNodeList(nodeString2);
+		List<PolymerNode> nodeList2 = getPolymerNodeList(nodeString2,monomerStore);
 		for (PolymerNode node : nodeList2) {
 			String type = node.getType();
 			String oldId = node.getId();
@@ -1887,9 +1910,19 @@ public class ComplexNotationParser {
 		return result;
 	}
 
+	
 	private static String getBasePairString(RNAPolymerNode node1,
 			RNAPolymerNode node2) throws NotationException, IOException,
 			JDOMException, MonomerException, StructureException {
+		return getBasePairString(node1,node2,null); 
+	}
+	
+	private static String getBasePairString(RNAPolymerNode node1,
+			RNAPolymerNode node2,MonomerStore monomerStore) throws NotationException, IOException,
+			JDOMException, MonomerException, StructureException {
+		
+		monomerStore=checkForMonomerStore(monomerStore);
+		
 		String basePair = "";
 		String seq1 = node1.getSequence().replaceAll("T", "U");
 		String seq2 = node2.getSequence().replaceAll("T", "U");
@@ -1911,9 +1944,9 @@ public class ComplexNotationParser {
 		int seq2MonomerStart = 0;
 
 		List<Nucleotide> seq1NucList = SimpleNotationParser.getNucleotideList(
-				node1.getLabel(), false);
+				node1.getLabel(), false,monomerStore);
 		List<Nucleotide> seq2NucList = SimpleNotationParser.getNucleotideList(
-				node2.getLabel(), false);
+				node2.getLabel(), false,monomerStore);
 
 		if (seqMatchLength > 0) {
 			// get the starting monomer position for sequence 1
@@ -1921,7 +1954,7 @@ public class ComplexNotationParser {
 			for (int i = 0; i < seq1NucStart; i++) {
 				Nucleotide nuc = seq1NucList.get(i);
 				int monomerCount = SimpleNotationParser
-						.getMonomerCountForRNA(nuc.getNotation());
+						.getMonomerCountForRNA(nuc.getNotation(),monomerStore);
 				seq1MonomerStart = seq1MonomerStart + monomerCount;
 			}
 
@@ -1931,7 +1964,7 @@ public class ComplexNotationParser {
 			for (int i = 0; i < seq2NucStart; i++) {
 				Nucleotide nuc = seq2NucList.get(i);
 				int monomerCount = SimpleNotationParser
-						.getMonomerCountForRNA(nuc.getNotation());
+						.getMonomerCountForRNA(nuc.getNotation(),monomerStore);
 				seq2MonomerStart = seq2MonomerStart + monomerCount;
 			}
 
@@ -2116,11 +2149,11 @@ public class ComplexNotationParser {
 			throws MonomerException, IOException, JDOMException,
 			NotationException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		if (validate)
 			SimpleNotationParser.validateMonomerReplacement(polymerType,
-					existingMonomerID, newMonomerID, monomerStoreToUse);
+					existingMonomerID, newMonomerID, monomerStore);
 		if (null == complexNotation || complexNotation.length() == 0) {
 			return complexNotation;
 		}
@@ -2145,7 +2178,7 @@ public class ComplexNotationParser {
 				String notation = polymer.getLabel();
 				String result = SimpleNotationParser.replaceMonomer(notation,
 						polymerType, existingMonomerID, newMonomerID,
-						monomerStoreToUse, validate);
+						monomerStore, validate);
 				sb.append(result);
 			} else {
 				sb.append(polymer.getLabel());
@@ -2199,9 +2232,9 @@ public class ComplexNotationParser {
 			for (String polymerType : polymerTypes) {
 				try {
 					SimpleNotationParser.validateSimpleNotation(notation,
-							polymerType);
+							polymerType,monomerStore);
 					return SimpleNotationParser.getComplexNotation(notation,
-							polymerType);
+							polymerType,monomerStore);
 				} catch (Exception e) {
 				}
 			}
@@ -2236,7 +2269,7 @@ public class ComplexNotationParser {
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		for (PolymerNode node : polymerNodes) {
 			String oneNodeID = node.getId();
@@ -2247,7 +2280,7 @@ public class ComplexNotationParser {
 			} else {
 				List<Nucleotide> nucleotidelist = SimpleNotationParser
 						.getStrictNucleotideList(notation, false,
-								monomerStoreToUse);
+								monomerStore);
 				for (Nucleotide oneNucleotide : nucleotidelist) {
 					if (oneNucleotide.isModified()) {
 						return true;
@@ -2267,17 +2300,17 @@ public class ComplexNotationParser {
 	public static int getTotalMonomerCount(String notation,
 			MonomerStore monomerStore) throws NotationException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		int totalMonomerCount = 0;
 
 		List<PolymerNode> nodes = ComplexNotationParser
-				.getPolymerNodeList(notation, monomerStoreToUse);
+				.getPolymerNodeList(notation, monomerStore);
 		for (PolymerNode node : nodes) {
 			String polymerType = node.getType();
 			String label = node.getLabel();
 			int monomerCount = SimpleNotationParser.getMonomerCount(label,
-					polymerType, monomerStoreToUse);
+					polymerType, monomerStore);
 			totalMonomerCount = totalMonomerCount + monomerCount;
 		}
 		return totalMonomerCount;
@@ -2309,9 +2342,9 @@ public class ComplexNotationParser {
 			MonomerException, IOException, JDOMException, PluginException,
 			StructureException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
-		return getMoleculeInfo(extendedNotation, false, monomerStoreToUse);
+		return getMoleculeInfo(extendedNotation, false, monomerStore);
 	}
 
 	/**
@@ -2343,12 +2376,12 @@ public class ComplexNotationParser {
 			throws NotationException, MonomerException, IOException,
 			JDOMException, PluginException, StructureException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
-		ComplexPolymer cp = parse(extendedNotation,monomerStoreToUse);
+		ComplexPolymer cp = parse(extendedNotation,monomerStore);
 
 		if (includeValidation) {
-			validateComplexPolymer(cp, monomerStoreToUse);
+			validateComplexPolymer(cp, monomerStore);
 		}
 
 		List<PolymerNode> nodeList = cp.getPolymerNodeList();
@@ -2367,7 +2400,7 @@ public class ComplexNotationParser {
 			int sourceMonomerNumber = edge.getSourceMonomerNumber();
 			String sourceR = edge.getSourceR();
 			MoleculeInfo sourceCapMI = getCapMoleculeInfo(sourceNode,
-					sourceMonomerNumber, sourceR);
+					sourceMonomerNumber, sourceR,monomerStore);
 			caps.add(sourceCapMI);
 
 			String targetId = edge.getTargetNode();
@@ -2375,7 +2408,7 @@ public class ComplexNotationParser {
 			int targetMonomerNumber = edge.getTargetMonomerNumber();
 			String targetR = edge.getTargetR();
 			MoleculeInfo targetCapMI = getCapMoleculeInfo(targetNode,
-					targetMonomerNumber, targetR,monomerStoreToUse);
+					targetMonomerNumber, targetR,monomerStore);
 			caps.add(targetCapMI);
 		}
 
@@ -2385,7 +2418,7 @@ public class ComplexNotationParser {
 			String polymerType = node.getType();
 			String label = node.getLabel();
 			MoleculeInfo tmpMI = SimpleNotationParser.getMoleculeInfo(label,
-					polymerType, monomerStoreToUse);
+					polymerType, monomerStore);
 			chunks.add(tmpMI);
 		}
 
@@ -2410,7 +2443,7 @@ public class ComplexNotationParser {
 		List<String> monomerIdList = SimpleNotationParser.getMonomerIDList(
 				notation, polymerType,monomerStore);
 		Monomer monomer = SimpleNotationParser.getMonomer(
-				monomerIdList.get(monomerNumber - 1), polymerType);
+				monomerIdList.get(monomerNumber - 1), polymerType,monomerStore);
 		return monomer.getCapMoleculeInfo(rgroup);
 	}
 
@@ -2439,7 +2472,7 @@ public class ComplexNotationParser {
 			throws IOException, NotationException, MonomerException,
 			StructureException, JDOMException {
 
-		MonomerStore monomerStoreToUse = checkForMonomerStore(monomerStore);
+		monomerStore = checkForMonomerStore(monomerStore);
 
 		Map<String, RgroupStructure> nodeStrucMap = new HashMap<String, RgroupStructure>();
 		for (int i = 0; i < nodeList.size(); i++) {
@@ -2449,7 +2482,7 @@ public class ComplexNotationParser {
 			String polymerType = PolymerNode.getPolymerType(nodeId);
 			RgroupStructure struc = SimpleNotationParser
 					.getSimplePolymerStructure(nodeLabel, polymerType,
-							monomerStoreToUse);
+							monomerStore);
 			if (null == struc.getMolecule()) {
 				throw new NotationException(
 						"Polymer notation contains non-specific monomer structure");

@@ -999,10 +999,25 @@ public class SimpleNotationParser {
 	 * @throws java.io.IOException
 	 * @throws org.jdom.JDOMException
 	 */
+	
 	public static String getTrimmedNucleotideSequence(String polymerNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
-		List<Nucleotide> list = getNucleotideList(polymerNotation);
+		MonomerFactory factory = null;
+		try {
+			factory = MonomerFactory.getInstance();
+		} catch (Exception ex) {
+			throw new NotationException("Unable to initialize monomer factory",
+					ex);
+		}
+		return getTrimmedNucleotideSequence(polymerNotation,factory.getMonomerStore());
+	}
+	
+		
+	public static String getTrimmedNucleotideSequence(String polymerNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, IOException,
+			JDOMException, StructureException {
+		List<Nucleotide> list = getNucleotideList(polymerNotation,monomerStore);
 
 		int start = 0;
 		Nucleotide na = list.get(start);
@@ -1036,10 +1051,25 @@ public class SimpleNotationParser {
 	 * @throws java.io.IOException
 	 * @throws org.jdom.JDOMException
 	 */
+	
 	public static String getNucleotideSequence(String polymerNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
-		List<Nucleotide> list = getNucleotideList(polymerNotation);
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return getNucleotideSequence(polymerNotation,factory.getMonomerStore());
+	}
+	
+	
+	public static String getNucleotideSequence(String polymerNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, IOException,
+			JDOMException, StructureException {
+		List<Nucleotide> list = getNucleotideList(polymerNotation,monomerStore);
 		return getNucleotideSequence(list);
 	}
 
@@ -1065,7 +1095,22 @@ public class SimpleNotationParser {
 	public static String getModifiedNucleotideSequence(String polymerNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
-		List<Nucleotide> list = getNucleotideList(polymerNotation);
+		
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return getModifiedNucleotideSequence(polymerNotation,factory.getMonomerStore());
+		
+	}
+	
+	public static String getModifiedNucleotideSequence(String polymerNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, IOException,
+			JDOMException, StructureException {
+		List<Nucleotide> list = getNucleotideList(polymerNotation,monomerStore);
 		return getModifiedNucleotideSequence(list);
 	}
 
@@ -1158,7 +1203,21 @@ public class SimpleNotationParser {
 	public static String getComplextNotationForAntisenseRNA(
 			String simpleNotation) throws NotationException, MonomerException,
 			StructureException, JDOMException, IOException {
-		String notation = getComplextNotationForRNA(simpleNotation);
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return getComplextNotationForAntisenseRNA(simpleNotation,factory.getMonomerStore());
+	}
+	
+	
+	public static String getComplextNotationForAntisenseRNA(
+			String simpleNotation,MonomerStore monomerStore) throws NotationException, MonomerException,
+			StructureException, JDOMException, IOException {
+		String notation = getComplextNotationForRNA(simpleNotation,monomerStore);
 		return notation.substring(0, notation.length() - 1)
 				+ Monomer.NUCLIEC_ACID_POLYMER_TYPE + "1{"
 				+ RNA_ANTISENSE_STRAND_ANNOTATION + "}$";
@@ -1179,7 +1238,22 @@ public class SimpleNotationParser {
 	public static String getComplextNotationForSenseRNA(String simpleNotation)
 			throws NotationException, MonomerException, StructureException,
 			JDOMException, IOException {
-		String notation = getComplextNotationForRNA(simpleNotation);
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+		return getComplextNotationForSenseRNA(simpleNotation,factory.getMonomerStore());
+		
+	}
+	
+	
+	public static String getComplextNotationForSenseRNA(String simpleNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, StructureException,
+			JDOMException, IOException {
+		String notation = getComplextNotationForRNA(simpleNotation,monomerStore);
 		return notation.substring(0, notation.length() - 1)
 				+ Monomer.NUCLIEC_ACID_POLYMER_TYPE + "1{"
 				+ RNA_SENSE_STRAND_ANNOTATION + "}$";
