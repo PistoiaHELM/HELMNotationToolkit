@@ -760,6 +760,7 @@ public class SimpleNotationParser {
 			throws NotationException {
 		List<String> ids = new ArrayList<String>();
 
+		
 		// CHEMICAL can have only one monomer
 		if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
 			String id = processNode(polymerNotation, polymerType, monomerStore);
@@ -867,6 +868,11 @@ public class SimpleNotationParser {
 	protected static String processNode(String nodeDesc, String polymerType,
 			MonomerStore monomerStore) throws NotationException {
 
+		//remove brackets 
+		if ((nodeDesc.charAt(0)==MODIFICATION_START_SYMBOL) && (nodeDesc.charAt(nodeDesc.length()-1)==MODIFICATION_END_SYMBOL)){
+			nodeDesc=nodeDesc.substring(1, nodeDesc.length()-1);
+		}
+		
 		boolean isSmilesCode = Pattern.matches(".*\\$\\|$", nodeDesc);
 
 		if (!isSmilesCode) {
