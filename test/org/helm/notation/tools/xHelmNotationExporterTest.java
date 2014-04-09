@@ -32,23 +32,20 @@ public class xHelmNotationExporterTest {
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(in);
 		
+		
+		XMLOutputter outputter=new XMLOutputter(Format.getPrettyFormat()) ;
+		String expectedDocString=outputter.outputString(doc);
+		
 		String helmString = xHelmNotationParser.getComplexNotationString(doc.getRootElement());
 		MonomerStore monomerStore = xHelmNotationParser.getMonomerStore(doc.getRootElement());	
 		
 		//export
-		Document exportedDoc=xHelmNotationExporter.buildXHelmDocument(helmString, monomerStore);
-		
-		XMLOutputter outputter=new XMLOutputter(Format.getPrettyFormat()) ;
-		String exportedDocString=outputter.outputString(exportedDoc);	
-		
-		
-		
-		String expectedDocString=outputter.outputString(doc);
+		String output=xHelmNotationExporter.writeXHELM(helmString, monomerStore);
+	
 				
-		assertEquals(expectedDocString.length(), exportedDocString.length());
+		assertEquals(expectedDocString.length(), output.length());
 		
-		//TODO 
-		//assertEquals(doc,exportedDoc);
+	
 		
 		
 	}

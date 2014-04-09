@@ -42,22 +42,29 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
 import org.jdom.JDOMException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ComplexNotationParserTest {
 
+
 	@Before
-	public void setupMonomerDB() {
+	public void init() {
 		try {
+			MonomerFactory.finalizeMonomerCache();
 			MonomerFactory.getInstance();
-			NucleotideFactory.getInstance();
-		} catch  (Exception ex) {
-			fail("Initialization");
+			NucleotideFactory.getInstance();	
+			SimpleNotationParser.resetSeed();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	
+	@After
+	public void finish() {
+		MonomerFactory.finalizeMonomerCache();
+	}
 	
 	@Test
 	public void testGenericConnection() {
@@ -496,6 +503,20 @@ public class ComplexNotationParserTest {
 		
 		smilesInline = ComplexNotationParser.getComplexPolymerSMILES(notation);
 		assertEquals("[H]NCCCC[C@H](NC(=O)[C@H](CS[H])NC(=O)[C@H](CS[H])NC(=O)CNC(=O)CNC(=O)CNCC(=O)[C@H](C)N[H])C(=O)N[C@@H](CCCCN[H])C(=O)N[C@@H](CCCCN[H])C(=O)N[C@@H](CCCCNC(=O)C1CCC(CN2C(=O)C=CC2=O)CC1)C(O)=O",smilesInline);
+		
+		
+	}
+	
+	
+	@Test
+	public void testReplaceSmiles() throws NotationException, MonomerException, JDOMException, IOException{
+	
+
+		
+		String helmNotation="PEPTIDE1{[C[C@H](N[*])C(=O)C[*] |$;;;_R1;;;;_R2$|].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$";
+		String notationNoSmiles=ComplexNotationParser.getNotationByReplacingSmiles(helmNotation, MonomerFactory.getInstance().getMonomerStore());
+		
+		assertEquals(notationNoSmiles, "PEPTIDE1{[AM#1].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$");
 		
 		
 	}

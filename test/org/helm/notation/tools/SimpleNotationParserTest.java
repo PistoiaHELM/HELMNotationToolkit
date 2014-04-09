@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
+import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationException;
 import org.helm.notation.NucleotideFactory;
 import org.helm.notation.StructureException;
@@ -16,7 +17,9 @@ import org.helm.notation.model.MoleculeInfo;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.Nucleotide;
 import org.jdom.JDOMException;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -60,19 +63,20 @@ public class SimpleNotationParserTest {
 	
 	
 	
-	@BeforeClass
-	public static void init() {
+	@Before
+	public  void init() {
 		try {
 			MonomerFactory.finalizeMonomerCache();
 			MonomerFactory.getInstance();
 			NucleotideFactory.getInstance();	
+			SimpleNotationParser.resetSeed();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@AfterClass
-	public static void finish() {
+	@After
+	public  void finish() {
 		MonomerFactory.finalizeMonomerCache();
 	}
 
@@ -360,7 +364,7 @@ public class SimpleNotationParserTest {
 	public void testGetPeptideSequence() throws NotationException,
 			MonomerException, IOException, JDOMException, StructureException {
 		
-		SimpleNotationParser.resetSeed();
+	
 		
 		String notation = "K.C.C.C.W.K.[seC]";
 		
@@ -390,6 +394,19 @@ public class SimpleNotationParserTest {
 	
 		
 	}
+	
+	@Test
+	public void testReplaceSmiles() throws NotationException, MonomerException, JDOMException, IOException{
+		String notation = "[C[C@H](N[*])C(=O)C[*] |$;;;_R1;;;;_R2$|].G.G.G.C.C.K.K.K.K";
+		String newNotation=SimpleNotationParser.getNotationByReplacingSmiles(notation,"PEPTIDE",MonomerFactory.getInstance().getMonomerStore());
+		assertEquals("[AM#1].G.G.G.C.C.K.K.K.K",newNotation);
+		
+		
+		
+
+	}
+	
+	
 	
 	
 	

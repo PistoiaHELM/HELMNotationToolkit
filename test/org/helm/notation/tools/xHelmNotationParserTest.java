@@ -2,9 +2,13 @@ package org.helm.notation.tools;
 
 import static org.junit.Assert.*;
 
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+
+
 
 
 import org.helm.notation.MonomerException;
@@ -18,6 +22,8 @@ import org.jdom.input.SAXBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+
 
 import chemaxon.marvin.plugin.PluginException;
 
@@ -107,6 +113,25 @@ public class xHelmNotationParserTest {
 	}
 	
 	@Test
+	public void testQRPeptide() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
+		Element xHELMRootElement = getXHELMRootElement("resources/qr_peptide.xhelm" );
+		String helmString = xHelmNotationParser.getComplexNotationString(
+				xHELMRootElement);
+
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+		
+		assertEquals(
+				"PEPTIDE1{[QR]}$$$$",
+				helmString);
+		
+		
+		
+		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
+	}
+		
+	
+	
+	@Test
 	public void testXHelmWithInlineSmiles() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
 		Element xHELMRootElement = getXHELMRootElement("resources/simpleWithInlineSmiles.xhelm");
 		
@@ -121,6 +146,49 @@ public class xHelmNotationParserTest {
 		
 
 	}
+	
+	
+	@Test
+	public void testInlineSmilesChem() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
+		Element xHELMRootElement = getXHELMRootElement("resources/inlineSmilesChem.xhelm");
+		
+		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+	
+		boolean valid=ComplexNotationParser.validateComplexNotation( helmString, store);
+		assertTrue(valid);
+	
+
+	}
+	
+	
+	@Test
+	public void testPeptideLinkerWithChemInline() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
+		Element xHELMRootElement = getXHELMRootElement("resources/PeptideLinkerWithChemInline.xhelm");
+		
+		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+	
+		boolean valid=ComplexNotationParser.validateComplexNotation( helmString, store);
+		assertTrue(valid);
+		
+
+	}
+	
+	
+	@Test
+	public void testInlineSmilesSinglePeptide() throws JDOMException, IOException, MonomerException, NotationException, StructureException, ClassNotFoundException{
+		Element xHELMRootElement = getXHELMRootElement("resources/InlineSmilesSinglePeptide.xhelm");
+		
+		String helmString = xHelmNotationParser.getComplexNotationString(xHELMRootElement);	
+		MonomerStore store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+	
+		boolean valid=ComplexNotationParser.validateComplexNotation( helmString, store);
+		assertTrue(valid);
+				
+	}
+	
+
 	
 	@Test
 	public void testXHelmValidation() throws JDOMException, IOException, MonomerException    {

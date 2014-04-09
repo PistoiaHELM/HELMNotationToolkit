@@ -23,10 +23,13 @@ package org.helm.notation.tools;
 
 import org.helm.notation.CalculationException;
 import org.helm.notation.MonomerException;
+import org.helm.notation.MonomerFactory;
+import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationException;
 import org.helm.notation.StructureException;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.model.PolymerNode;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.jdom.JDOMException;
 
 /**
@@ -145,6 +149,19 @@ public class ExtinctionCoefficientCalculator {
         return calculateFromComplexNotation(complexNotation, getDefaultUnitType());
     }
 
+    
+    public float calculateFromComplexNotation(String complexNotation, int unitType) throws NotationException, MonomerException, IOException, JDOMException, StructureException, CalculationException {
+    	MonomerFactory factory = null;
+		try {
+			factory = MonomerFactory.getInstance();
+		} catch (Exception ex) {
+			throw new NotationException("Unable to initialize monomer factory",
+					ex);
+		}
+    	return calculateFromComplexNotation(complexNotation,unitType,factory.getMonomerStore());
+    }
+        
+    
     /**
      * This method calculates extinction coefficient for complex polymer notation
      * @param complexNotation
@@ -157,9 +174,11 @@ public class ExtinctionCoefficientCalculator {
      * @throws StructureException
      * @throws CalculationException 
      */
-    public float calculateFromComplexNotation(String complexNotation, int unitType) throws NotationException, MonomerException, IOException, JDOMException, StructureException, CalculationException {
-        float result = 0.0f;
-        List<PolymerNode> polymerNodes = ComplexNotationParser.getPolymerNodeList(complexNotation);
+    
+    public float calculateFromComplexNotation(String complexNotation, int unitType,MonomerStore monomerStore) throws NotationException, MonomerException, IOException, JDOMException, StructureException, CalculationException {
+        
+    	float result = 0.0f;
+        List<PolymerNode> polymerNodes = ComplexNotationParser.getPolymerNodeList(complexNotation,monomerStore);
         for (PolymerNode polymerNode : polymerNodes) {
             String polymerType = polymerNode.getType();
             String notation = polymerNode.getLabel();
@@ -170,7 +189,7 @@ public class ExtinctionCoefficientCalculator {
                     ext = ext*1000;
                 }
             } else if (polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE)) {
-                ext = calculateFromPeptidePolymerNotation(notation);
+                ext = calculateFromPeptidePolymerNotation(notation,monomerStore);
                 if (unitType == RNA_UNIT_TYPE) {
                     ext = ext/1000;
                 }
@@ -308,9 +327,22 @@ public class ExtinctionCoefficientCalculator {
         }
         return calculate(ids);
     }
-
+    
+    
     public float calculateFromPeptidePolymerNotation(String simpleNotation) throws NotationException, MonomerException, CalculationException, IOException, JDOMException, StructureException {
-        List<Monomer> monomers = SimpleNotationParser.getMonomerList(simpleNotation, Monomer.PEPTIDE_POLYMER_TYPE);
+    	MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return calculateFromPeptidePolymerNotation(simpleNotation,factory.getMonomerStore());
+    }
+    
+
+    public float calculateFromPeptidePolymerNotation(String simpleNotation,MonomerStore monomerStore) throws NotationException, MonomerException, CalculationException, IOException, JDOMException, StructureException {
+        List<Monomer> monomers = SimpleNotationParser.getMonomerList(simpleNotation, Monomer.PEPTIDE_POLYMER_TYPE,monomerStore);
         List<String> ids = new ArrayList<String>();
         for (Monomer monomer : monomers) {
             String id = monomer.getNaturalAnalog();

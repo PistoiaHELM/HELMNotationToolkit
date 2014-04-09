@@ -760,6 +760,7 @@ public class SimpleNotationParser {
 			throws NotationException {
 		List<String> ids = new ArrayList<String>();
 
+		
 		// CHEMICAL can have only one monomer
 		if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
 			String id = processNode(polymerNotation, polymerType, monomerStore);
@@ -864,23 +865,30 @@ public class SimpleNotationParser {
 		return ids;
 	}
 
-	private static String processNode(String id, String polymerType,
+	protected static String processNode(String nodeDesc, String polymerType,
 			MonomerStore monomerStore) throws NotationException {
 
-		boolean isSmilesCode = Pattern.matches(".*\\$\\|$", id);
+		//remove brackets 
+		if ((nodeDesc.charAt(0)==MODIFICATION_START_SYMBOL) && (nodeDesc.charAt(nodeDesc.length()-1)==MODIFICATION_END_SYMBOL)){
+			nodeDesc=nodeDesc.substring(1, nodeDesc.length()-1);
+		}
+		
+		boolean isSmilesCode = Pattern.matches(".*\\$\\|$", nodeDesc);
 
 		if (!isSmilesCode) {
-			return id;
+			Map<String, Monomer> monomers = monomerStore.getMonomers(polymerType);
+			if (monomers.containsKey(nodeDesc)){
+				return nodeDesc;
+			
+			}
 		}
 
-		// Map<String, Monomer> monomers = monomerStore
-		// .getMonomers(Monomer.CHEMICAL_POLYMER_TYPE);
-		Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();
+	Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();
 
 		String alternateId = null;
 
-		if (smilesDB.containsKey(id)) {
-			alternateId = smilesDB.get(id).getAlternateId();
+		if (smilesDB.containsKey(nodeDesc)) {
+			alternateId = smilesDB.get(nodeDesc).getAlternateId();
 
 		} else {
 
@@ -897,29 +905,27 @@ public class SimpleNotationParser {
 			Map<String, Attachment> ids = factory.getAttachmentDB();
 			Attachment R1HAtt = ids.get("R1-H");
 
-			// TODO what type makes sense here for inline smiles in rna and
-			// peptide?
 			Monomer m = null;
 			if (polymerType == Monomer.CHEMICAL_POLYMER_TYPE) {
 				m = new Monomer(polymerType, Monomer.UNDEFINED_MOMONER_TYPE,
 						null, alternateId);
 			} else {
 				m = new Monomer(polymerType, Monomer.BACKBONE_MOMONER_TYPE,
-						null, alternateId);
+						"X", alternateId);
 			}
-			m.setCanSMILES(id);
+			m.setCanSMILES(nodeDesc);
 
 			List<Attachment> al = new ArrayList<Attachment>();
 			int start = 0;
-			int pos = id.indexOf("R", start);
+			int pos = nodeDesc.indexOf("R", start);
 			String number = "";
 			while (pos >= 0) {
 				pos++;
-				String letter = id.substring(pos, pos + 1);
+				String letter = nodeDesc.substring(pos, pos + 1);
 				while (letter.matches("\\d")) {
 					number = number + letter;
 					pos++;
-					letter = id.substring(pos, pos + 1);
+					letter = nodeDesc.substring(pos, pos + 1);
 				}
 
 				try {
@@ -937,13 +943,14 @@ public class SimpleNotationParser {
 				}
 
 				start = pos;
-				pos = id.indexOf("R", start);
+				pos = nodeDesc.indexOf("R", start);
 				number = "";
 			}
 
 			m.setAttachmentList(al);
 			try {
 				monomerStore.addNewMonomer(m);
+				MonomerFactory.setDBChanged( true);
 			} catch (Exception ex) {
 				throw new NotationException(
 						"Unable to add adhoc new monomer into monomer databse",
@@ -998,10 +1005,25 @@ public class SimpleNotationParser {
 	 * @throws java.io.IOException
 	 * @throws org.jdom.JDOMException
 	 */
+	
 	public static String getTrimmedNucleotideSequence(String polymerNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
-		List<Nucleotide> list = getNucleotideList(polymerNotation);
+		MonomerFactory factory = null;
+		try {
+			factory = MonomerFactory.getInstance();
+		} catch (Exception ex) {
+			throw new NotationException("Unable to initialize monomer factory",
+					ex);
+		}
+		return getTrimmedNucleotideSequence(polymerNotation,factory.getMonomerStore());
+	}
+	
+		
+	public static String getTrimmedNucleotideSequence(String polymerNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, IOException,
+			JDOMException, StructureException {
+		List<Nucleotide> list = getNucleotideList(polymerNotation,monomerStore);
 
 		int start = 0;
 		Nucleotide na = list.get(start);
@@ -1035,10 +1057,25 @@ public class SimpleNotationParser {
 	 * @throws java.io.IOException
 	 * @throws org.jdom.JDOMException
 	 */
+	
 	public static String getNucleotideSequence(String polymerNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
-		List<Nucleotide> list = getNucleotideList(polymerNotation);
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return getNucleotideSequence(polymerNotation,factory.getMonomerStore());
+	}
+	
+	
+	public static String getNucleotideSequence(String polymerNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, IOException,
+			JDOMException, StructureException {
+		List<Nucleotide> list = getNucleotideList(polymerNotation,monomerStore);
 		return getNucleotideSequence(list);
 	}
 
@@ -1064,7 +1101,22 @@ public class SimpleNotationParser {
 	public static String getModifiedNucleotideSequence(String polymerNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, StructureException {
-		List<Nucleotide> list = getNucleotideList(polymerNotation);
+		
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return getModifiedNucleotideSequence(polymerNotation,factory.getMonomerStore());
+		
+	}
+	
+	public static String getModifiedNucleotideSequence(String polymerNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, IOException,
+			JDOMException, StructureException {
+		List<Nucleotide> list = getNucleotideList(polymerNotation,monomerStore);
 		return getModifiedNucleotideSequence(list);
 	}
 
@@ -1157,7 +1209,21 @@ public class SimpleNotationParser {
 	public static String getComplextNotationForAntisenseRNA(
 			String simpleNotation) throws NotationException, MonomerException,
 			StructureException, JDOMException, IOException {
-		String notation = getComplextNotationForRNA(simpleNotation);
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+    	return getComplextNotationForAntisenseRNA(simpleNotation,factory.getMonomerStore());
+	}
+	
+	
+	public static String getComplextNotationForAntisenseRNA(
+			String simpleNotation,MonomerStore monomerStore) throws NotationException, MonomerException,
+			StructureException, JDOMException, IOException {
+		String notation = getComplextNotationForRNA(simpleNotation,monomerStore);
 		return notation.substring(0, notation.length() - 1)
 				+ Monomer.NUCLIEC_ACID_POLYMER_TYPE + "1{"
 				+ RNA_ANTISENSE_STRAND_ANNOTATION + "}$";
@@ -1178,7 +1244,22 @@ public class SimpleNotationParser {
 	public static String getComplextNotationForSenseRNA(String simpleNotation)
 			throws NotationException, MonomerException, StructureException,
 			JDOMException, IOException {
-		String notation = getComplextNotationForRNA(simpleNotation);
+		MonomerFactory factory = null;
+    	try {
+    		factory = MonomerFactory.getInstance();
+    	} catch (Exception ex) {
+    		throw new NotationException("Unable to initialize monomer factory",
+    				ex);
+    	}
+		return getComplextNotationForSenseRNA(simpleNotation,factory.getMonomerStore());
+		
+	}
+	
+	
+	public static String getComplextNotationForSenseRNA(String simpleNotation,MonomerStore monomerStore)
+			throws NotationException, MonomerException, StructureException,
+			JDOMException, IOException {
+		String notation = getComplextNotationForRNA(simpleNotation,monomerStore);
 		return notation.substring(0, notation.length() - 1)
 				+ Monomer.NUCLIEC_ACID_POLYMER_TYPE + "1{"
 				+ RNA_SENSE_STRAND_ANNOTATION + "}$";
@@ -2031,108 +2112,108 @@ public class SimpleNotationParser {
 	 * @throws IOException
 	 * @throws JDOMException
 	 */
-	protected static String preprocessChemNode(String nodeDesc)
-			throws NotationException {
-		MonomerFactory factory;
-		try {
-			factory = MonomerFactory.getInstance();
-		} catch (Exception ex) {
-			throw new NotationException("Unable to initialize monomer factory",
-					ex);
-		}
-		return preprocessChemNode(nodeDesc, factory.getMonomerStore());
-	}
-
-	protected static String preprocessChemNode(String nodeDesc,
-			MonomerStore monomerStore) throws NotationException {
-
-		Map<String, Monomer> chemMonomers = monomerStore
-				.getMonomers(Monomer.CHEMICAL_POLYMER_TYPE);
-		// Map<String, Monomer> externalChemMonomers =
-		// factory.getExternalMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
-		Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();
-
-		String alternateId = null;
-		/*
-		 * if (externalChemMonomers!=null &&
-		 * externalChemMonomers.containsKey(nodeDesc)) { alternateId = nodeDesc;
-		 * } else
-		 */
-		if (chemMonomers.containsKey(nodeDesc)) {
-			alternateId = nodeDesc;
-		} else {
-			if (smilesDB.containsKey(nodeDesc)) {
-				Monomer tempM = smilesDB.get(nodeDesc);
-				if (tempM.getPolymerType()
-						.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
-					alternateId = tempM.getAlternateId();
-				} else {
-					throw new NotationException(
-							"Ad Hoc chemical monomer structure belongs to "
-									+ tempM.getPolymerType());
-				}
-			} else {
-				MonomerFactory factory;
-				try {
-					factory = MonomerFactory.getInstance();
-				} catch (Exception ex) {
-					throw new NotationException(
-							"Unable to initialize monomer factory", ex);
-				}
-
-				alternateId = generateNextMonomerID(
-						Monomer.CHEMICAL_POLYMER_TYPE, monomerStore);
-
-				Map<String, Attachment> ids = factory.getAttachmentDB();
-				Attachment R1HAtt = ids.get("R1-H");
-				Monomer m = new Monomer(Monomer.CHEMICAL_POLYMER_TYPE,
-						Monomer.UNDEFINED_MOMONER_TYPE, null, alternateId);
-				m.setCanSMILES(nodeDesc);
-				List<Attachment> al = new ArrayList<Attachment>();
-				int start = 0;
-				int pos = nodeDesc.indexOf("R", start);
-				String number = "";
-				while (pos >= 0) {
-					pos++;
-					String letter = nodeDesc.substring(pos, pos + 1);
-					while (letter.matches("\\d")) {
-						number = number + letter;
-						pos++;
-						letter = nodeDesc.substring(pos, pos + 1);
-					}
-
-					try {
-						Attachment tmpAtt = DeepCopy.copy(R1HAtt);
-						tmpAtt.setLabel("R" + number);
-						tmpAtt.setAlternateId("R" + number + "-H");
-						String oldSmi = tmpAtt.getCapGroupSMILES();
-						String newSmi = oldSmi.replace("R1", "R" + number);
-						tmpAtt.setCapGroupSMILES(newSmi);
-						al.add(tmpAtt);
-					} catch (Exception ex) {
-						throw new NotationException(
-								"Unable to create attachment by copying from attachment database",
-								ex);
-					}
-
-					start = pos;
-					pos = nodeDesc.indexOf("R", start);
-					number = "";
-				}
-
-				m.setAttachmentList(al);
-				try {
-					monomerStore.addNewMonomer(m);
-					MonomerFactory.setDBChanged(true);
-				} catch (Exception ex) {
-					throw new NotationException(
-							"Unable to add adhoc new monomer into monomer databse",
-							ex);
-				}
-			}
-		}
-		return alternateId;
-	}
+//	protected static String preprocessChemNode(String nodeDesc)
+//			throws NotationException {
+//		MonomerFactory factory;
+//		try {
+//			factory = MonomerFactory.getInstance();
+//		} catch (Exception ex) {
+//			throw new NotationException("Unable to initialize monomer factory",
+//					ex);
+//		}
+//		return preprocessChemNode(nodeDesc, factory.getMonomerStore());
+//	}
+//
+//	protected static String preprocessChemNode(String nodeDesc,
+//			MonomerStore monomerStore) throws NotationException {
+//
+//		Map<String, Monomer> chemMonomers = monomerStore
+//				.getMonomers(Monomer.CHEMICAL_POLYMER_TYPE);
+//		// Map<String, Monomer> externalChemMonomers =
+//		// factory.getExternalMonomerDB().get(Monomer.CHEMICAL_POLYMER_TYPE);
+//		Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();
+//
+//		String alternateId = null;
+//		/*
+//		 * if (externalChemMonomers!=null &&
+//		 * externalChemMonomers.containsKey(nodeDesc)) { alternateId = nodeDesc;
+//		 * } else
+//		 */
+//		if (chemMonomers.containsKey(nodeDesc)) {
+//			alternateId = nodeDesc;
+//		} else {
+//			if (smilesDB.containsKey(nodeDesc)) {
+//				Monomer tempM = smilesDB.get(nodeDesc);
+//				if (tempM.getPolymerType()
+//						.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
+//					alternateId = tempM.getAlternateId();
+//				} else {
+//					throw new NotationException(
+//							"Ad Hoc chemical monomer structure belongs to "
+//									+ tempM.getPolymerType());
+//				}
+//			} else {
+//				MonomerFactory factory;
+//				try {
+//					factory = MonomerFactory.getInstance();
+//				} catch (Exception ex) {
+//					throw new NotationException(
+//							"Unable to initialize monomer factory", ex);
+//				}
+//
+//				alternateId = generateNextMonomerID(
+//						Monomer.CHEMICAL_POLYMER_TYPE, monomerStore);
+//
+//				Map<String, Attachment> ids = factory.getAttachmentDB();
+//				Attachment R1HAtt = ids.get("R1-H");
+//				Monomer m = new Monomer(Monomer.CHEMICAL_POLYMER_TYPE,
+//						Monomer.UNDEFINED_MOMONER_TYPE, null, alternateId);
+//				m.setCanSMILES(nodeDesc);
+//				List<Attachment> al = new ArrayList<Attachment>();
+//				int start = 0;
+//				int pos = nodeDesc.indexOf("R", start);
+//				String number = "";
+//				while (pos >= 0) {
+//					pos++;
+//					String letter = nodeDesc.substring(pos, pos + 1);
+//					while (letter.matches("\\d")) {
+//						number = number + letter;
+//						pos++;
+//						letter = nodeDesc.substring(pos, pos + 1);
+//					}
+//
+//					try {
+//						Attachment tmpAtt = DeepCopy.copy(R1HAtt);
+//						tmpAtt.setLabel("R" + number);
+//						tmpAtt.setAlternateId("R" + number + "-H");
+//						String oldSmi = tmpAtt.getCapGroupSMILES();
+//						String newSmi = oldSmi.replace("R1", "R" + number);
+//						tmpAtt.setCapGroupSMILES(newSmi);
+//						al.add(tmpAtt);
+//					} catch (Exception ex) {
+//						throw new NotationException(
+//								"Unable to create attachment by copying from attachment database",
+//								ex);
+//					}
+//
+//					start = pos;
+//					pos = nodeDesc.indexOf("R", start);
+//					number = "";
+//				}
+//
+//				m.setAttachmentList(al);
+//				try {
+//					monomerStore.addNewMonomer(m);
+//					MonomerFactory.setDBChanged(true);
+//				} catch (Exception ex) {
+//					throw new NotationException(
+//							"Unable to add adhoc new monomer into monomer databse",
+//							ex);
+//				}
+//			}
+//		}
+//		return alternateId;
+//	}
 
 	private static int seed = 0;
 	protected static String AD_HOC_MONOMER_ID_PREFIX = "AM#";
@@ -2142,7 +2223,7 @@ public class SimpleNotationParser {
 		Map<String, Monomer> monomers = store.getMonomers(polymerType);
 		seed++;
 		String result = AD_HOC_MONOMER_ID_PREFIX + seed;
-		if (monomers.containsKey(result)) {
+		if (monomers!=null && monomers.containsKey(result)) {
 			return generateNextMonomerID(polymerType, store);
 		} else {
 			return result;
@@ -2179,6 +2260,20 @@ public class SimpleNotationParser {
 		} else {
 			return -1;
 		}
+	}
+	
+	
+	/*
+	 * This function replaces smiles in simple notation with temporary ids
+	 * 
+	 */
+	public static String getNotationByReplacingSmiles(String simpleNotation,String polymerType,MonomerStore store) throws NotationException, MonomerException, JDOMException, IOException{
+		
+		List<String> monomerIDs = getMonomerIDList(simpleNotation, polymerType,
+				store);
+		
+		return getSimpleNotation(monomerIDs, polymerType, store);
+		
 	}
 
 }
