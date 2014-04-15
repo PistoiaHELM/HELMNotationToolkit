@@ -49,25 +49,21 @@ public class MonomerStore {
 
 		Monomer copyMonomer = DeepCopy.copy(monomer);
 
-		boolean alreadyInMonomerMap = monomerMap.containsKey(alternateId);
-		if (!alreadyInMonomerMap) {
+		boolean alreadyAdded = false;
+		alreadyAdded = monomerMap.containsKey(alternateId);
+		
+		if (!alreadyAdded) {
 			monomerMap.put(alternateId, copyMonomer);
+
+			boolean alreadyInSMILESMap = hasSmilesString
+					&& (smilesMonomerDB.containsKey(smilesString));
+
+			if (!alreadyInSMILESMap) {
+				smilesMonomerDB.put(smilesString, copyMonomer);
+			}
 		}
 
-		boolean alreadyInSMILESMap = hasSmilesString
-				&& (smilesMonomerDB.containsKey(smilesString));
-
-		if (!alreadyInSMILESMap) {
-			smilesMonomerDB.put(smilesString, monomer);
-		}
-		/*
-		 * if (!alreadyInMonomerMap && !alreadyInSMILESMap) {
-		 * monomerMap.put(alternateId, copyMonomer); if ( hasSmilesString) {
-		 * smilesMonomerDB.put(monomer.getCanSMILES(), monomer); } } else {
-		 * throw new MonomerException( "Monomer already exists in store " +
-		 * monomer.getAlternateId()); }
-		 */
-
+		
 	}
 
 	public boolean hasMonomer(String polymerType, String alternateId) {
@@ -91,6 +87,7 @@ public class MonomerStore {
 			MonomerException {
 		monomer.setNewMonomer(true);
 		addMonomer(monomer);
+		MonomerFactory.setDBChanged( true);
 	}
 
 	public boolean isMonomerStoreEmpty() {
@@ -102,7 +99,8 @@ public class MonomerStore {
 		this.monomerDB.clear();
 		this.smilesMonomerDB.clear();
 	}
-
+	
+	
 	public String toString() {
 		String str = "";
 		for (Map<String, Monomer> val : this.monomerDB.values()) {

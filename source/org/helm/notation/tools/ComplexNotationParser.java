@@ -1501,7 +1501,7 @@ public class ComplexNotationParser {
 		for (PolymerNode node : nodeList) {
 			if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE)
 					&& node.getLabel().startsWith(
-							SimpleNotationParser.AD_HOC_MONOMER_ID_PREFIX)) {
+							SimpleNotationParser.getAdHocMonomerIDPrefix(Monomer.CHEMICAL_POLYMER_TYPE))) {
 
 				Monomer m = monomerStore.getMonomer(
 						Monomer.CHEMICAL_POLYMER_TYPE, node.getLabel());

@@ -104,18 +104,24 @@ public class MonomerFactory {
 	 * @return Map as Map<String, Map<String, Monomer>>
 	 */
 	public synchronized Map<String, Map<String, Monomer>> getMonomerDB() {
-		return monomerDB;
+		return getMonomerDB( true);
 	}
 
-	/*
-	 * public synchronized Map<String, Map<String, Monomer>>
-	 * getExternalMonomerDB() { if ( externalMonomerDB == null) {
-	 * externalMonomerDB = new HashMap<String, Map<String, Monomer>>(); } return
-	 * externalMonomerDB; } public synchronized void
-	 * setExternalMonomerDB(Map<String, Map<String, Monomer>> map) {
-	 * externalMonomerDB=map; } public void clearExternalMonomerDB(){
-	 * externalMonomerDB=null; }
-	 */
+	public synchronized Map<String, Map<String, Monomer>> getMonomerDB( boolean includeNewMonomers) {
+		if ( includeNewMonomers) {
+			return monomerDB;
+		}
+		else {
+			Map<String, Map<String, Monomer>> reducedMonomerDB = new HashMap<String, Map<String, Monomer>>();
+			for ( String polymerType : monomerDB.keySet()) {
+				Map<String, Monomer> monomerMap = monomerDB.get( polymerType);
+				reducedMonomerDB.put(polymerType, excludeNewMonomers(monomerMap));
+			}
+			return reducedMonomerDB;
+		}
+	}
+	
+
 
 	protected MonomerStore monomerStore;
 
@@ -131,9 +137,29 @@ public class MonomerFactory {
 	}
 
 	public synchronized Map<String, Monomer> getSmilesMonomerDB() {
-		return smilesMonomerDB;
+		return getSmilesMonomerDB( true);
+	}
+	
+	public synchronized Map<String, Monomer> getSmilesMonomerDB( boolean includeNewMonomers) {
+		if ( includeNewMonomers) {
+			return smilesMonomerDB;
+		}
+		else {
+			return excludeNewMonomers( smilesMonomerDB);
+		}
 	}
 
+	private synchronized Map<String, Monomer> excludeNewMonomers( Map<String, Monomer> monomerMap) {
+		Map<String, Monomer> reducedMonomerMap = new HashMap<String, Monomer>();
+		for ( String identifier : monomerMap.keySet()) {
+			Monomer monomer = monomerMap.get( identifier);
+			if (! monomer.isNewMonomer()) {
+				reducedMonomerMap.put(identifier, monomer);
+			}
+		}
+		return reducedMonomerMap;
+	}
+	
 	public synchronized List<String> getPolymerTypes() {
 		List<String> l = new ArrayList<String>();
 		l.addAll(monomerDB.keySet());
@@ -297,25 +323,6 @@ public class MonomerFactory {
 		dbChanged = true;
 	}
 
-	/*
-	 * public void addExternalMonomer( Monomer monomer) throws IOException,
-	 * MonomerException { String polymerType = monomer.getPolymerType(); String
-	 * alternateId = monomer.getAlternateId();
-	 * 
-	 * Map<String, Monomer> monomerMap =
-	 * getExternalMonomerDB().get(polymerType);
-	 * 
-	 * Monomer copyMonomer = DeepCopy.copy(monomer);
-	 * 
-	 * if (null == monomerMap) { monomerMap = new HashMap<String, Monomer>();
-	 * externalMonomerDB.put(polymerType, monomerMap); }
-	 * 
-	 * if (!monomerMap.containsKey(alternateId)) { monomerMap.put(alternateId,
-	 * copyMonomer); } //TODO if (monomer.getCanSMILES() != null &&
-	 * monomer.getCanSMILES().length() > 0) { if
-	 * (!smilesMonomerDB.containsKey(monomer.getCanSMILES())) {
-	 * smilesMonomerDB.put(monomer.getCanSMILES(), monomer); } } }
-	 */
 
 	/**
 	 * Build an MonomerCache object with monomerDBXML String
@@ -438,8 +445,8 @@ public class MonomerFactory {
 	private List<Monomer> getNewMonomers(
 			Map<String, Map<String, Monomer>> monomerDB) {
 		List<Monomer> l = new ArrayList<Monomer>();
-		Set typeSet = monomerDB.keySet();
-		for (Iterator i = typeSet.iterator(); i.hasNext();) {
+		Set<String> typeSet = monomerDB.keySet();
+		for (Iterator<String> i = typeSet.iterator(); i.hasNext();) {
 			String polymerType = (String) i.next();
 			Map<String, Monomer> map = (Map<String, Monomer>) monomerDB
 					.get(polymerType);
@@ -476,6 +483,7 @@ public class MonomerFactory {
 		cache.setMonomerDB(newMonomerDB);
 		cache.setAttachmentDB(newAttachmentDB);
 		cache.setSmilesMonomerDB(newSmilesMonomerDB);
+	
 
 		return cache;
 	}
@@ -581,9 +589,12 @@ public class MonomerFactory {
 					.getResourceAsStream(MONOMER_DB_XML_RESOURCE);
 			cache = buildMonomerCacheFromXML(in);
 			validate(cache.getMonomerDB());
+			
 			logger.log(Level.INFO, MONOMER_DB_XML_RESOURCE
 					+ " is used for monomer cache initialization");
 		}
+
+	
 
 		monomerDB = cache.getMonomerDB();
 		attachmentDB = cache.getAttachmentDB();
@@ -603,9 +614,9 @@ public class MonomerFactory {
 			f.mkdir();
 		}
 		MonomerCache cache = new MonomerCache();
-		cache.setMonomerDB(getMonomerDB());
+		cache.setMonomerDB(getMonomerDB( false));
 		cache.setAttachmentDB(getAttachmentDB());
-		cache.setSmilesMonomerDB(getSmilesMonomerDB());
+		cache.setSmilesMonomerDB(getSmilesMonomerDB( false));
 		serializeMonomerCache(cache, MONOMER_CACHE_FILE_PATH);
 
 		String monomerDbXML = buildMonomerDbXMLFromCache(cache);
