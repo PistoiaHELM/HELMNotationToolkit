@@ -31,7 +31,11 @@ public class MonomerStore {
 		return smilesMonomerDB;
 	}
 
-	public void addMonomer(Monomer monomer) throws IOException,
+	public void addMonomer(Monomer monomer) throws IOException, MonomerException {
+		addMonomer(monomer, false);
+	}
+	
+	public void addMonomer(Monomer monomer, boolean dbChanged) throws IOException,
 			MonomerException {
 		Map<String, Monomer> monomerMap = monomerDB.get(monomer
 				.getPolymerType());
@@ -63,7 +67,9 @@ public class MonomerStore {
 			}
 		}
 
-		
+		if ( dbChanged) {
+			MonomerFactory.setDBChanged(true);
+		}
 	}
 
 	public boolean hasMonomer(String polymerType, String alternateId) {
@@ -78,7 +84,7 @@ public class MonomerStore {
 	public Monomer getMonomer(String smiles) {
 		return smilesMonomerDB.get(smiles);
 	}
-
+	
 	public Map<String, Monomer> getMonomers(String polymerType) {
 		return monomerDB.get(polymerType);
 	}
@@ -86,8 +92,7 @@ public class MonomerStore {
 	public synchronized void addNewMonomer(Monomer monomer) throws IOException,
 			MonomerException {
 		monomer.setNewMonomer(true);
-		addMonomer(monomer);
-		MonomerFactory.setDBChanged( true);
+		addMonomer(monomer, true);
 	}
 
 	public boolean isMonomerStoreEmpty() {
