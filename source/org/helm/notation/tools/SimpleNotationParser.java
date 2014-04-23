@@ -900,7 +900,7 @@ public class SimpleNotationParser {
 						"Unable to initialize monomer factory", ex);
 			}
 
-			alternateId = generateNextMonomerID(polymerType, monomerStore);
+			alternateId = generateNextAdHocMonomerID(polymerType, monomerStore);
 
 			Map<String, Attachment> ids = factory.getAttachmentDB();
 			Attachment R1HAtt = ids.get("R1-H");
@@ -913,6 +913,7 @@ public class SimpleNotationParser {
 				m = new Monomer(polymerType, Monomer.BACKBONE_MOMONER_TYPE,
 						"X", alternateId);
 			}
+			m.setAdHocMonomer( true);
 			m.setCanSMILES(nodeDesc);
 
 			List<Attachment> al = new ArrayList<Attachment>();
@@ -950,7 +951,6 @@ public class SimpleNotationParser {
 			m.setAttachmentList(al);
 			try {
 				monomerStore.addNewMonomer(m);
-				MonomerFactory.setDBChanged( true);
 			} catch (Exception ex) {
 				throw new NotationException(
 						"Unable to add adhoc new monomer into monomer databse",
@@ -2213,26 +2213,53 @@ public class SimpleNotationParser {
 //			}
 //		}
 //		return alternateId;
-//	}
+//	}	
+	private static Map<String, Integer> seedMap = new HashMap<String, Integer>();
+	
+	public static String getAdHocMonomerIDPrefix(String polymerType) {
+		if ( polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
+			return "CM#";
+		}
+		else if ( polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE)) {
+			return "PM#";
+		}
+		else {
+			return "AM#";
+		}
+	}
 
-	private static int seed = 0;
-	protected static String AD_HOC_MONOMER_ID_PREFIX = "AM#";
-
-	private static String generateNextMonomerID(String polymerType,
+	public static String generateNextAdHocMonomerID(String polymerType,
 			MonomerStore store) {
+		Map<String, Monomer> internalMonomers = null;
+		try {
+			internalMonomers = MonomerFactory.getInstance().getMonomerDB().get(polymerType);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		Map<String, Monomer> monomers = store.getMonomers(polymerType);
+		
+		Integer seed = seedMap.get(polymerType);
+		if ( seed == null) {
+			seed = 0;
+		}
 		seed++;
-		String result = AD_HOC_MONOMER_ID_PREFIX + seed;
-		if (monomers!=null && monomers.containsKey(result)) {
-			return generateNextMonomerID(polymerType, store);
+		seedMap.put( polymerType, seed);
+		
+		String result = getAdHocMonomerIDPrefix(polymerType) + seed;
+		
+		
+		if ((monomers!=null && monomers.containsKey(result))
+				|| (internalMonomers != null && internalMonomers.containsKey(result))) {
+			return generateNextAdHocMonomerID(polymerType, store);
 		} else {
 			return result;
 		}
 	}
 
-	// TODO need to reset seed for unit tests
+
 	public static void resetSeed() {
-		seed = 0;
+		seedMap = new HashMap<String, Integer>();
 	}
 
 	public static int getMatchingBracketPosition(char[] characters,

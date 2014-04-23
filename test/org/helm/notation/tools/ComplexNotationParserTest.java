@@ -516,7 +516,7 @@ public class ComplexNotationParserTest {
 		String helmNotation="PEPTIDE1{[C[C@H](N[*])C(=O)C[*] |$;;;_R1;;;;_R2$|].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$";
 		String notationNoSmiles=ComplexNotationParser.getNotationByReplacingSmiles(helmNotation, MonomerFactory.getInstance().getMonomerStore());
 		
-		assertEquals(notationNoSmiles, "PEPTIDE1{[AM#1].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$");
+		assertEquals(notationNoSmiles, "PEPTIDE1{[PM#1].G.G.G.C.C.K.K.K.K}|CHEM1{MCC}$PEPTIDE1,CHEM1,10:R3-1:R1$$$");
 		
 		
 	}

@@ -389,7 +389,7 @@ public class SimpleNotationParserTest {
 		assertEquals("GGKAXC",
 				SimpleNotationParser.getPeptideSequence(peptide));
 		
-		assertEquals("G|G|K|A|AM#1|seC",
+		assertEquals("G|G|K|A|PM#1|seC",
 				SimpleNotationParser.getModifiedPeptideSequence(peptide,"|"));
 	
 		
@@ -399,7 +399,7 @@ public class SimpleNotationParserTest {
 	public void testReplaceSmiles() throws NotationException, MonomerException, JDOMException, IOException{
 		String notation = "[C[C@H](N[*])C(=O)C[*] |$;;;_R1;;;;_R2$|].G.G.G.C.C.K.K.K.K";
 		String newNotation=SimpleNotationParser.getNotationByReplacingSmiles(notation,"PEPTIDE",MonomerFactory.getInstance().getMonomerStore());
-		assertEquals("[AM#1].G.G.G.C.C.K.K.K.K",newNotation);
+		assertEquals("[PM#1].G.G.G.C.C.K.K.K.K",newNotation);
 		
 		
 		

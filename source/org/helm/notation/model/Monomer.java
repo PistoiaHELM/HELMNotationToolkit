@@ -56,6 +56,7 @@ public class Monomer implements Serializable {
     private String polymerType;    //list of attachments in the monomer
     private List<Attachment> attachmentList;    //mark monomer as new 
     private boolean newMonomer;
+    private boolean adHocMonomer;
     public static final String ID_A = "A";
     public static final String ID_G = "G";
     public static final String ID_C = "C";
@@ -143,6 +144,14 @@ public class Monomer implements Serializable {
         this.naturalAnalog = naturalAnalog;
     }
 
+    public void setAdHocMonomer( boolean adHocMonomer) {
+    	this.adHocMonomer = adHocMonomer;
+    }
+    
+    public boolean isAdHocMonomer() {
+    	return this.adHocMonomer;
+    }
+    
     public String getCanSMILES() {
         return canSMILES;
     }

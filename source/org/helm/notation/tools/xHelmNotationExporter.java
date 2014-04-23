@@ -50,7 +50,7 @@ public class xHelmNotationExporter {
 				List<Monomer> monomers = SimpleNotationParser.getMonomerList(
 						node.getLabel(), node.getType(), store);
 				for (Monomer subnode : monomers) {
-					if (!subnode.getAlternateId().startsWith("AM#")) {
+					if (!subnode.isAdHocMonomer()) {
 						set.add(subnode);
 					}
 				}

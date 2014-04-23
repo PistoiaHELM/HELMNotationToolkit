@@ -31,6 +31,7 @@ import chemaxon.struc.Molecule;
 import org.helm.notation.NotationException;
 import org.helm.notation.StructureException;
 import org.helm.notation.model.MoleculeInfo;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class provides methods that handle chemical structures
@@ -485,7 +488,7 @@ public class StructureParser {
         String[] tokens = extendedSmiles.split("R", -1);
         if (tokens.length > 1) {
             for (int i = 1; i < tokens.length; i++) {
-                String token = tokens[i];
+                String token = tokens[i];                
                 char[] chars = token.toCharArray();
                 String numbers = "";
                 for (int j = 0; j < chars.length; j++) {
@@ -506,4 +509,21 @@ public class StructureParser {
 
         return list;
     }
+    
+    /**
+     * This method extracts and returns smiles(CCC(S[*])[C@H](N[*])C([*])=O) from extendedSmiles (CCC(S[*])[C@H](N[*])C([*])=O |r,$;;;;_R3;;;_R1;;_R2;$|)
+     * @param extendedSmiles
+     * @return smiles
+     */
+	public static String getSmilesFromExtendedSmiles(String extendedSmiles) {
+		String smiles = extendedSmiles;
+		String regex = "(.+)\\|(r,)?\\$";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(extendedSmiles);
+		if (m.find()) {
+			smiles = m.group(1).trim();
+		}
+
+		return smiles;
+	}
 }
