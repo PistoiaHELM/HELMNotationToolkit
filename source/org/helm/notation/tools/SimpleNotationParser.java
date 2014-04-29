@@ -906,10 +906,15 @@ public class SimpleNotationParser {
 			Attachment R1HAtt = ids.get("R1-H");
 
 			Monomer m = null;
-			if (polymerType == Monomer.CHEMICAL_POLYMER_TYPE) {
+			if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
 				m = new Monomer(polymerType, Monomer.UNDEFINED_MOMONER_TYPE,
 						null, alternateId);
-			} else {
+			}
+			else if (polymerType.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
+				m = new Monomer(polymerType, Monomer.BRANCH_MOMONER_TYPE,
+						"X", alternateId);
+			} 
+			else {
 				m = new Monomer(polymerType, Monomer.BACKBONE_MOMONER_TYPE,
 						"X", alternateId);
 			}
@@ -1027,14 +1032,14 @@ public class SimpleNotationParser {
 
 		int start = 0;
 		Nucleotide na = list.get(start);
-		while (null == na.getBaseMonomer()) {
+		while (null == na.getBaseMonomer(monomerStore)) {
 			start++;
 			na = list.get(start);
 		}
 
 		int end = list.size() - 1;
 		na = list.get(end);
-		while (null == na.getBaseMonomer()) {
+		while (null == na.getBaseMonomer(monomerStore)) {
 			end--;
 			na = list.get(end);
 		}
@@ -1934,7 +1939,7 @@ public class SimpleNotationParser {
 				if (null != nuc.getSugarMonomer()) {
 					offset++;
 				}
-				if (null != nuc.getBaseMonomer()) {
+				if (null != nuc.getBaseMonomer(monomerStore)) {
 					offset++;
 				}
 				if (null != nuc.getPhosphateMonomer()) {
@@ -2222,6 +2227,9 @@ public class SimpleNotationParser {
 		}
 		else if ( polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE)) {
 			return "PM#";
+		}
+		else if ( polymerType.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
+			return "NM#";
 		}
 		else {
 			return "AM#";

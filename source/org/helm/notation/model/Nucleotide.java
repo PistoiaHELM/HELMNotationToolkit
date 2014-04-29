@@ -22,9 +22,13 @@
 package org.helm.notation.model;
 
 import org.helm.notation.MonomerFactory;
+import org.helm.notation.MonomerStore;
+import org.helm.notation.NotationException;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is a data model class for nucleotide
@@ -176,11 +180,22 @@ public class Nucleotide implements Serializable {
      * @return base monomer, could be null
      */
     public Monomer getBaseMonomer() {
+    	MonomerFactory factory = null;
+		try {
+			factory = MonomerFactory.getInstance();
+		} catch (Exception ex) {
+			Logger.getLogger(Nucleotide.class.getName()).log(Level.SEVERE, "Unable to initialize monomer factory", ex);			
+		}
+    	return getBaseMonomer(factory.getMonomerStore());
+	
+	}	 
+	 
+    public Monomer getBaseMonomer(MonomerStore monomerStore) {
 
         String baseSymbol = getBaseSymbol();
         if (baseSymbol != null && !baseSymbol.equalsIgnoreCase("")) {
             try {
-                Map<String, Monomer> monomers = MonomerFactory.getInstance().getMonomerDB().get(Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+                Map<String, Monomer> monomers = monomerStore.getMonomers(Monomer.NUCLIEC_ACID_POLYMER_TYPE);
                 Monomer m = monomers.get(baseSymbol);
                 return m;
             } catch (Exception ex) {

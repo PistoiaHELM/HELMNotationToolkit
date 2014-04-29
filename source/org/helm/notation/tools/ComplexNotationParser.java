@@ -1971,7 +1971,7 @@ public class ComplexNotationParser {
 			// build the matching monomer position
 			for (int i = 0; i < seqMatchLength; i++) {
 				Nucleotide nuc1 = seq1NucList.get(i + seq1NucStart);
-				if (null == nuc1.getBaseMonomer()) {
+				if (null == nuc1.getBaseMonomer(monomerStore)) {
 					throw new NotationException(
 							"Nucleotide without base cannot be hybridized with others");
 				}
@@ -1982,7 +1982,7 @@ public class ComplexNotationParser {
 				}
 
 				Nucleotide nuc2 = seq2NucList.get(i + seq2NucStart);
-				if (null == nuc2.getBaseMonomer()) {
+				if (null == nuc2.getBaseMonomer(monomerStore)) {
 					throw new NotationException(
 							"Nucleotide without base cannot be hybridized with others");
 				}

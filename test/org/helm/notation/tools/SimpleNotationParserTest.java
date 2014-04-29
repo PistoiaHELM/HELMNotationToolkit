@@ -38,6 +38,10 @@ public class SimpleNotationParserTest {
 		return "[OP([*])([*])=O |$;;_R1;_R2;$|].R(A)[sP].RP.R(G)[OP([*])([*])=O |$;;_R1;_R2;$|].[LR]([5meC])";
 	}
 	
+	public String getInlineRNAModifiedAdenine(){
+		return "R([C[N]1=CN=C(N)C2=C1N([*])C=N2 |$;;;;;;;;;_R1;;$,c:6,11,t:1,3|])";
+	}
+	
 	
 	
 	public String getSimplePeptideNotation(){		
@@ -92,6 +96,10 @@ public class SimpleNotationParserTest {
         
         count=SimpleNotationParser.getMonomerCount(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
         assertEquals(11,count);
+        
+        
+        count=SimpleNotationParser.getMonomerCount(getInlineRNAModifiedAdenine(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+        assertEquals(2,count);
         
         
         count=SimpleNotationParser.getMonomerCount(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
@@ -168,6 +176,10 @@ public class SimpleNotationParserTest {
         assertEquals("RNA1{[OP([*])([*])=O |$;;_R1;_R2;$|].R(A)[sP].RP.R(G)[OP([*])([*])=O |$;;_R1;_R2;$|].[LR]([5meC])}$$$$",complexNotation);
         
 		
+        complexNotation=SimpleNotationParser.getComplexNotation(getInlineRNAModifiedAdenine(), Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+        assertEquals("RNA1{R([C[N]1=CN=C(N)C2=C1N([*])C=N2 |$;;;;;;;;;_R1;;$,c:6,11,t:1,3|])}$$$$",complexNotation);
+        
+        
         complexNotation=SimpleNotationParser.getComplexNotation(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE);
         assertEquals("PEPTIDE1{G.G.K.A.A.[seC]}$$$$",complexNotation);
         
@@ -231,6 +243,8 @@ public class SimpleNotationParserTest {
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getSimpleRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE));
 		
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getInlineSmilesRNANotation(), Monomer.NUCLIEC_ACID_POLYMER_TYPE));
+		
+		assertTrue(SimpleNotationParser.validateSimpleNotation(getInlineRNAModifiedAdenine(), Monomer.NUCLIEC_ACID_POLYMER_TYPE));
 		
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getSimplePeptideNotation(), Monomer.PEPTIDE_POLYMER_TYPE));
 		
@@ -406,6 +420,7 @@ public class SimpleNotationParserTest {
 
 	}
 	
+
 	
 	
 	
