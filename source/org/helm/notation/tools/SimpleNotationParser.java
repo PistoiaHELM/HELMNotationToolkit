@@ -611,32 +611,67 @@ public class SimpleNotationParser {
 			if (reverseNucMap.containsKey(tmpNotation)) {
 				symbol = reverseNucMap.get(tmpNotation);
 			} else {
-				// boolean modified =
-				// (notation.indexOf(MODIFICATION_START_SYMBOL) >=0);
-				String[] tokens = notation.split(BRANCH_DELIMITER_REGEX);
-				String base = null;
-				if (tokens.length >= 2) {
-					base = tokens[1].replaceAll(MODIFICATION_DELIMITER_REGEX,
-							"");
-				}
-				if (null != base) {
-					if (base.length() == 1) {
-						symbol = base;
-					} else {
-						Monomer monomer = SimpleNotationParser
-								.getMonomer(base,
-										Monomer.NUCLIEC_ACID_POLYMER_TYPE,
-										monomerStore);
-						if (null == monomer.getNaturalAnalog()) {
-							symbol = "X";
-						} else {
-							symbol = monomer.getNaturalAnalog();
-						}
+				char [] chars=notation.toCharArray();
+				String base=null;
+				symbol="X";
+				
+				//find base
+				for (int j = 0; j < chars.length; j++) {
+					char letter = chars[j];
+					//skip modifications if not in branch
+					if (letter == MODIFICATION_START_SYMBOL) {
+						int matchingPos = getMatchingBracketPosition(chars, j,
+								MODIFICATION_START_SYMBOL,
+								MODIFICATION_END_SYMBOL);
+						j++;
+
+						if (matchingPos == -1) {
+							throw new NotationException(
+									"Invalid Polymer Notation: Could not find matching bracket");
+						} 
+						j = matchingPos;
+					
 					}
-				} else {
-					symbol = "X";
+					//base is always a branch monomer
+					else if (letter == BRANCH_START_SYMBOL) {
+						int matchingPos = getMatchingBracketPosition(chars, j,
+								BRANCH_START_SYMBOL,
+								BRANCH_END_SYMBOL);
+						j++;
+						
+						if (matchingPos == -1) {
+							throw new NotationException(
+									"Invalid Polymer Notation: Could not find matching bracket");
+						}
+						
+						base = notation.substring(j, matchingPos);
+						
+						if (base.length() == 1) {
+							symbol = base;
+						}
+						else {
+							String id=SimpleNotationParser
+									.processNode(base, Monomer.NUCLIEC_ACID_POLYMER_TYPE,
+											monomerStore);
+							Monomer monomer = SimpleNotationParser
+									.getMonomer(id,
+											Monomer.NUCLIEC_ACID_POLYMER_TYPE,
+											monomerStore);
+							if (null == monomer.getNaturalAnalog()) {
+								symbol = "X";
+							} else {
+								symbol = monomer.getNaturalAnalog();
+							}
+						}
+						
+						j = matchingPos;
+					}
+					
+					
 				}
+			
 			}
+
 			Nucleotide nuc = new Nucleotide(symbol, notation);
 			ids.add(nuc);
 		}
@@ -652,6 +687,8 @@ public class SimpleNotationParser {
 
 		return ids;
 	}
+	
+	
 
 	/**
 	 * getNucleotideList is a more forgiving function that will try to
