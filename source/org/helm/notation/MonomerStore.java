@@ -7,34 +7,79 @@ import java.util.Set;
 
 import org.helm.notation.model.Monomer;
 import org.helm.notation.tools.DeepCopy;
-
+/**
+ * This class represents a store for monomers.
+ * It is mainly used to seperate the monomers coming from a 
+ * single (XHELM) file from the monomers within the local database.  
+ * 
+ * @author maisel
+ *
+ */
 public class MonomerStore {
 	private Map<String, Map<String, Monomer>> monomerDB;
 	private Map<String, Monomer> smilesMonomerDB;
 
+	/**
+	 * Constructor with Monomer- and SmilesDB
+	 * 
+	 * @param monomerDB
+	 * @param smilesMonomerDB
+	 */
 	public MonomerStore(Map<String, Map<String, Monomer>> monomerDB,
 			Map<String, Monomer> smilesMonomerDB) {
 		this.monomerDB = monomerDB;
 		this.smilesMonomerDB = smilesMonomerDB;
 	}
 
+	/**
+	 * 
+	 * Constructs empty MonomerStore
+	 * 
+	 */
 	public MonomerStore() {
 		monomerDB = new HashMap<String, Map<String, Monomer>>();
 		smilesMonomerDB = new HashMap<String, Monomer>();
 	}
 
+	
+	/**
+	 * returns MonomerDB
+	 * 
+	 * @return MonomerDB as Map<String, Map<String, Monomer>>
+	 */
 	public Map<String, Map<String, Monomer>> getMonomerDB() {
 		return monomerDB;
 	}
 
+	/**
+	 * returns SmilesMonomerDB
+	 * 
+	 * @return SmilesMonomerDB as Map<String, Monomer>
+	 */
 	public Map<String, Monomer> getSmilesMonomerDB() {
 		return smilesMonomerDB;
 	}
 
+	/**
+	 * Adds a monomer to the store
+	 * 
+	 * @param monomer
+	 * @throws IOException
+	 * @throws MonomerException
+	 */
 	public void addMonomer(Monomer monomer) throws IOException, MonomerException {
 		addMonomer(monomer, false);
 	}
 	
+	
+	/**
+	 * Adds a monomer to the store and optionally sets the dbChanged flag
+	 * 
+	 * @param monomer
+	 * @param dbChanged
+	 * @throws IOException
+	 * @throws MonomerException
+	 */
 	public void addMonomer(Monomer monomer, boolean dbChanged) throws IOException,
 			MonomerException {
 		Map<String, Monomer> monomerMap = monomerDB.get(monomer
@@ -72,34 +117,77 @@ public class MonomerStore {
 		}
 	}
 
+	/**
+	 * Checks if a specific monomer exists in the store
+	 * 
+	 * @param polymerType
+	 * @param alternateId
+	 * @return true if monomer exists, false if not
+	 */
 	public boolean hasMonomer(String polymerType, String alternateId) {
 		return ((monomerDB.get(polymerType) != null) && getMonomer(polymerType,
 				alternateId) != null);
 	}
 
+	
+	/**
+	 * Returns the monomer specified by polymerType and alternatId
+	 * 
+	 * @param polymerType
+	 * @param alternateId
+	 * @return the matching monomer
+	 */
 	public Monomer getMonomer(String polymerType, String alternateId) {
 		return monomerDB.get(polymerType).get(alternateId);
 	}
 
+	/**
+	 * Returns the monomer by smiles string
+	 * 
+	 * @param smiles
+	 * @return the matching monomer
+	 */
 	public Monomer getMonomer(String smiles) {
 		return smilesMonomerDB.get(smiles);
 	}
 	
+	/**
+	 * Returns all monomers by polymerType
+	 * 
+	 * @param polymerType
+	 * @return All monomers with polymerType
+	 */
 	public Map<String, Monomer> getMonomers(String polymerType) {
 		return monomerDB.get(polymerType);
 	}
 
+	/**
+	 * Adds a monomer to the store and makes it a temporary new monomer
+	 * 
+	 * @param monomer
+	 * @throws IOException
+	 * @throws MonomerException
+	 */
 	public synchronized void addNewMonomer(Monomer monomer) throws IOException,
 			MonomerException {
 		monomer.setNewMonomer(true);
 		addMonomer(monomer, true);
 	}
 
+	/**
+	 * Checks for the empty store
+	 * 
+	 * @return true if the store is empty, false if not
+	 */
 	public boolean isMonomerStoreEmpty() {
 		return (this.monomerDB == null || this.monomerDB.values() == null || this.monomerDB
 				.values().size() == 0);
 	}
 
+	
+	/**
+	 * Clears the MonomerStore
+	 */
 	public synchronized void clearMonomers() {
 		this.monomerDB.clear();
 		this.smilesMonomerDB.clear();
@@ -119,6 +207,11 @@ public class MonomerStore {
 		return str;
 	}
 	
+	/**
+	 * Returns the polymer type set
+	 * 
+	 * @return the polymer type set as Set<String>
+	 */
 	 public Set<String> getPolymerTypeSet(){
 	    	return monomerDB.keySet();    
 	    }
