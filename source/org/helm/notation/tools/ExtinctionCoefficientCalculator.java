@@ -184,7 +184,7 @@ public class ExtinctionCoefficientCalculator {
             String notation = polymerNode.getLabel();
             float ext = 0.0f;
             if (polymerType.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
-                ext = calculateFromRnaPolymerNotation(notation);
+                ext = calculateFromRnaPolymerNotation(notation,monomerStore);
                 if (unitType == PEPTIDE_UNIT_TYPE) {
                     ext = ext*1000;
                 }
@@ -210,8 +210,15 @@ public class ExtinctionCoefficientCalculator {
      * @throws org.helm.notation.StructureException
      * @throws org.helm.notation.CalculationException
      */
+    
     public float calculateFromRnaPolymerNotation(String simpleNotation) throws NotationException, MonomerException, CalculationException, IOException, JDOMException, StructureException {
-        String naturalSequence = SimpleNotationParser.getTrimmedNucleotideSequence(simpleNotation);
+        MonomerStore store=MonomerFactory.getInstance().getMonomerStore();
+        return calculateFromRnaPolymerNotation(simpleNotation,store);
+        
+    }
+    
+    public float calculateFromRnaPolymerNotation(String simpleNotation,MonomerStore monomerStore) throws NotationException, MonomerException, CalculationException, IOException, JDOMException, StructureException {
+        String naturalSequence = SimpleNotationParser.getTrimmedNucleotideSequence(simpleNotation,monomerStore);
         return calculateFromNucleotideSequence(naturalSequence);
     }
 

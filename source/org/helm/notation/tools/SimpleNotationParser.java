@@ -611,32 +611,67 @@ public class SimpleNotationParser {
 			if (reverseNucMap.containsKey(tmpNotation)) {
 				symbol = reverseNucMap.get(tmpNotation);
 			} else {
-				// boolean modified =
-				// (notation.indexOf(MODIFICATION_START_SYMBOL) >=0);
-				String[] tokens = notation.split(BRANCH_DELIMITER_REGEX);
-				String base = null;
-				if (tokens.length >= 2) {
-					base = tokens[1].replaceAll(MODIFICATION_DELIMITER_REGEX,
-							"");
-				}
-				if (null != base) {
-					if (base.length() == 1) {
-						symbol = base;
-					} else {
-						Monomer monomer = SimpleNotationParser
-								.getMonomer(base,
-										Monomer.NUCLIEC_ACID_POLYMER_TYPE,
-										monomerStore);
-						if (null == monomer.getNaturalAnalog()) {
-							symbol = "X";
-						} else {
-							symbol = monomer.getNaturalAnalog();
-						}
+				char [] chars=notation.toCharArray();
+				String base=null;
+				symbol="X";
+				
+				//find base
+				for (int j = 0; j < chars.length; j++) {
+					char letter = chars[j];
+					//skip modifications if not in branch
+					if (letter == MODIFICATION_START_SYMBOL) {
+						int matchingPos = getMatchingBracketPosition(chars, j,
+								MODIFICATION_START_SYMBOL,
+								MODIFICATION_END_SYMBOL);
+						j++;
+
+						if (matchingPos == -1) {
+							throw new NotationException(
+									"Invalid Polymer Notation: Could not find matching bracket");
+						} 
+						j = matchingPos;
+					
 					}
-				} else {
-					symbol = "X";
+					//base is always a branch monomer
+					else if (letter == BRANCH_START_SYMBOL) {
+						int matchingPos = getMatchingBracketPosition(chars, j,
+								BRANCH_START_SYMBOL,
+								BRANCH_END_SYMBOL);
+						j++;
+						
+						if (matchingPos == -1) {
+							throw new NotationException(
+									"Invalid Polymer Notation: Could not find matching bracket");
+						}
+						
+						base = notation.substring(j, matchingPos);
+						
+						if (base.length() == 1) {
+							symbol = base;
+						}
+						else {
+							String id=SimpleNotationParser
+									.processNode(base, Monomer.NUCLIEC_ACID_POLYMER_TYPE,
+											monomerStore);
+							Monomer monomer = SimpleNotationParser
+									.getMonomer(id,
+											Monomer.NUCLIEC_ACID_POLYMER_TYPE,
+											monomerStore);
+							if (null == monomer.getNaturalAnalog()) {
+								symbol = "X";
+							} else {
+								symbol = monomer.getNaturalAnalog();
+							}
+						}
+						
+						j = matchingPos;
+					}
+					
+					
 				}
+			
 			}
+
 			Nucleotide nuc = new Nucleotide(symbol, notation);
 			ids.add(nuc);
 		}
@@ -652,6 +687,8 @@ public class SimpleNotationParser {
 
 		return ids;
 	}
+	
+	
 
 	/**
 	 * getNucleotideList is a more forgiving function that will try to
@@ -906,10 +943,15 @@ public class SimpleNotationParser {
 			Attachment R1HAtt = ids.get("R1-H");
 
 			Monomer m = null;
-			if (polymerType == Monomer.CHEMICAL_POLYMER_TYPE) {
+			if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
 				m = new Monomer(polymerType, Monomer.UNDEFINED_MOMONER_TYPE,
 						null, alternateId);
-			} else {
+			}
+			else if (polymerType.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
+				m = new Monomer(polymerType, Monomer.BRANCH_MOMONER_TYPE,
+						"X", alternateId);
+			} 
+			else {
 				m = new Monomer(polymerType, Monomer.BACKBONE_MOMONER_TYPE,
 						"X", alternateId);
 			}
@@ -1027,14 +1069,14 @@ public class SimpleNotationParser {
 
 		int start = 0;
 		Nucleotide na = list.get(start);
-		while (null == na.getBaseMonomer()) {
+		while (null == na.getBaseMonomer(monomerStore)) {
 			start++;
 			na = list.get(start);
 		}
 
 		int end = list.size() - 1;
 		na = list.get(end);
-		while (null == na.getBaseMonomer()) {
+		while (null == na.getBaseMonomer(monomerStore)) {
 			end--;
 			na = list.get(end);
 		}
@@ -1934,7 +1976,7 @@ public class SimpleNotationParser {
 				if (null != nuc.getSugarMonomer()) {
 					offset++;
 				}
-				if (null != nuc.getBaseMonomer()) {
+				if (null != nuc.getBaseMonomer(monomerStore)) {
 					offset++;
 				}
 				if (null != nuc.getPhosphateMonomer()) {
@@ -2222,6 +2264,9 @@ public class SimpleNotationParser {
 		}
 		else if ( polymerType.equals(Monomer.PEPTIDE_POLYMER_TYPE)) {
 			return "PM#";
+		}
+		else if ( polymerType.equals(Monomer.NUCLIEC_ACID_POLYMER_TYPE)) {
+			return "NM#";
 		}
 		else {
 			return "AM#";

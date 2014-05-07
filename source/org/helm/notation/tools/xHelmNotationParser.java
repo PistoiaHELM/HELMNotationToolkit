@@ -16,14 +16,34 @@ import org.jdom.JDOMException;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
+/**
+ * Class to parse the XHELM XML format
+ * 
+ * @author maisel
+ *
+ */
 public class xHelmNotationParser {
+	
+	/**
+	 * Extracts the complex notation string from the root node of the XHELM document
+	 * 
+	 * @param rootElement
+	 * @return the complex notation string
+	 */
 	public static String getComplexNotationString(Element rootElement)
 	{
 		Element helmNotationElement = rootElement.getChild("HelmNotation");
 		return helmNotationElement.getText();
 	}
 
-	// read monomers to monomerStore
+	/**
+	 * Generates the monomer store from a given XHELM document
+	 * 
+	 * @param rootElement
+	 * @return a monomer store
+	 * @throws MonomerException
+	 * @throws IOException
+	 */
 	public static MonomerStore getMonomerStore(Element rootElement)
 			throws MonomerException, IOException {
 		MonomerStore monomerStore = new MonomerStore();

@@ -40,8 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * This class provides methods that handle chemical structures
@@ -510,20 +509,5 @@ public class StructureParser {
         return list;
     }
     
-    /**
-     * This method extracts and returns smiles(CCC(S[*])[C@H](N[*])C([*])=O) from extendedSmiles (CCC(S[*])[C@H](N[*])C([*])=O |r,$;;;;_R3;;;_R1;;_R2;$|)
-     * @param extendedSmiles
-     * @return smiles
-     */
-	public static String getSmilesFromExtendedSmiles(String extendedSmiles) {
-		String smiles = extendedSmiles;
-		String regex = "(.+)\\|(r,)?\\$";
-		Pattern p = Pattern.compile(regex);
-		Matcher m = p.matcher(extendedSmiles);
-		if (m.find()) {
-			smiles = m.group(1).trim();
-		}
-
-		return smiles;
-	}
+  
 }

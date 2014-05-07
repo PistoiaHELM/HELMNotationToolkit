@@ -19,6 +19,13 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+
+/**
+ * Class to export to XHELM XML format
+ * 
+ * @author maisel
+ *
+ */
 public class xHelmNotationExporter {
 
 	public static final String XHELM_ELEMENT 			= "Xhelm";
@@ -28,7 +35,13 @@ public class xHelmNotationExporter {
     public static final String HELM_NOTATION_ELEMENT 	= "HelmNotation";
     
 
-	
+	/**
+	 * Writes the XHELM XML format for the given notation and the corresponding monomer store
+	 * 
+	 * @param helmNotation
+	 * @param store
+	 * @return the XHELM format
+	 */
 	public static String writeXHELM(String helmNotation, MonomerStore store) {
 		Element root = new Element(XHELM_ELEMENT);
 

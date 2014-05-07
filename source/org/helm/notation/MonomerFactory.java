@@ -106,7 +106,13 @@ public class MonomerFactory {
 	public synchronized Map<String, Map<String, Monomer>> getMonomerDB() {
 		return getMonomerDB( true);
 	}
-
+	
+	
+	/**
+	 * returns the monomer database including monomers that where temporary marked as new, else without those monomers
+	 * @param includeNewMonomers 
+	 * @return Map as Map<String, Map<String, Monomer>>
+	 */
 	public synchronized Map<String, Map<String, Monomer>> getMonomerDB( boolean includeNewMonomers) {
 		if ( includeNewMonomers) {
 			return monomerDB;
@@ -125,6 +131,10 @@ public class MonomerFactory {
 
 	protected MonomerStore monomerStore;
 
+	/**
+	 * create a MonomerStore instance based on MonomerFactory's monomerDB and smilesMonomerDB
+	 * @return MonomerStore
+	 */
 	public synchronized MonomerStore getMonomerStore() {
 		if (monomerStore == null) {
 			monomerStore = new MonomerStore(monomerDB, smilesMonomerDB);
@@ -705,13 +715,13 @@ public class MonomerFactory {
 		return true;
 	}
 
+
 	public static void finalizeMonomerCache() {
 
 		monomerDB = null;
 		attachmentDB = null;
 		smilesMonomerDB = null;
 		dbChanged = true;
-		// externalMonomerDB=null;
 		instance = null;
 	}
 
