@@ -65,17 +65,21 @@ import org.jdom.JDOMException;
  */
 /**
  * This class provides methods that handle complex polymer extendendNotation.
- * Complex Polymer Notation is based on graph theory, and uses simple polymer
- * notation and chemical structure as building blocks. The following is a
- * extendendNotation for complex polymer RNA1{R(A)P.[mR](U)P.R([BiA])P.R(C)P}
- * |RNA2{R([BiA])P.R(U)P.R(G)P.R(C)P} |CHEM1{bLink} $RNA1,CHEM1,8:R2-1:R1
- * |CHEM1,RNA2,1:R2-2:R2 Complex notation will follow the following format
- * starting 7/14/2008 NodeList$EdgeList$BasePairList$NodeLabelList$OtherTBD,
- * where EdgeList, BasePairList, NodeLabelList and OtherTBD could be empty, but
- * still keep the positional $ 1. Node List 2. Edge List 3. Base Pair List 4.
- * Node Label List 5. OtherTBD Be careful that monomer XML may contain $, so we
- * have to walk the notation from left to right
- * 
+ * Complex Polymer Notation is based on graph theory, and uses simple polymer notation and chemical structure as building blocks.
+ * The following is a extendendNotation for complex polymer
+ *              RNA1{R(A)P.[mR](U)P.R([BiA])P.R(C)P}
+|RNA2{R([BiA])P.R(U)P.R(G)P.R(C)P}
+|CHEM1{bLink}
+$RNA1,CHEM1,8:R2-1:R1
+|CHEM1,RNA2,1:R2-2:R2
+ * Complex notation will follow the following format starting  7/14/2008
+ * NodeList$EdgeList$BasePairList$NodeLabelList$OtherTBD, where EdgeList, BasePairList, NodeLabelList and OtherTBD could be empty, but still keep the positional $
+ * 1. Node List
+ * 2. Edge List
+ * 3. Base Pair List
+ * 4. Node Label List
+ * 5. OtherTBD
+ * Be careful that monomer XML may contain $, so we have to walk the notation from left to right
  * @author ZHANGTIANHONG
  */
 public class ComplexNotationParser {
@@ -102,15 +106,7 @@ public class ComplexNotationParser {
 	private static MonomerStore checkForMonomerStore(MonomerStore monomerStore) {
 		// check for default value
 		MonomerStore combinedMonomerStore = monomerStore;
-		// SM 2014-03-03 unit test xHelmNotationParserTest.testXHelmValidation
-		// fails
-		// do we need to check for empty monomer store?
-		// if an invalid xhelm format (empty monomer section) is parsed, the
-		// validation is not working anymore because the local monomerStore is
-		// used
-		if (combinedMonomerStore == null) {// ||
-											// combinedMonomerStore.isMonomerStoreEmpty())
-											// {
+		if (combinedMonomerStore == null) {
 			MonomerFactory factory = null;
 			try {
 				factory = MonomerFactory.getInstance();
@@ -144,6 +140,21 @@ public class ComplexNotationParser {
 		return getComplexPolymerSMILES(extendedNotation, null);
 	}
 
+	
+
+	/**
+	 * This methods returns the unique SMILES string for complex polymer
+	 * extendendNotation, if all monomers have specific structures
+	 * 
+	 * @param extendedNotation
+	 *            text string for complex polymer extendendNotation
+	 * @param  monomerStore          
+	 * @throws java.io.IOException
+	 * @throws org.helm.notation.NotationException
+	 * @throws org.helm.notation.MonomerException
+	 * @throws org.helm.notation.StructureException
+	 * @throws org.jdom.JDOMException
+	 */
 	public static String getComplexPolymerSMILES(String extendedNotation,
 			MonomerStore monomerStore) throws IOException, NotationException,
 			MonomerException, StructureException, JDOMException {
@@ -199,6 +210,14 @@ public class ComplexNotationParser {
 	}
 
 	
+	/**
+	 * This method determines if the extendendNotation contains generic
+	 * structure (cannot generate SMILES)
+	 * 
+	 * @param extendendNotation
+	 *            the complete structure extendendNotation
+	 * @return true or false
+	 */
 	public static boolean containsGenericStructure(String extendendNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException {
@@ -211,6 +230,7 @@ public class ComplexNotationParser {
 	 * 
 	 * @param extendendNotation
 	 *            the complete structure extendendNotation
+	 * @param monomerStore           
 	 * @return true or false
 	 */
 	public static boolean containsGenericStructure(String extendendNotation,MonomerStore monomerStore)
@@ -436,16 +456,7 @@ public class ComplexNotationParser {
 		return l;
 	}
 
-	/*
-	 * private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList,
-	 * Map<Integer, RgroupStructure> groupStructureMap) throws
-	 * NotationException, MonomerException, IOException, JDOMException,
-	 * StructureException { MonomerFactory factory =
-	 * MonomerFactory.getInstance(); MonomerStore
-	 * store=factory.getMonomerStore(); return
-	 * getMoleculeList(nodeList,groupStructureMap,store); }
-	 */
-
+	
 	private static List<Molecule> getMoleculeList(List<PolymerNode> nodeList,
 			Map<Integer, RgroupStructure> groupStructureMap,
 			MonomerStore monomerStore) throws NotationException,
@@ -514,8 +525,8 @@ public class ComplexNotationParser {
 	}
 
 	/**
-	 * This method breaks PolymerNode lists into connected groups based on edge
-	 * info List<String> could have one element for standalone polymer node,
+	 * This method breaks PolymerNode lists into connected groups based on edge info 
+	 * List<String> could have one element for standalone polymer node,
 	 * duplicated elements for self connection or multiple connection
 	 * 
 	 * @param allNodeList
@@ -614,14 +625,8 @@ public class ComplexNotationParser {
 		return l;
 	}
 
-	public static boolean validateComplexNotation(String extendedNotation)
-			throws NotationException, MonomerException, IOException,
-			StructureException, JDOMException {
-		return validateComplexNotation(extendedNotation, null);
-	}
-
 	/**
-	 * This methods validates the complex polymer extendendNotation
+	 * This method validates the complex polymer extendendNotation
 	 * 
 	 * @param extendedNotation
 	 * @return true or false
@@ -630,6 +635,24 @@ public class ComplexNotationParser {
 	 * @throws java.io.IOException
 	 * @throws org.helm.notation.StructureException
 	 * @throws org.jdom.JDOMException
+	 */
+	public static boolean validateComplexNotation(String extendedNotation)
+			throws NotationException, MonomerException, IOException,
+			StructureException, JDOMException {
+		return validateComplexNotation(extendedNotation, null);
+	}
+
+	/**
+	 * This method validates the complex polymer extendendNotation
+	 *  
+	 * @param extendedNotation
+	 * @param monomerStore
+	 * @return true or false
+	 * @throws NotationException
+	 * @throws MonomerException
+	 * @throws IOException
+	 * @throws StructureException
+	 * @throws JDOMException
 	 */
 	public static boolean validateComplexNotation(String extendedNotation,
 			MonomerStore monomerStore) throws NotationException,
@@ -664,6 +687,19 @@ public class ComplexNotationParser {
 		return validateComplexPolymer(complexPolymer, null);
 	}
 
+	/**
+	 * This methods checks Nodes and Edges matches, and checks validity of each
+	 * node label
+	 * 
+	 * @param complexPolymer
+	 * @param monomerStore
+	 * @return true or false
+	 * @throws org.helm.notation.NotationException
+	 * @throws java.io.IOException
+	 * @throws org.helm.notation.MonomerException
+	 * @throws org.helm.notation.StructureException
+	 * @throws org.jdom.JDOMException
+	 */
 	public static boolean validateComplexPolymer(ComplexPolymer complexPolymer,
 			MonomerStore monomerStore) throws NotationException, IOException,
 			MonomerException, StructureException, JDOMException {
@@ -827,9 +863,8 @@ public class ComplexNotationParser {
 	}
 
 	/**
-	 * This method convert the complex polymer extendendNotation into an
-	 * ComplexPolymer object Will throw NotationException if graph
-	 * extendendNotation format is invalid,
+	 * This method convert the complex polymer extendendNotation into an ComplexPolymer object 
+	 * Will throw NotationException if graph extendendNotation format is invalid
 	 * 
 	 * @param extendendNotation
 	 * @return ComplexPolymer
@@ -849,6 +884,16 @@ public class ComplexNotationParser {
 		return parse(extendendNotation, factory.getMonomerStore());
 	}
 
+	/**
+	 * This method convert the complex polymer extendendNotation into an ComplexPolymer object 
+	 * Will throw NotationException if graph extendendNotation format is invalid
+	 * 
+	 * @param extendendNotation
+	 * @param monomerStore
+	 * @return ComplexPolymer
+	 * @throws org.helm.notation.NotationException
+	 * @throws org.helm.notation.MonomerException
+	 */
 	public static ComplexPolymer parse(String extendendNotation,
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, JDOMException, IOException {
@@ -965,23 +1010,33 @@ public class ComplexNotationParser {
 	}
 
 	/**
-	 * This methods converts the allNodeString to a List of PolymerNode Note on
-	 * 2/25/2011 by Tianhong: CHEM nodes could contain adhoc monomers, which
-	 * contains SMILES string in the format of ID?SMILES SMILES could have
-	 * LIST-LEVEL_DELIMITER which is pipe | Need to find them and do a
-	 * preprocess, add adhoc monomer into monomer factory
-	 * 
-	 * @param allNodeString
-	 *            - allNodeString or complex notation string
-	 * @return List<PolymerNode>
-	 * @throws org.helm.notation.NotationException
-	 */
+     * This methods converts the allNodeString to a List of PolymerNode
+     * Note on 2/25/2011 by Tianhong:
+     * CHEM nodes could contain adhoc monomers, which contains SMILES string in the format of ID?SMILES
+     * SMILES could have LIST-LEVEL_DELIMITER which is pipe |
+     * Need to find them and do a preprocess, add adhoc monomer into monomer factory
+     * @param allNodeString - allNodeString or complex notation string
+     * @return List<PolymerNode>
+     * @throws org.helm.notation.NotationException
+     */
 	public static List<PolymerNode> getPolymerNodeList(String allNodeString)
 			throws NotationException {
 
 		return getPolymerNodeList(allNodeString, null);
 	}
 
+	
+	/**
+     * This methods converts the allNodeString to a List of PolymerNode
+     * Note on 2/25/2011 by Tianhong:
+     * CHEM nodes could contain adhoc monomers, which contains SMILES string in the format of ID?SMILES
+     * SMILES could have LIST-LEVEL_DELIMITER which is pipe |
+     * Need to find them and do a preprocess, add adhoc monomer into monomer factory
+     * @param allNodeString - allNodeString or complex notation string
+     * @param monomerStore
+     * @return List<PolymerNode>
+     * @throws org.helm.notation.NotationException
+     */
 	public static List<PolymerNode> getPolymerNodeList(String allNodeString,
 			MonomerStore monomerStore) throws NotationException {
 
@@ -1202,7 +1257,9 @@ public class ComplexNotationParser {
 
 	/**
 	 * generates formated siRNA sequence with provided padding and base-pair
-	 * character, such as AGCUUUGGTT |||||||| TTUCGAAACC
+	 *   AGCUUUGGTT
+     *   ||||||||
+     * TTUCGAAACC
 	 * 
 	 * @param complexNotation
 	 * @param paddingChar
@@ -1450,6 +1507,19 @@ public class ComplexNotationParser {
 		return getCanonicalNotation(complexNotation, null);
 	}
 
+	/**
+	 * Generate canonical notation without validation
+	 * 
+	 * @param complexNotation
+	 * @param monomerStore
+	 * @return canonical notation
+	 * @throws NotationException
+	 * @throws MonomerException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws StructureException
+	 * @throws JDOMException
+	 */
 	public static String getCanonicalNotation(String complexNotation,
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, IOException, ClassNotFoundException,
@@ -1496,7 +1566,6 @@ public class ComplexNotationParser {
 
 		List<PolymerNode> nodeList = cp.getPolymerNodeList();
 		List<PolymerEdge> edgeList = cp.getPolymerEdgeList();
-		// TODO deal with adhoc monomers in all polymer types
 		// deal with ad hoc CHEM monomer here, use smiles instead of temp ID
 		for (PolymerNode node : nodeList) {
 			if (node.getType().equals(Monomer.CHEMICAL_POLYMER_TYPE)
@@ -1761,10 +1830,6 @@ public class ComplexNotationParser {
 	}
 
 	
-	public static String getCombinedComlexNotation(String complexNotation1,
-			String complexNotation2) throws NotationException, MonomerException {
-		return getCombinedComlexNotation(complexNotation1,complexNotation2,null);
-	}
 	/**
 	 * The method generates the complex the notation for two complex notations
 	 * combined. There will be no chemcial conection and base pairing between
@@ -1774,6 +1839,25 @@ public class ComplexNotationParser {
 	 *            -- complex notation for the first component to be combined
 	 * @param complexNotation2
 	 *            -- complex notation for the second component to be combined
+	 * @return the complex notation for the combined structure
+	 * @throws org.helm.notation.NotationException
+	 * @throws org.helm.notation.MonomerException
+	 */
+	public static String getCombinedComlexNotation(String complexNotation1,
+			String complexNotation2) throws NotationException, MonomerException {
+		return getCombinedComlexNotation(complexNotation1,complexNotation2,null);
+	}
+
+	/**
+	 * The method generates the complex the notation for two complex notations
+	 * combined. There will be no chemcial conection and base pairing between
+	 * the components represented by each complex notation. *
+	 * 
+	 * @param complexNotation1
+	 *            -- complex notation for the first component to be combined
+	 * @param complexNotation2
+	 *            -- complex notation for the second component to be combined
+	 * @param monomerStore           
 	 * @return the complex notation for the combined structure
 	 * @throws org.helm.notation.NotationException
 	 * @throws org.helm.notation.MonomerException
@@ -2011,6 +2095,17 @@ public class ComplexNotationParser {
 		return basePair;
 	}
 
+	/**
+	 * This method decomposes complex notation into complex notations of
+	 * covalently connected monomers, base pairing info is lost
+	 * 
+	 * @param complexNotation
+	 * @return complex notation for connected polymers
+	 * @throws org.helm.notation.NotationException
+	 * @throws org.helm.notation.MonomerException
+	 * @throws org.jdom.JDOMException
+	 * @throws java.io.IOException
+	 */
 	public static String[] decompose(String complexNotation)
 			throws NotationException, MonomerException, JDOMException,
 			IOException {
@@ -2023,6 +2118,7 @@ public class ComplexNotationParser {
 	 * covalently connected monomers, base pairing info is lost
 	 * 
 	 * @param complexNotation
+	 * @param monomerStore
 	 * @return complex notation for connected polymers
 	 * @throws org.helm.notation.NotationException
 	 * @throws org.helm.notation.MonomerException
@@ -2133,7 +2229,6 @@ public class ComplexNotationParser {
 	 * @throws org.jdom.JDOMException
 	 * @throws org.helm.notation.NotationException
 	 */
-
 	public static String replaceMonomer(String complexNotation,
 			String polymerType, String existingMonomerID, String newMonomerID)
 			throws MonomerException, IOException, JDOMException,
@@ -2143,6 +2238,22 @@ public class ComplexNotationParser {
 				newMonomerID, null, true);
 	}
 
+	/**
+	 * This method replace existing monomer with new monomer for a given polymer
+	 * type in the complex notation
+	 * 
+	 * @param complexNotation
+	 * @param polymerType
+	 * @param existingMonomerID
+	 * @param newMonomerID
+	 * @param monomerStore
+	 * @param validate
+	 * @return complex notation after replacement
+	 * @throws org.helm.notation.MonomerException
+	 * @throws java.io.IOException
+	 * @throws org.jdom.JDOMException
+	 * @throws org.helm.notation.NotationException
+	 */
 	public static String replaceMonomer(String complexNotation,
 			String polymerType, String existingMonomerID, String newMonomerID,
 			MonomerStore monomerStore, boolean validate)
@@ -2214,6 +2325,20 @@ public class ComplexNotationParser {
 
 	}
 
+	/**
+	 * Standardize all forms of HELM notation into complex notation
+	 * 
+	 * @param notation
+	 *            - in the format of Complex Notation or Simple Notation for
+	 *            RNA, Peptide, and Chem
+	 * @param monomerStore           
+	 * @return complex notation
+	 * @throws org.helm.notation.MonomerException
+	 * @throws java.io.IOException
+	 * @throws org.jdom.JDOMException
+	 * @throws org.helm.notation.NotationException
+	 * @throws org.helm.notation.StructureException
+	 */
 	public static String standardize(String notation, MonomerStore monomerStore)
 			throws MonomerException, IOException, JDOMException,
 			NotationException, StructureException {
@@ -2256,7 +2381,6 @@ public class ComplexNotationParser {
 	 * @throws JDOMException
 	 * @throws StructureException
 	 */
-
 	public static boolean hasNucleotideModification(
 			List<PolymerNode> polymerNodes) throws NotationException,
 			MonomerException, IOException, JDOMException, StructureException {
@@ -2264,6 +2388,20 @@ public class ComplexNotationParser {
 		return hasNucleotideModification(polymerNodes, null);
 	}
 
+	/**
+	 * Returns true if the any of the polymerNodes that are not nucleotides have
+	 * has a modified nucleotide. The assertion is based on breaking the
+	 * notation into single Nucleotides and using the Nucleotide.isModified()
+	 * 
+	 * @param polymerNodes
+	 * @param monomerStore
+	 * @return true or false
+	 * @throws NotationException
+	 * @throws MonomerException
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws StructureException
+	 */
 	public static boolean hasNucleotideModification(
 			List<PolymerNode> polymerNodes, MonomerStore monomerStore)
 			throws NotationException, MonomerException, IOException,
@@ -2329,7 +2467,6 @@ public class ComplexNotationParser {
 	 * @throws PluginException
 	 * @throws StructureException
 	 */
-
 	public static MoleculeInfo getMoleculeInfo(String extendedNotation)
 			throws NotationException, MonomerException, IOException,
 			JDOMException, PluginException, StructureException {
@@ -2337,6 +2474,20 @@ public class ComplexNotationParser {
 		return getMoleculeInfo(extendedNotation, null);
 	}
 
+	/**
+	 * Perform calculation without validation
+	 * 
+	 * @param extendedNotation
+	 *            - complex polymer notation
+	 * @param monomerStore           
+	 * @return MoleculeInfo of complex polymer
+	 * @throws NotationException
+	 * @throws MonomerException
+	 * @throws IOException
+	 * @throws JDOMException
+	 * @throws PluginException
+	 * @throws StructureException
+	 */
 	public static MoleculeInfo getMoleculeInfo(String extendedNotation,
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, IOException, JDOMException, PluginException,
@@ -2348,22 +2499,21 @@ public class ComplexNotationParser {
 	}
 
 	/**
-	 * This method returns the MoleculeInfo of input polymer notation using the
-	 * divide and conquer approach in SimpleNotationParser Should return the
-	 * same result as StructureParser.getMoleculeInfo(String smiles) method, but
-	 * runs faster for standard edges Ignore fuzzy edges in the calculation,
-	 * good enough for large structures
-	 * 
-	 * @param extendedNotation
-	 * @param includeValidation
-	 * @return MoleculeInfo object
-	 * @throws NotationException
-	 * @throws MonomerException
-	 * @throws IOException
-	 * @throws JDOMException
-	 * @throws PluginException
-	 * @throws StructureException
-	 */
+     * This method returns the MoleculeInfo of input polymer notation using the divide and conquer approach in SimpleNotationParser
+     * Should return the same result as StructureParser.getMoleculeInfo(String smiles) method, but runs faster for standard edges
+     * Ignore fuzzy edges in the calculation, good enough for large structures
+     *
+     * @param extendedNotation
+     * @param includeValidation
+     * @return MoleculeInfo object
+     * @throws NotationException
+     * @throws MonomerException
+     * @throws IOException
+     * @throws JDOMException
+     * @throws PluginException
+     * @throws StructureException 
+     */
+	
 	public static MoleculeInfo getMoleculeInfo(String extendedNotation,
 			boolean includeValidation) throws NotationException,
 			MonomerException, IOException, JDOMException, PluginException,
@@ -2371,6 +2521,23 @@ public class ComplexNotationParser {
 		return getMoleculeInfo(extendedNotation, includeValidation, null);
 	}
 
+	
+	/**
+     * This method returns the MoleculeInfo of input polymer notation using the divide and conquer approach in SimpleNotationParser
+     * Should return the same result as StructureParser.getMoleculeInfo(String smiles) method, but runs faster for standard edges
+     * Ignore fuzzy edges in the calculation, good enough for large structures
+     *
+     * @param extendedNotation
+     * @param includeValidation
+     * @param monomerStore
+     * @return MoleculeInfo object
+     * @throws NotationException
+     * @throws MonomerException
+     * @throws IOException
+     * @throws JDOMException
+     * @throws PluginException
+     * @throws StructureException 
+     */
 	public static MoleculeInfo getMoleculeInfo(String extendedNotation,
 			boolean includeValidation, MonomerStore monomerStore)
 			throws NotationException, MonomerException, IOException,
@@ -2457,16 +2624,7 @@ public class ComplexNotationParser {
 		return null;
 	}
 
-	/*
-	 * private static Map<String, RgroupStructure>
-	 * getPolymerNodeStructureMap(List<PolymerNode> nodeList) throws
-	 * IOException, NotationException, MonomerException, StructureException,
-	 * JDOMException { MonomerFactory factory = null; try { factory =
-	 * MonomerFactory.getInstance(); } catch (Exception ex) { throw new
-	 * NotationException("Unable to initialize monomer factory", ex); } return
-	 * getPolymerNodeStructureMap(nodeList,factory.getMonomerStore()); }
-	 */
-
+	
 	private static Map<String, RgroupStructure> getPolymerNodeStructureMap(
 			List<PolymerNode> nodeList, MonomerStore monomerStore)
 			throws IOException, NotationException, MonomerException,
@@ -2492,9 +2650,17 @@ public class ComplexNotationParser {
 		return nodeStrucMap;
 	}
 	
-	/*
+
+	
+	/**
 	 * This function replaces smiles in complex notation with temporary ids
-	 * 
+	 * @param helmString
+	 * @param monomerStore
+	 * @return helmNotation
+	 * @throws NotationException
+	 * @throws MonomerException
+	 * @throws JDOMException
+	 * @throws IOException
 	 */
 	public static String getNotationByReplacingSmiles(String helmString,MonomerStore monomerStore) throws NotationException, MonomerException, JDOMException, IOException{
 		
@@ -2517,8 +2683,6 @@ public class ComplexNotationParser {
 			sb.append(ComplexNotationParser.NODE_LABEL_END_SYMBOL);
 		}
 		return sb.toString() + restOfNotation;
-		
-		
 		
 		
 	}
