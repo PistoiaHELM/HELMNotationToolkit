@@ -56,7 +56,8 @@ public class StructureParser {
     public static final String ATOM_POSITION_DELIMITER_REGEX = "\\$|;";
     public static final String ATOM_POSITION_DELIMITER_SYMBOL = ";";
     public static final String WHITE_SPACE_REGEX = "\\s";
-    public static final String CHEMAXON_EXTENDEND_SMILES_FORMAT = "cxsmiles:u";
+    //2014-05-13 -e :do not include enhanced stereochemistry features 
+    public static final String CHEMAXON_EXTENDEND_SMILES_FORMAT = "cxsmiles:u-e";
     public static final String UNIQUE_SMILES_FORMAT = "smiles:u";
     public static final String SMILES_FORMAT = "smiles";
     private static final int CANONICALIZATION_ROUND = 3;

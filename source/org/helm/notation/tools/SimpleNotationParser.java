@@ -1081,12 +1081,18 @@ public class SimpleNotationParser {
 			}
 		}
 
-	Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();
-
+		Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();		
+		
+		String uniqueSmiles=null;
+		try {
+			uniqueSmiles=StructureParser.getUniqueExtendedSMILES(nodeDesc);
+		} catch (Exception ex) {
+			uniqueSmiles=nodeDesc;
+		}
+		
 		String alternateId = null;
-
-		if (smilesDB.containsKey(nodeDesc)) {
-			alternateId = smilesDB.get(nodeDesc).getAlternateId();
+		if (smilesDB.containsKey(uniqueSmiles)) {
+			alternateId = smilesDB.get(uniqueSmiles).getAlternateId();
 
 		} else {
 
@@ -1117,19 +1123,19 @@ public class SimpleNotationParser {
 						"X", alternateId);
 			}
 			m.setAdHocMonomer( true);
-			m.setCanSMILES(nodeDesc);
+			m.setCanSMILES(uniqueSmiles);
 
 			List<Attachment> al = new ArrayList<Attachment>();
 			int start = 0;
-			int pos = nodeDesc.indexOf("R", start);
+			int pos = uniqueSmiles.indexOf("R", start);
 			String number = "";
 			while (pos >= 0) {
 				pos++;
-				String letter = nodeDesc.substring(pos, pos + 1);
+				String letter = uniqueSmiles.substring(pos, pos + 1);
 				while (letter.matches("\\d")) {
 					number = number + letter;
 					pos++;
-					letter = nodeDesc.substring(pos, pos + 1);
+					letter = uniqueSmiles.substring(pos, pos + 1);
 				}
 
 				try {
@@ -1147,7 +1153,7 @@ public class SimpleNotationParser {
 				}
 
 				start = pos;
-				pos = nodeDesc.indexOf("R", start);
+				pos = uniqueSmiles.indexOf("R", start);
 				number = "";
 			}
 

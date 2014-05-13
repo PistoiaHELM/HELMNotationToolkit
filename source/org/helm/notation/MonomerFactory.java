@@ -45,6 +45,7 @@ import org.helm.notation.model.Monomer;
 import org.helm.notation.model.MonomerCache;
 import org.helm.notation.tools.DeepCopy;
 import org.helm.notation.tools.MonomerParser;
+import org.helm.notation.tools.StructureParser;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -694,10 +695,18 @@ public class MonomerFactory {
 			for (Iterator it = monomerSet.iterator(); it.hasNext();) {
 				String monomerID = (String) it.next();
 				Monomer monomer = monomerMap.get(monomerID);
-				String smiles = monomer.getCanSMILES();
+				//String smiles = monomer.getCanSMILES();
+				String smiles=null;
+				try {
+					smiles = StructureParser.getUniqueExtendedSMILES(monomer.getCanSMILES());
+				} catch (Exception e) {
+					smiles=monomer.getCanSMILES();
+				} 
 				map.put(smiles, monomer);
+				
 			}
 		}
+		//System.out.println("smiles map count"+map.size());
 		return map;
 	}
 

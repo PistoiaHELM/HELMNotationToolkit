@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.helm.notation.model.Monomer;
 import org.helm.notation.tools.DeepCopy;
+import org.helm.notation.tools.StructureParser;
 /**
  * This class represents a store for monomers.
  * It is mainly used to seperate the monomers coming from a 
@@ -88,6 +89,12 @@ public class MonomerStore {
 		String alternateId = monomer.getAlternateId();
 		String smilesString = monomer.getCanSMILES();
 
+		try {
+			smilesString=StructureParser.getUniqueExtendedSMILES(smilesString);
+		} catch (Exception e) {
+			smilesString=monomer.getCanSMILES();
+		}
+		
 		boolean hasSmilesString = (smilesString != null && smilesString
 				.length() > 0);
 
