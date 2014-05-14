@@ -1,7 +1,9 @@
 package org.helm.notation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -222,4 +224,19 @@ public class MonomerStore {
 	 public Set<String> getPolymerTypeSet(){
 	    	return monomerDB.keySet();    
 	    }
+	 
+	 
+	 /**
+	  *  This method returns all monomers of the store as list sorted by polymer type 
+	  * @return all monomers of store as List<Monomer>
+	  */
+	 public List<Monomer> getAllMonomersList(){
+		 List<Monomer> monomers=new ArrayList<Monomer>();
+		 for (String polymerType : getPolymerTypeSet()) {
+			 Map<String,Monomer> map=getMonomers(polymerType);
+			 monomers.addAll(map.values());
+		 }				
+		 return monomers;
+		 
+	 }
 }
