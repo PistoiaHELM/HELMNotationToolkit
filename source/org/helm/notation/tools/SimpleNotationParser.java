@@ -1124,6 +1124,7 @@ public class SimpleNotationParser {
 			}
 			m.setAdHocMonomer( true);
 			m.setCanSMILES(uniqueSmiles);
+			m.setName("Dynamic");
 
 			List<Attachment> al = new ArrayList<Attachment>();
 			int start = 0;
