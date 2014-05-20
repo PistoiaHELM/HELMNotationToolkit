@@ -1114,7 +1114,7 @@ public class ComplexNotationParser {
 //			label = SimpleNotationParser.preprocessChemNode(label,
 //					monomerStore);
 			
-			label = SimpleNotationParser.processNode(label,Monomer.CHEMICAL_POLYMER_TYPE,monomerStore);
+			label = SimpleNotationParser.processNode(label,Monomer.CHEMICAL_POLYMER_TYPE,"X",monomerStore);
 		}
 
 		PolymerNode node = new PolymerNode();
