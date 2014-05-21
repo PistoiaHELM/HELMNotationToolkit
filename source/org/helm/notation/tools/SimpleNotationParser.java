@@ -1539,7 +1539,7 @@ public class SimpleNotationParser {
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, StructureException, JDOMException, IOException {
 		return getComplexNotation(simpleNotation,
-				Monomer.CHEMICAL_POLYMER_TYPE,true, monomerStore);
+				Monomer.CHEMICAL_POLYMER_TYPE, monomerStore);
 	}
 
 	
@@ -1583,7 +1583,7 @@ public class SimpleNotationParser {
 	public static String getComplextNotationForPeptide(String simpleNotation,
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, StructureException, JDOMException, IOException {
-		return getComplexNotation(simpleNotation, Monomer.PEPTIDE_POLYMER_TYPE,true,
+		return getComplexNotation(simpleNotation, Monomer.PEPTIDE_POLYMER_TYPE,
 				monomerStore);
 	}
 
@@ -1725,10 +1725,9 @@ public class SimpleNotationParser {
 			MonomerStore monomerStore) throws NotationException,
 			MonomerException, StructureException, JDOMException, IOException {
 		return getComplexNotation(simpleNotation,
-				Monomer.NUCLIEC_ACID_POLYMER_TYPE,true, monomerStore);
+				Monomer.NUCLIEC_ACID_POLYMER_TYPE, monomerStore);
 	}
 
-	
 	/**
 	 * This method converts simple notation for a given polymer type to complex
 	 * notation. Complex notation is needed to calculate molecule info such as
@@ -1736,27 +1735,6 @@ public class SimpleNotationParser {
 	 * 
 	 * @param simpleNotation
 	 * @param polymerType
-	 * @return complex notation
-	 * @throws org.helm.notation.NotationException
-	 * @throws org.helm.notation.MonomerException
-	 * @throws org.helm.notation.StructureException
-	 * @throws org.jdom.JDOMException
-	 * @throws java.io.IOException
-	 */
-	public static String getComplexNotation(String simpleNotation,String polymerType) throws NotationException, MonomerException,
-			StructureException, JDOMException, IOException {
-		return getComplexNotation(simpleNotation,polymerType, true);
-	}
-	
-	
-	/**
-	 * This method converts simple notation for a given polymer type to complex
-	 * notation. Complex notation is needed to calculate molecule info such as
-	 * MW and formula
-	 * 
-	 * @param simpleNotation
-	 * @param polymerType
-	 * @param validate
 	 * @return complex notation
 	 * @throws org.helm.notation.NotationException
 	 * @throws org.helm.notation.MonomerException
@@ -1765,7 +1743,7 @@ public class SimpleNotationParser {
 	 * @throws java.io.IOException
 	 */
 	public static String getComplexNotation(String simpleNotation,
-			String polymerType,boolean validate) throws NotationException, MonomerException,
+			String polymerType) throws NotationException, MonomerException,
 			StructureException, JDOMException, IOException {
 		MonomerFactory factory = null;
 		try {
@@ -1774,18 +1752,17 @@ public class SimpleNotationParser {
 			throw new NotationException("Unable to initialize monomer factory",
 					ex);
 		}
-		return getComplexNotation(simpleNotation, polymerType,validate,
+		return getComplexNotation(simpleNotation, polymerType,
 				factory.getMonomerStore());
 	}
 
 	/**
 	 * This method converts simple notation for a given polymer type to complex
 	 * notation. Complex notation is needed to calculate molecule info such as
-	 * MW and formula. 
+	 * MW and formula
 	 * 
 	 * @param simpleNotation
 	 * @param polymerType
-	 * @param validate 
 	 * @param monomerStore
 	 * @return complex notation
 	 * @throws org.helm.notation.NotationException
@@ -1795,11 +1772,10 @@ public class SimpleNotationParser {
 	 * @throws java.io.IOException
 	 */
 	public static String getComplexNotation(String simpleNotation,
-			String polymerType, boolean validate, MonomerStore monomerStore)
+			String polymerType, MonomerStore monomerStore)
 			throws NotationException, MonomerException, StructureException,
 			JDOMException, IOException {
-		if (validate)
-			validateSimpleNotation(simpleNotation, polymerType, monomerStore);
+		validateSimpleNotation(simpleNotation, polymerType, monomerStore);
 		return polymerType + "1{" + simpleNotation + "}$$$$";
 	}
 
@@ -2655,7 +2631,7 @@ public class SimpleNotationParser {
 		for (int i = 0; i < chunks.size(); i++) {
 			String tmpNotation = chunks.get(i);
 			String complexNotation = getComplexNotation(tmpNotation,
-					polymerType, true,monomerStore);
+					polymerType, monomerStore);
 			String smiles = ComplexNotationParser.getComplexPolymerSMILES(
 					complexNotation, monomerStore);
 			MoleculeInfo tmpmi = StructureParser.getMoleculeInfo(smiles);
