@@ -1386,7 +1386,7 @@ public class SimpleNotationParser {
 
 		StringBuffer sb = new StringBuffer();
 		for (int i = start; i <= end; i++) {
-			sb.append(list.get(i).getNaturalAnalog());
+			sb.append(list.get(i).getNaturalAnalog(monomerStore));
 		}
 		return sb.toString();
 	}
