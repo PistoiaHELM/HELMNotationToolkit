@@ -108,6 +108,20 @@ public class xHelmNotationParserTest {
 	
 
 		
+		xHELMRootElement = getXHELMRootElement("resources/RNAWithInline.xhelm" );
+		helmString = xHelmNotationParser.getComplexNotationString(
+				xHELMRootElement);
+
+		store = xHelmNotationParser.getMonomerStore(xHELMRootElement);
+		
+		
+		assertEquals("RNA1{[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|](A)P.RP.[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|](T)P.R([Cc1nc2c(nc(N)[nH]c2=O)n1[*] |$;;;;;;;;;;;;_R1$|])P.R([Cc1cc(N)nc(=O)n1[*] |$;;;;;;;;;_R1$|])}$$$$",helmString);
+
+		assertTrue(ComplexNotationParser.validateComplexNotation(helmString, store));
+		
+
+	
+		
 		
 		
 	}
