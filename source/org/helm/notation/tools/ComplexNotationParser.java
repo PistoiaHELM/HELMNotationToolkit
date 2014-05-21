@@ -2299,6 +2299,7 @@ public class ComplexNotationParser {
 		return sb.toString() + restOfNotation;
 	}
 
+	
 	/**
 	 * Standardize all forms of HELM notation into complex notation
 	 * 
@@ -2314,6 +2315,26 @@ public class ComplexNotationParser {
 	 */
 	public static String standardize(String notation) throws MonomerException,
 			IOException, JDOMException, NotationException, StructureException {
+		return standardize(notation, true);
+	}
+
+	
+	/**
+	 * Standardize all forms of HELM notation into complex notation
+	 * 
+	 * @param notation
+	 *            - in the format of Complex Notation or Simple Notation for
+	 *            RNA, Peptide, and Chem
+	 * @param validate            
+	 * @return complex notation
+	 * @throws org.helm.notation.MonomerException
+	 * @throws java.io.IOException
+	 * @throws org.jdom.JDOMException
+	 * @throws org.helm.notation.NotationException
+	 * @throws org.helm.notation.StructureException
+	 */
+	public static String standardize(String notation,boolean validate) throws MonomerException,
+			IOException, JDOMException, NotationException, StructureException {
 		MonomerFactory factory = null;
 		try {
 			factory = MonomerFactory.getInstance();
@@ -2321,7 +2342,7 @@ public class ComplexNotationParser {
 			throw new NotationException("Unable to initialize monomer factory",
 					ex);
 		}
-		return standardize(notation, factory.getMonomerStore());
+		return standardize(notation, validate,factory.getMonomerStore());
 
 	}
 
@@ -2331,6 +2352,7 @@ public class ComplexNotationParser {
 	 * @param notation
 	 *            - in the format of Complex Notation or Simple Notation for
 	 *            RNA, Peptide, and Chem
+	 * @param validate 
 	 * @param monomerStore           
 	 * @return complex notation
 	 * @throws org.helm.notation.MonomerException
@@ -2339,7 +2361,7 @@ public class ComplexNotationParser {
 	 * @throws org.helm.notation.NotationException
 	 * @throws org.helm.notation.StructureException
 	 */
-	public static String standardize(String notation, MonomerStore monomerStore)
+	public static String standardize(String notation, boolean validate,MonomerStore monomerStore)
 			throws MonomerException, IOException, JDOMException,
 			NotationException, StructureException {
 		if (null == notation || notation.length() == 0) {
@@ -2356,10 +2378,12 @@ public class ComplexNotationParser {
 					.getMonomerDB().keySet();
 			for (String polymerType : polymerTypes) {
 				try {
+					if (validate){
 					SimpleNotationParser.validateSimpleNotation(notation,
 							polymerType,monomerStore);
+					}
 					return SimpleNotationParser.getComplexNotation(notation,
-							polymerType,monomerStore);
+							polymerType,validate,monomerStore);
 				} catch (Exception e) {
 				}
 			}
