@@ -1198,6 +1198,22 @@ public class SimpleNotationParser {
 		}
 
 		Map<String, Monomer> smilesDB = monomerStore.getSmilesMonomerDB();		
+
+		
+		//validate smiles before adding temp. monomer (xhelm-63)
+		try {
+			if (!StructureParser.validateSmiles(nodeDesc)) {
+				throw new NotationException(
+						"Unable to create ad hoc monomer for " + nodeDesc);
+			}
+
+		} catch (IOException e) {
+			throw new NotationException("Unable to create ad hoc monomer for "
+					+ nodeDesc);
+
+		}
+		
+
 		
 		String uniqueSmiles=null;
 		try {
