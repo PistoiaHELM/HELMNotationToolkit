@@ -1,12 +1,15 @@
 package org.helm.notation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.helm.notation.model.Monomer;
 import org.helm.notation.tools.DeepCopy;
+import org.helm.notation.tools.StructureParser;
 /**
  * This class represents a store for monomers.
  * It is mainly used to seperate the monomers coming from a 
@@ -88,6 +91,12 @@ public class MonomerStore {
 		String alternateId = monomer.getAlternateId();
 		String smilesString = monomer.getCanSMILES();
 
+		try {
+			smilesString=StructureParser.getUniqueExtendedSMILES(smilesString);
+		} catch (Exception e) {
+			smilesString=monomer.getCanSMILES();
+		}
+		
 		boolean hasSmilesString = (smilesString != null && smilesString
 				.length() > 0);
 
@@ -215,4 +224,19 @@ public class MonomerStore {
 	 public Set<String> getPolymerTypeSet(){
 	    	return monomerDB.keySet();    
 	    }
+	 
+	 
+	 /**
+	  *  This method returns all monomers of the store as list sorted by polymer type 
+	  * @return all monomers of store as List<Monomer>
+	  */
+	 public List<Monomer> getAllMonomersList(){
+		 List<Monomer> monomers=new ArrayList<Monomer>();
+		 for (String polymerType : getPolymerTypeSet()) {
+			 Map<String,Monomer> map=getMonomers(polymerType);
+			 monomers.addAll(map.values());
+		 }				
+		 return monomers;
+		 
+	 }
 }

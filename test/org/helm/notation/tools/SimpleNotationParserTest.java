@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
-import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationException;
 import org.helm.notation.NucleotideFactory;
 import org.helm.notation.StructureException;
@@ -18,9 +18,7 @@ import org.helm.notation.model.Monomer;
 import org.helm.notation.model.Nucleotide;
 import org.jdom.JDOMException;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import chemaxon.marvin.plugin.PluginException;
@@ -62,6 +60,9 @@ public class SimpleNotationParserTest {
 		
 	}
 	
+	public String getRNANotationWithInline(){
+		return "[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|]([Cc1nc2c(N)ncnc2n1[*] |$;;;;;;;;;;;_R1$|])[C[O]=P(O)([*])[*] |$;;;;_R1;_R2$|].R(C)P.R(T)P.R(G)";
+	}	
 	
 	
 	
@@ -247,6 +248,8 @@ public class SimpleNotationParserTest {
 		
 		assertTrue(SimpleNotationParser.validateSimpleNotation(getSmilesNotation(), Monomer.CHEMICAL_POLYMER_TYPE));		
 		
+		assertTrue(SimpleNotationParser.validateSimpleNotation(getRNANotationWithInline(), Monomer.NUCLIEC_ACID_POLYMER_TYPE));
+		
 	}
 	
 	@Test
@@ -418,6 +421,39 @@ public class SimpleNotationParserTest {
 		
 		
 
+	}
+	
+	@Test
+	public void testGetMonomerIDList() throws NotationException{
+		
+		String notation= "P.R(A)[sP].RP.R(G)P.[LR]([5meC])";
+	
+		List<String> ids=SimpleNotationParser.getMonomerIDList(notation, "RNA");
+		
+		List<String> expectedIds=Arrays.asList("P", "R", "A", "sP", "R", "P", "R", "G", "P", "LR", "5meC");
+		assertEquals(expectedIds, ids);
+		
+		
+		notation="[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|](A)P.RP.[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|](T)P.R([Cc1nc2c(nc(N)[nH]c2=O)n1[*] |$;;;;;;;;;;;;_R1$|])P.R([Cc1cc(N)nc(=O)n1[*] |$;;;;;;;;;_R1$|])";
+		ids=SimpleNotationParser.getMonomerIDList(notation, "RNA");
+		expectedIds=Arrays.asList("NM#1", "A", "P", "R", "P", "NM#1", "T", "P","R", "NM#2", "P", "R","NM#3");
+		assertEquals(expectedIds, ids);
+		
+		try {
+			String invalidNotation = "P.R(A).RP.R(G)P.[LR]([5meC])";
+			ids = SimpleNotationParser.getMonomerIDList(invalidNotation, "RNA");
+		} catch (NotationException e) {
+			assertTrue(true);
+		}
+		
+		
+		
+		notation= "G.G.K.A.[C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|].[seC]";
+		ids=SimpleNotationParser.getMonomerIDList(notation, "PEPTIDE");
+		expectedIds=Arrays.asList("G", "G", "K", "A", "A", "seC");
+		assertEquals(expectedIds, ids);
+		
+	
 	}
 	
 

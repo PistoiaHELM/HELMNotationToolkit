@@ -211,7 +211,7 @@ public class Nucleotide implements Serializable {
 				Monomer m = monomers.get(phosphateSymbol);
 				return m;
 			} catch (Exception ex) {
-				System.out.println("Unable to get natural analog for "
+				System.out.println("Unable to get phosphate monomer for "
 						+ phosphateSymbol);
 				return null;
 			}
@@ -253,7 +253,7 @@ public class Nucleotide implements Serializable {
 				Monomer m = monomers.get(baseSymbol);
 				return m;
 			} catch (Exception ex) {
-				System.out.println("Unable to get natural analog for "
+				System.out.println("Unable to get base monomer for "
 						+ baseSymbol);
 				return null;
 			}
@@ -295,7 +295,7 @@ public class Nucleotide implements Serializable {
 				Monomer m = monomers.get(sugarSymbol);
 				return m;
 			} catch (Exception ex) {
-				System.out.println("Unable to get natural analog for "
+				System.out.println("Unable to get sugar monomer for "
 						+ sugarSymbol);
 				return null;
 			}
