@@ -61,14 +61,14 @@ public class SimpleNotationParserTest {
 	}
 	
 	public String getRNANotationWithInline(){
-		return "[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|]([Cc1nc2c(N)ncnc2n1[*] |$;;;;;;;;;;;_R1$|])[C[O]=P(O)([*])[*] |$;;;;_R1;_R2$|].R(C)P.R(T)P.R(G)";
+		return "[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|]([Cc1nc2c(N)ncnc2n1[*] |$;;;;;;;;;;;_R1$|])[O[26P]([*])([*])=O |$;;_R1;_R2;$|].R(C)P.R(T)P.R(G)";
 	}	
 	
 	
 	
 	
 	@Before
-	public  void init() {
+	public void init() {
 		try {
 			MonomerFactory.finalizeMonomerCache();
 			MonomerFactory.getInstance();

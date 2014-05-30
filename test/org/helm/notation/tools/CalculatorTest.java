@@ -79,7 +79,7 @@ public class CalculatorTest {
         result = calculator.calculateFromComplexNotation(input, ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
         assertEquals(result,46200.004,1e-4);
         
-        input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}|CHEM1{PEG3}|PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
+        input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}|CHEM1{PEG2}|PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
         result = calculator.calculateFromComplexNotation(input);
         assertEquals(result,69.69,1e-5);
         
