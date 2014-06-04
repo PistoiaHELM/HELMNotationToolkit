@@ -1191,7 +1191,7 @@ public class SimpleNotationParser {
 
 		if (!isSmilesCode) {
 			Map<String, Monomer> monomers = monomerStore.getMonomers(polymerType);
-			if (monomers.containsKey(nodeDesc)){
+			if (monomers != null && monomers.containsKey(nodeDesc)){
 				return nodeDesc;
 			
 			}
