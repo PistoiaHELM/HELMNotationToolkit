@@ -24,6 +24,7 @@ package org.helm.notation.model;
 import org.helm.notation.MonomerFactory;
 import org.helm.notation.MonomerStore;
 import org.helm.notation.NotationException;
+import org.helm.notation.tools.SimpleNotationParser;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -158,20 +159,58 @@ public class Nucleotide implements Serializable {
 	 * @param monomerStore - store in which base monomer is located
 	 * @return natural Analog or X if natural analog is not available  
 	 */
+	
+	
 	public String getNaturalAnalog(MonomerStore monomerStore) {
-		int start = getNotation().indexOf("(");
-		int end = getNotation().indexOf(")");
-		if (start < 0)
+		String baseNotation = null;
+		String notation = getNotation();
+		char[] notationChar = notation.toCharArray();
+		for (int i = 0; i < notationChar.length; i++) {
+			if (notationChar[i] == '[') {
+				int pos = SimpleNotationParser.getMatchingBracketPosition(
+						notationChar, i, '[', ']');
+				i = pos;
+				continue;
+			}
+			// must be the base
+			if (notationChar[i] == '(') {
+				int pos = SimpleNotationParser.getMatchingBracketPosition(
+						notationChar, i, '(', ')');
+				baseNotation = notation.substring(i + 1, pos);
+				break;
+
+			}
+		}
+
+		
+
+		// No base found
+		if (baseNotation == null) {
 			return "X";
-		String baseNotation = getNotation().substring(start + 1, end);
-		String baseSymbol = baseNotation.replaceAll("\\[|\\]", "");
+		}
+		// remove first and last bracket
+		if ((baseNotation.charAt(0) == '[')
+				&& (baseNotation.charAt(baseNotation.length() - 1) == ']')) {
+			baseNotation = baseNotation.substring(1, baseNotation.length() - 1);
+		} else {
+			baseNotation = baseNotation;
+		}
+
 		try {
-			Map<String, Monomer> monomers = monomerStore.getMonomers(Monomer.NUCLIEC_ACID_POLYMER_TYPE);
-			Monomer m = monomers.get(baseSymbol);
+
+			Map<String, Monomer> monomers = monomerStore
+					.getMonomers(Monomer.NUCLIEC_ACID_POLYMER_TYPE);
+			Monomer m = monomers.get(baseNotation);
+
+			if (m == null) {
+				Map<String, Monomer> smiles = monomerStore.getSmilesMonomerDB();
+				m = smiles.get(baseNotation);
+			}
+
 			return m.getNaturalAnalog();
 		} catch (Exception e) {
 			System.out
-					.println("Unable to get natural analog for " + baseSymbol);
+					.println("Unable to get natural analog for " + baseNotation);
 			return "X";
 		}
 	}
@@ -441,4 +480,7 @@ public class Nucleotide implements Serializable {
 		baseSymbol = baseSymbol.replaceAll("\\[|\\]", "");
 		return baseSymbol;
 	}
+	
+    	
+	
 }
