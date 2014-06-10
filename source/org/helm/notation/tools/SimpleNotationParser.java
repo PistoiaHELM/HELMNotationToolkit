@@ -722,15 +722,22 @@ public class SimpleNotationParser {
 		Map<String, String> reverseNucMap = NucleotideFactory.getInstance()
 				.getReverseNucleotideTemplateMap();
 
-		String[] notations = polymerNotation.split(GROUP_LEVEL_DELIMITER_REGEX);
-		for (int i = 0; i < notations.length; i++) {
-			String notation = notations[i];
+
+		SimpleNotationGroupIterator iterator=new SimpleNotationGroupIterator(polymerNotation);
+		while (iterator.hasNextGroup()){
+		
+		//String[] notations = polymerNotation.split(GROUP_LEVEL_DELIMITER_REGEX);
+			
+		//for (int i = 0; i < notations.length; i++) {
+		//	String notation = notations[i];
+			String notation = iterator.nextGroup();
 
 			String symbol = null;
 
 			// last nucleotide will be handled differently
 			String tmpNotation = notation;
-			if (i == (notations.length - 1) && notation.endsWith(")")) {
+			//if (i == (notations.length - 1) && notation.endsWith(")")) {
+			if (!iterator.hasNextGroup() && notation.endsWith(")")) {
 				tmpNotation = notation + "P";
 			}
 
@@ -874,9 +881,13 @@ public class SimpleNotationParser {
 		List<Nucleotide> ids = new ArrayList<Nucleotide>();
 		Map<String, String> reverseNucMap = NucleotideFactory.getInstance()
 				.getReverseNucleotideTemplateMap();
-		String[] notations = polymerNotation.split(GROUP_LEVEL_DELIMITER_REGEX);
-		for (int i = 0; i < notations.length; i++) {
-			String notation = notations[i];
+		//String[] notations = polymerNotation.split(GROUP_LEVEL_DELIMITER_REGEX);
+		//for (int i = 0; i < notations.length; i++) {
+		SimpleNotationGroupIterator iterator=new SimpleNotationGroupIterator(polymerNotation);
+		while (iterator.hasNextGroup()){
+
+			//String notation = notations[i];
+			String notation = iterator.nextGroup();
 			String symbol = null;
 
 			// last nucleotide will be handled differently
@@ -888,7 +899,8 @@ public class SimpleNotationParser {
 				nuc = new Nucleotide("temp", notation);
 				String naturalAnalog = nuc.getNaturalAnalog();
 				if (nuc.isModified()) {
-					if (i == (notations.length - 1)
+					//if (i == (notations.length - 1)
+					if (!iterator.hasNextGroup()
 							&& nuc.unmodifiedWithoutPhosphate()) {
 						nuc.setSymbol("end" + naturalAnalog);
 					} else {
