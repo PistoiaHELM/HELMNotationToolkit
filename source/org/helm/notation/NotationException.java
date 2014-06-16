@@ -23,26 +23,30 @@ package org.helm.notation;
 
 /**
  * This is the exception thrown for Invalid Notations
+ * 
  * @author zhangtianhong
  */
 public class NotationException extends Exception {
 
-    /**
-     * Creates a new instance of <code>NotationException</code> without detail message.
-     */
-    public NotationException() {
-    }
+	/**
+	 * Creates a new instance of <code>NotationException</code> without detail
+	 * message.
+	 */
+	public NotationException() {
+	}
 
+	/**
+	 * Constructs an instance of <code>NotationException</code> with the
+	 * specified detail message.
+	 * 
+	 * @param msg
+	 *            the detail message.
+	 */
+	public NotationException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Constructs an instance of <code>NotationException</code> with the specified detail message.
-     * @param msg the detail message.
-     */
-    public NotationException(String msg) {
-        super(msg);
-    }
-
-    public NotationException(String msg, Throwable err) {
-        super(msg, err);
-    }
+	public NotationException(String msg, Throwable err) {
+		super(msg, err);
+	}
 }

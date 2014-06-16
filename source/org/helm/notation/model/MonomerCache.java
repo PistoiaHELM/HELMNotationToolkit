@@ -25,38 +25,38 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class MonomerCache implements Serializable {
-    
-    private Map<String, Map<String, Monomer>> monomerDB;
 
-    private Map<String, Attachment> attachmentDB;
-    
-    private Map<String, Monomer> smilesMonomerDB;
+	private Map<String, Map<String, Monomer>> monomerDB;
 
-    public Map<String, Map<String, Monomer>> getMonomerDB() {
-        return monomerDB;
-    }
+	private Map<String, Attachment> attachmentDB;
 
-    public Map<String, Attachment> getAttachmentDB() {
-        return attachmentDB;
-    }
+	private Map<String, Monomer> smilesMonomerDB;
 
-    public Map<String, Monomer> getSmilesMonomerDB() {
-        return smilesMonomerDB;
-    }
+	public Map<String, Map<String, Monomer>> getMonomerDB() {
+		return monomerDB;
+	}
 
-    public void setMonomerDB(Map<String, Map<String, Monomer>> monomerDB) {
-        this.monomerDB = monomerDB;
-    }
+	public Map<String, Attachment> getAttachmentDB() {
+		return attachmentDB;
+	}
 
-    public void setAttachmentDB(Map<String, Attachment> attachmentDB) {
-        this.attachmentDB = attachmentDB;
-    }
+	public Map<String, Monomer> getSmilesMonomerDB() {
+		return smilesMonomerDB;
+	}
 
-    public void setSmilesMonomerDB(Map<String, Monomer> smilesMonomerDB) {
-        this.smilesMonomerDB = smilesMonomerDB;
-    }
+	public void setMonomerDB(Map<String, Map<String, Monomer>> monomerDB) {
+		this.monomerDB = monomerDB;
+	}
+
+	public void setAttachmentDB(Map<String, Attachment> attachmentDB) {
+		this.attachmentDB = attachmentDB;
+	}
+
+	public void setSmilesMonomerDB(Map<String, Monomer> smilesMonomerDB) {
+		this.smilesMonomerDB = smilesMonomerDB;
+	}
 }

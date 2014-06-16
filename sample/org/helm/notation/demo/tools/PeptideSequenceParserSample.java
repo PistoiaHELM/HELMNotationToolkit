@@ -24,24 +24,26 @@ package org.helm.notation.demo.tools;
 import org.helm.notation.tools.*;
 
 /**
- *
+ * 
  * @author zhangtianhong
  */
 public class PeptideSequenceParserSample {
 
-    public static void main(String[] args) {
-        try {
-            String notation = PeptideSequenceParser.getNotation("AGG   seC   ");
-            System.out.println(notation);
+	public static void main(String[] args) {
+		try {
+			String notation = PeptideSequenceParser.getNotation("AGG   seC   ");
+			System.out.println(notation);
 
-            notation = PeptideSequenceParser.getNotation("AGG.seC.GGG.seC", ".");
-            System.out.println(notation);
+			notation = PeptideSequenceParser
+					.getNotation("AGG.seC.GGG.seC", ".");
+			System.out.println(notation);
 
-            notation = PeptideSequenceParser.getNotation("AGG seC.seC.GGG.seC", ".");
-            System.out.println(notation);
+			notation = PeptideSequenceParser.getNotation("AGG seC.seC.GGG.seC",
+					".");
+			System.out.println(notation);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

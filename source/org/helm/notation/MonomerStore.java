@@ -10,13 +10,14 @@ import java.util.Set;
 import org.helm.notation.model.Monomer;
 import org.helm.notation.tools.DeepCopy;
 import org.helm.notation.tools.StructureParser;
+
 /**
- * This class represents a store for monomers.
- * It is mainly used to seperate the monomers coming from a 
- * single (XHELM) file from the monomers within the local database.  
+ * This class represents a store for monomers. It is mainly used to seperate the
+ * monomers coming from a single (XHELM) file from the monomers within the local
+ * database.
  * 
  * @author maisel
- *
+ * 
  */
 public class MonomerStore {
 	private Map<String, Map<String, Monomer>> monomerDB;
@@ -44,7 +45,6 @@ public class MonomerStore {
 		smilesMonomerDB = new HashMap<String, Monomer>();
 	}
 
-	
 	/**
 	 * returns MonomerDB
 	 * 
@@ -70,11 +70,11 @@ public class MonomerStore {
 	 * @throws IOException
 	 * @throws MonomerException
 	 */
-	public void addMonomer(Monomer monomer) throws IOException, MonomerException {
+	public void addMonomer(Monomer monomer) throws IOException,
+			MonomerException {
 		addMonomer(monomer, false);
 	}
-	
-	
+
 	/**
 	 * Adds a monomer to the store and optionally sets the dbChanged flag
 	 * 
@@ -83,8 +83,8 @@ public class MonomerStore {
 	 * @throws IOException
 	 * @throws MonomerException
 	 */
-	public void addMonomer(Monomer monomer, boolean dbChanged) throws IOException,
-			MonomerException {
+	public void addMonomer(Monomer monomer, boolean dbChanged)
+			throws IOException, MonomerException {
 		Map<String, Monomer> monomerMap = monomerDB.get(monomer
 				.getPolymerType());
 		String polymerType = monomer.getPolymerType();
@@ -92,11 +92,12 @@ public class MonomerStore {
 		String smilesString = monomer.getCanSMILES();
 
 		try {
-			smilesString=StructureParser.getUniqueExtendedSMILES(smilesString);
+			smilesString = StructureParser
+					.getUniqueExtendedSMILES(smilesString);
 		} catch (Exception e) {
-			smilesString=monomer.getCanSMILES();
+			smilesString = monomer.getCanSMILES();
 		}
-		
+
 		boolean hasSmilesString = (smilesString != null && smilesString
 				.length() > 0);
 
@@ -109,7 +110,7 @@ public class MonomerStore {
 
 		boolean alreadyAdded = false;
 		alreadyAdded = monomerMap.containsKey(alternateId);
-		
+
 		if (!alreadyAdded) {
 			monomerMap.put(alternateId, copyMonomer);
 
@@ -121,7 +122,7 @@ public class MonomerStore {
 			}
 		}
 
-		if ( dbChanged) {
+		if (dbChanged) {
 			MonomerFactory.setDBChanged(true);
 		}
 	}
@@ -138,7 +139,6 @@ public class MonomerStore {
 				alternateId) != null);
 	}
 
-	
 	/**
 	 * Returns the monomer specified by polymerType and alternatId
 	 * 
@@ -159,7 +159,7 @@ public class MonomerStore {
 	public Monomer getMonomer(String smiles) {
 		return smilesMonomerDB.get(smiles);
 	}
-	
+
 	/**
 	 * Returns all monomers by polymerType
 	 * 
@@ -193,7 +193,6 @@ public class MonomerStore {
 				.values().size() == 0);
 	}
 
-	
 	/**
 	 * Clears the MonomerStore
 	 */
@@ -201,8 +200,7 @@ public class MonomerStore {
 		this.monomerDB.clear();
 		this.smilesMonomerDB.clear();
 	}
-	
-	
+
 	public String toString() {
 		String str = "";
 		for (Map<String, Monomer> val : this.monomerDB.values()) {
@@ -215,28 +213,29 @@ public class MonomerStore {
 
 		return str;
 	}
-	
+
 	/**
 	 * Returns the polymer type set
 	 * 
 	 * @return the polymer type set as Set<String>
 	 */
-	 public Set<String> getPolymerTypeSet(){
-	    	return monomerDB.keySet();    
-	    }
-	 
-	 
-	 /**
-	  *  This method returns all monomers of the store as list sorted by polymer type 
-	  * @return all monomers of store as List<Monomer>
-	  */
-	 public List<Monomer> getAllMonomersList(){
-		 List<Monomer> monomers=new ArrayList<Monomer>();
-		 for (String polymerType : getPolymerTypeSet()) {
-			 Map<String,Monomer> map=getMonomers(polymerType);
-			 monomers.addAll(map.values());
-		 }				
-		 return monomers;
-		 
-	 }
+	public Set<String> getPolymerTypeSet() {
+		return monomerDB.keySet();
+	}
+
+	/**
+	 * This method returns all monomers of the store as list sorted by polymer
+	 * type
+	 * 
+	 * @return all monomers of store as List<Monomer>
+	 */
+	public List<Monomer> getAllMonomersList() {
+		List<Monomer> monomers = new ArrayList<Monomer>();
+		for (String polymerType : getPolymerTypeSet()) {
+			Map<String, Monomer> map = getMonomers(polymerType);
+			monomers.addAll(map.values());
+		}
+		return monomers;
+
+	}
 }

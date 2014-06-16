@@ -23,26 +23,30 @@ package org.helm.notation;
 
 /**
  * This is the exception thrown for Invalid Monomers
+ * 
  * @author zhangtianhong
  */
 public class MonomerException extends Exception {
 
-    /**
-     * Creates a new instance of <code>MonomerException</code> without detail message.
-     */
-    public MonomerException() {
-    }
+	/**
+	 * Creates a new instance of <code>MonomerException</code> without detail
+	 * message.
+	 */
+	public MonomerException() {
+	}
 
+	/**
+	 * Constructs an instance of <code>MonomerException</code> with the
+	 * specified detail message.
+	 * 
+	 * @param msg
+	 *            the detail message.
+	 */
+	public MonomerException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Constructs an instance of <code>MonomerException</code> with the specified detail message.
-     * @param msg the detail message.
-     */
-    public MonomerException(String msg) {
-        super(msg);
-    }
-
-    public MonomerException(String msg, Throwable err) {
-        super(msg, err);
-    }
+	public MonomerException(String msg, Throwable err) {
+		super(msg, err);
+	}
 }

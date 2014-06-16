@@ -25,29 +25,29 @@ import chemaxon.marvin.plugin.PluginException;
 public class xHelmNotationExporterTest {
 
 	@Test
-	public void testExport() throws JDOMException, IOException, MonomerException {
-		
-		//import
-		InputStream in = this.getClass().getResourceAsStream("resources/PeptideLinkerNucleotide.xhelm");
+	public void testExport() throws JDOMException, IOException,
+			MonomerException {
+
+		// import
+		InputStream in = this.getClass().getResourceAsStream(
+				"resources/PeptideLinkerNucleotide.xhelm");
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(in);
-		
-		
-		XMLOutputter outputter=new XMLOutputter(Format.getPrettyFormat()) ;
-		String expectedDocString=outputter.outputString(doc);
-		
-		String helmString = xHelmNotationParser.getComplexNotationString(doc.getRootElement());
-		MonomerStore monomerStore = xHelmNotationParser.getMonomerStore(doc.getRootElement());	
-		
-		//export
-		String output=xHelmNotationExporter.writeXHELM(helmString, monomerStore);
-	
-				
+
+		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+		String expectedDocString = outputter.outputString(doc);
+
+		String helmString = xHelmNotationParser.getComplexNotationString(doc
+				.getRootElement());
+		MonomerStore monomerStore = xHelmNotationParser.getMonomerStore(doc
+				.getRootElement());
+
+		// export
+		String output = xHelmNotationExporter.writeXHELM(helmString,
+				monomerStore);
+
 		assertEquals(expectedDocString.length(), output.length());
-		
-	
-		
-		
+
 	}
 
 }

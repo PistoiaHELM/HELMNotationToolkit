@@ -105,35 +105,37 @@ public class MonomerFactory {
 	 * @return Map as Map<String, Map<String, Monomer>>
 	 */
 	public synchronized Map<String, Map<String, Monomer>> getMonomerDB() {
-		return getMonomerDB( true);
+		return getMonomerDB(true);
 	}
-	
-	
+
 	/**
-	 * returns the monomer database including monomers that where temporary marked as new, else without those monomers
-	 * @param includeNewMonomers 
+	 * returns the monomer database including monomers that where temporary
+	 * marked as new, else without those monomers
+	 * 
+	 * @param includeNewMonomers
 	 * @return Map as Map<String, Map<String, Monomer>>
 	 */
-	public synchronized Map<String, Map<String, Monomer>> getMonomerDB( boolean includeNewMonomers) {
-		if ( includeNewMonomers) {
+	public synchronized Map<String, Map<String, Monomer>> getMonomerDB(
+			boolean includeNewMonomers) {
+		if (includeNewMonomers) {
 			return monomerDB;
-		}
-		else {
+		} else {
 			Map<String, Map<String, Monomer>> reducedMonomerDB = new HashMap<String, Map<String, Monomer>>();
-			for ( String polymerType : monomerDB.keySet()) {
-				Map<String, Monomer> monomerMap = monomerDB.get( polymerType);
-				reducedMonomerDB.put(polymerType, excludeNewMonomers(monomerMap));
+			for (String polymerType : monomerDB.keySet()) {
+				Map<String, Monomer> monomerMap = monomerDB.get(polymerType);
+				reducedMonomerDB.put(polymerType,
+						excludeNewMonomers(monomerMap));
 			}
 			return reducedMonomerDB;
 		}
 	}
-	
-
 
 	protected MonomerStore monomerStore;
 
 	/**
-	 * create a MonomerStore instance based on MonomerFactory's monomerDB and smilesMonomerDB
+	 * create a MonomerStore instance based on MonomerFactory's monomerDB and
+	 * smilesMonomerDB
+	 * 
 	 * @return MonomerStore
 	 */
 	public synchronized MonomerStore getMonomerStore() {
@@ -148,29 +150,30 @@ public class MonomerFactory {
 	}
 
 	public synchronized Map<String, Monomer> getSmilesMonomerDB() {
-		return getSmilesMonomerDB( true);
+		return getSmilesMonomerDB(true);
 	}
-	
-	public synchronized Map<String, Monomer> getSmilesMonomerDB( boolean includeNewMonomers) {
-		if ( includeNewMonomers) {
+
+	public synchronized Map<String, Monomer> getSmilesMonomerDB(
+			boolean includeNewMonomers) {
+		if (includeNewMonomers) {
 			return smilesMonomerDB;
-		}
-		else {
-			return excludeNewMonomers( smilesMonomerDB);
+		} else {
+			return excludeNewMonomers(smilesMonomerDB);
 		}
 	}
 
-	private synchronized Map<String, Monomer> excludeNewMonomers( Map<String, Monomer> monomerMap) {
+	private synchronized Map<String, Monomer> excludeNewMonomers(
+			Map<String, Monomer> monomerMap) {
 		Map<String, Monomer> reducedMonomerMap = new HashMap<String, Monomer>();
-		for ( String identifier : monomerMap.keySet()) {
-			Monomer monomer = monomerMap.get( identifier);
-			if (! monomer.isNewMonomer()) {
+		for (String identifier : monomerMap.keySet()) {
+			Monomer monomer = monomerMap.get(identifier);
+			if (!monomer.isNewMonomer()) {
 				reducedMonomerMap.put(identifier, monomer);
 			}
 		}
 		return reducedMonomerMap;
 	}
-	
+
 	public synchronized List<String> getPolymerTypes() {
 		List<String> l = new ArrayList<String>();
 		l.addAll(monomerDB.keySet());
@@ -252,9 +255,9 @@ public class MonomerFactory {
 	}
 
 	public static void setDBChanged(boolean isChanged) {
-	    dbChanged = isChanged;	
+		dbChanged = isChanged;
 	}
-	
+
 	/**
 	 * Returns whether one of the stored databases has changed, for example by
 	 * adding or removing monomers.
@@ -264,6 +267,7 @@ public class MonomerFactory {
 	public static boolean hasDBChanged() {
 		return dbChanged;
 	}
+
 	public static void resetDBChanged() {
 		dbChanged = false;
 	}
@@ -333,7 +337,6 @@ public class MonomerFactory {
 
 		dbChanged = true;
 	}
-
 
 	/**
 	 * Build an MonomerCache object with monomerDBXML String
@@ -494,7 +497,6 @@ public class MonomerFactory {
 		cache.setMonomerDB(newMonomerDB);
 		cache.setAttachmentDB(newAttachmentDB);
 		cache.setSmilesMonomerDB(newSmilesMonomerDB);
-	
 
 		return cache;
 	}
@@ -600,12 +602,10 @@ public class MonomerFactory {
 					.getResourceAsStream(MONOMER_DB_XML_RESOURCE);
 			cache = buildMonomerCacheFromXML(in);
 			validate(cache.getMonomerDB());
-			
+
 			logger.log(Level.INFO, MONOMER_DB_XML_RESOURCE
 					+ " is used for monomer cache initialization");
 		}
-
-	
 
 		monomerDB = cache.getMonomerDB();
 		attachmentDB = cache.getAttachmentDB();
@@ -625,9 +625,9 @@ public class MonomerFactory {
 			f.mkdir();
 		}
 		MonomerCache cache = new MonomerCache();
-		cache.setMonomerDB(getMonomerDB( false));
+		cache.setMonomerDB(getMonomerDB(false));
 		cache.setAttachmentDB(getAttachmentDB());
-		cache.setSmilesMonomerDB(getSmilesMonomerDB( false));
+		cache.setSmilesMonomerDB(getSmilesMonomerDB(false));
 		serializeMonomerCache(cache, MONOMER_CACHE_FILE_PATH);
 
 		String monomerDbXML = buildMonomerDbXMLFromCache(cache);
@@ -695,18 +695,19 @@ public class MonomerFactory {
 			for (Iterator it = monomerSet.iterator(); it.hasNext();) {
 				String monomerID = (String) it.next();
 				Monomer monomer = monomerMap.get(monomerID);
-				//String smiles = monomer.getCanSMILES();
-				String smiles=null;
+				// String smiles = monomer.getCanSMILES();
+				String smiles = null;
 				try {
-					smiles = StructureParser.getUniqueExtendedSMILES(monomer.getCanSMILES());
+					smiles = StructureParser.getUniqueExtendedSMILES(monomer
+							.getCanSMILES());
 				} catch (Exception e) {
-					smiles=monomer.getCanSMILES();
-				} 
+					smiles = monomer.getCanSMILES();
+				}
 				map.put(smiles, monomer);
-				
+
 			}
 		}
-		//System.out.println("smiles map count"+map.size());
+		// System.out.println("smiles map count"+map.size());
 		return map;
 	}
 
@@ -723,7 +724,6 @@ public class MonomerFactory {
 		}
 		return true;
 	}
-
 
 	public static void finalizeMonomerCache() {
 

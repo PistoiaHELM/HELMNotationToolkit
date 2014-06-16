@@ -23,26 +23,30 @@ package org.helm.notation;
 
 /**
  * This is the exception thrown for Invalid Structures
+ * 
  * @author zhangtianhong
  */
 public class StructureException extends Exception {
 
-    /**
-     * Creates a new instance of <code>StructureException</code> without detail message.
-     */
-    public StructureException() {
-    }
+	/**
+	 * Creates a new instance of <code>StructureException</code> without detail
+	 * message.
+	 */
+	public StructureException() {
+	}
 
+	/**
+	 * Constructs an instance of <code>StructureException</code> with the
+	 * specified detail message.
+	 * 
+	 * @param msg
+	 *            the detail message.
+	 */
+	public StructureException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Constructs an instance of <code>StructureException</code> with the specified detail message.
-     * @param msg the detail message.
-     */
-    public StructureException(String msg) {
-        super(msg);
-    }
-
-    public StructureException(String msg, Throwable err) {
-        super(msg, err);
-    }
+	public StructureException(String msg, Throwable err) {
+		super(msg, err);
+	}
 }

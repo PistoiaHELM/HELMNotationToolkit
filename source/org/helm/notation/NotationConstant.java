@@ -22,17 +22,21 @@
 package org.helm.notation;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public interface NotationConstant {
-    public static final String NOTATION_SOURCE = "HELM Notation";
-    public static final String NOTATION_DIRECTORY = System.getProperty("user.home") + System.getProperty("file.separator") + ".helm";
-    
-    //notation to smiles conversion will not be performed when total monomer count is above this threshold
-    public static final int MONOMER_COUNT_THRESHOLD = 200;
+	public static final String NOTATION_SOURCE = "HELM Notation";
+	public static final String NOTATION_DIRECTORY = System
+			.getProperty("user.home")
+			+ System.getProperty("file.separator")
+			+ ".helm";
 
-    //break long sequences to small chunks using the value
-    public static final int MONOMER_GROUP_COUNT_INTERVAL = 20;
+	// notation to smiles conversion will not be performed when total monomer
+	// count is above this threshold
+	public static final int MONOMER_COUNT_THRESHOLD = 200;
+
+	// break long sequences to small chunks using the value
+	public static final int MONOMER_GROUP_COUNT_INTERVAL = 20;
 
 }

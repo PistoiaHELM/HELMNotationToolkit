@@ -25,101 +25,104 @@ import java.io.Serializable;
 
 /**
  * This is a data model for Attachment point on monomer
+ * 
  * @author zhangtianhong
  */
 public class Attachment implements Serializable {
 
-    public static final String BACKBONE_MONOMER_LEFT_ATTACHEMENT = "R1";
-    public static final String BACKBONE_MONOMER_RIGHT_ATTACHEMENT = "R2";
-    public static final String BACKBONE_MONOMER_BRANCH_ATTACHEMENT = "R3";
-    public static final String BRANCH_MONOMER_ATTACHEMENT = "R1";
-    public static final String STARTING_MONOMER_ATTACHEMENT = "Starting";    
-    
-    public static final String CAP_GROUP_OH = "OH";
-    public static final String CAP_GROUP_H = "H";
-    
-    public static final String PAIR_ATTACHMENT = "pair";
-   
-    //surrogate database ID, users may never see it
-    private int id;    
-    
-    //String ID for this attachment
-    private String alternateId;    
-    
-    //R group used for this attachment, such as R1
-    private String label;    
-    
-    //The name for the capping group, such as hydroxyl or OH, does not specify connection atom for multi-atom groups.
-    private String capGroupName;    
-    
-    //The canonical SMILES for the capping group, include the R group to indicate how connection should be made with monomer
-    private String capGroupSMILES;
-    
-//    private boolean connected;
-  
-    public Attachment() {
-//        connected = false;
-    }
+	public static final String BACKBONE_MONOMER_LEFT_ATTACHEMENT = "R1";
+	public static final String BACKBONE_MONOMER_RIGHT_ATTACHEMENT = "R2";
+	public static final String BACKBONE_MONOMER_BRANCH_ATTACHEMENT = "R3";
+	public static final String BRANCH_MONOMER_ATTACHEMENT = "R1";
+	public static final String STARTING_MONOMER_ATTACHEMENT = "Starting";
 
-    public Attachment(String label, String capGroupName) {
-        this.label = label;
-        this.capGroupName = capGroupName;
-//        connected = false;
-    }
+	public static final String CAP_GROUP_OH = "OH";
+	public static final String CAP_GROUP_H = "H";
 
-    public int getId() {
-        return id;
-    }
+	public static final String PAIR_ATTACHMENT = "pair";
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	// surrogate database ID, users may never see it
+	private int id;
 
-    public String getAlternateId() {
-        return alternateId;
-    }
+	// String ID for this attachment
+	private String alternateId;
 
-    public void setAlternateId(String alternateId) {
-        this.alternateId = alternateId;
-    }
+	// R group used for this attachment, such as R1
+	private String label;
 
-    public String getLabel() {
-        if(label == null){
-            return " ";
-        }
-        return label;
-    }
+	// The name for the capping group, such as hydroxyl or OH, does not specify
+	// connection atom for multi-atom groups.
+	private String capGroupName;
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	// The canonical SMILES for the capping group, include the R group to
+	// indicate how connection should be made with monomer
+	private String capGroupSMILES;
 
-    public String getCapGroupName() {
-        return capGroupName;
-    }
+	// private boolean connected;
 
-    public void setCapGroupName(String capGroupName) {
-        this.capGroupName = capGroupName;
-    }
+	public Attachment() {
+		// connected = false;
+	}
 
-    public String getCapGroupSMILES() {
-        return capGroupSMILES;
-    }
+	public Attachment(String label, String capGroupName) {
+		this.label = label;
+		this.capGroupName = capGroupName;
+		// connected = false;
+	}
 
-    public void setCapGroupSMILES(String capGroupSMILES) {
-        this.capGroupSMILES = capGroupSMILES; 
-    }
+	public int getId() {
+		return id;
+	}
 
-//    public boolean isConnected() {
-//        return connected;
-//    }
-//
-//    public void setConnected(boolean connected) {
-//        this.connected = connected;
-//    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    @Override
-    public String toString() {
-        return (label + ": " + capGroupName);
-    }
+	public String getAlternateId() {
+		return alternateId;
+	}
+
+	public void setAlternateId(String alternateId) {
+		this.alternateId = alternateId;
+	}
+
+	public String getLabel() {
+		if (label == null) {
+			return " ";
+		}
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getCapGroupName() {
+		return capGroupName;
+	}
+
+	public void setCapGroupName(String capGroupName) {
+		this.capGroupName = capGroupName;
+	}
+
+	public String getCapGroupSMILES() {
+		return capGroupSMILES;
+	}
+
+	public void setCapGroupSMILES(String capGroupSMILES) {
+		this.capGroupSMILES = capGroupSMILES;
+	}
+
+	// public boolean isConnected() {
+	// return connected;
+	// }
+	//
+	// public void setConnected(boolean connected) {
+	// this.connected = connected;
+	// }
+
+	@Override
+	public String toString() {
+		return (label + ": " + capGroupName);
+	}
 }

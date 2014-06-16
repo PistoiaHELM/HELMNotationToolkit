@@ -22,58 +22,61 @@
 package org.helm.notation.model;
 
 /**
- * This is the data model for PolymerNode in complex polymer notation.
- * id is the node ID such as RNA1, CHEM2, and label is the simple polymer notation for the node.
+ * This is the data model for PolymerNode in complex polymer notation. id is the
+ * node ID such as RNA1, CHEM2, and label is the simple polymer notation for the
+ * node.
+ * 
  * @author zhangtianhong
  */
 public class PolymerNode {
 
-    private String id;
-    private String label;
-    private String anotation;
-    
-    public String getId() {
-        return id;
-    }
+	private String id;
+	private String label;
+	private String anotation;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    /**
-     * get the polymer type of this polymer node
-     * @return either RNA, PEPTIDE, or CHEM 
-     */
-    public String getType() {
-        return getPolymerType(getId());
-    }
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    public String getAnotation() {
-        return anotation;
-    }
+	/**
+	 * get the polymer type of this polymer node
+	 * 
+	 * @return either RNA, PEPTIDE, or CHEM
+	 */
+	public String getType() {
+		return getPolymerType(getId());
+	}
 
-    public void setAnotation(String anotation) {
-        this.anotation = anotation;
-    }
-    
-    public static String getPolymerType(String nodeId) {
-        char[] chars = nodeId.toCharArray();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < chars.length; i++) {
-            if (String.valueOf(chars[i]).matches("[0-9]")) {
-                break;
-            } else {
-                sb.append(chars[i]);
-            }
-        }
-        return sb.toString();      
-    }
+	public String getAnotation() {
+		return anotation;
+	}
+
+	public void setAnotation(String anotation) {
+		this.anotation = anotation;
+	}
+
+	public static String getPolymerType(String nodeId) {
+		char[] chars = nodeId.toCharArray();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < chars.length; i++) {
+			if (String.valueOf(chars[i]).matches("[0-9]")) {
+				break;
+			} else {
+				sb.append(chars[i]);
+			}
+		}
+		return sb.toString();
+	}
 }

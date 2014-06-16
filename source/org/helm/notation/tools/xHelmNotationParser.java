@@ -20,18 +20,18 @@ import org.jdom.output.XMLOutputter;
  * Class to parse the XHELM XML format
  * 
  * @author maisel
- *
+ * 
  */
 public class xHelmNotationParser {
-	
+
 	/**
-	 * Extracts the complex notation string from the root node of the XHELM document
+	 * Extracts the complex notation string from the root node of the XHELM
+	 * document
 	 * 
 	 * @param rootElement
 	 * @return the complex notation string
 	 */
-	public static String getComplexNotationString(Element rootElement)
-	{
+	public static String getComplexNotationString(Element rootElement) {
 		Element helmNotationElement = rootElement.getChild("HelmNotation");
 		return helmNotationElement.getText();
 	}
@@ -48,11 +48,11 @@ public class xHelmNotationParser {
 			throws MonomerException, IOException {
 		MonomerStore monomerStore = new MonomerStore();
 		Element monomerListElement = rootElement.getChild("Monomers");
-		if ( monomerListElement != null) {
+		if (monomerListElement != null) {
 			@SuppressWarnings("unchecked")
 			List<Element> elementList = (List<Element>) monomerListElement
 					.getChildren("Monomer");
-	
+
 			for (Element monomerElement : elementList) {
 				Monomer m = MonomerParser.getMonomer(monomerElement);
 				monomerStore.addMonomer(m);
@@ -60,7 +60,5 @@ public class xHelmNotationParser {
 		}
 		return monomerStore;
 	}
-
-
 
 }

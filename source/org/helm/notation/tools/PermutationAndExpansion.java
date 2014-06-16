@@ -27,71 +27,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class PermutationAndExpansion {
 
-    public static List<List<String>> linearize(List<List<String[]>> originalList) {
-        List<List<String>> result = new ArrayList<List<String>>();
-        for (List<String[]> l : originalList) {
-            List<String> tmp = new ArrayList<String>();
-            for (String[] sa : l) {
-                for (int i = 0; i < sa.length; i++) {
-                    tmp.add(sa[i]);
-                }
-            }
-            result.add(tmp);
-        }
-        return result;
-    }
+	public static List<List<String>> linearize(List<List<String[]>> originalList) {
+		List<List<String>> result = new ArrayList<List<String>>();
+		for (List<String[]> l : originalList) {
+			List<String> tmp = new ArrayList<String>();
+			for (String[] sa : l) {
+				for (int i = 0; i < sa.length; i++) {
+					tmp.add(sa[i]);
+				}
+			}
+			result.add(tmp);
+		}
+		return result;
+	}
 
-    public static void expand(List<List<String[]>> parent, List<String[]> child) throws IOException, ClassNotFoundException {
-        if (parent.size() == 0) {
-            parent.add(child);
-        } else {
-            List<List<String[]>> remove = new ArrayList<List<String[]>>();
-            List<List<String[]>> keep = new ArrayList<List<String[]>>();
-            for (int i = 0; i < parent.size(); i++) {
-                List<String[]> tmp = parent.get(i);
-                remove.add(tmp);
-                for (int j = 0; j < child.size(); j++) {
-                    List<String[]> l = DeepCopy.copy(tmp);
-                    l.add(child.get(j));
-                    keep.add(l);
-                }
-            }
-            parent.removeAll(remove);
-            parent.addAll(keep);
-        }
-    }
+	public static void expand(List<List<String[]>> parent, List<String[]> child)
+			throws IOException, ClassNotFoundException {
+		if (parent.size() == 0) {
+			parent.add(child);
+		} else {
+			List<List<String[]>> remove = new ArrayList<List<String[]>>();
+			List<List<String[]>> keep = new ArrayList<List<String[]>>();
+			for (int i = 0; i < parent.size(); i++) {
+				List<String[]> tmp = parent.get(i);
+				remove.add(tmp);
+				for (int j = 0; j < child.size(); j++) {
+					List<String[]> l = DeepCopy.copy(tmp);
+					l.add(child.get(j));
+					keep.add(l);
+				}
+			}
+			parent.removeAll(remove);
+			parent.addAll(keep);
+		}
+	}
 
-    public static void permutate(List<String[]> l, List<String> ls) {
-        String[] a = ls.toArray(new String[0]);
-        int n = ls.size();
-        permutate(l, a, n);
-    }
+	public static void permutate(List<String[]> l, List<String> ls) {
+		String[] a = ls.toArray(new String[0]);
+		int n = ls.size();
+		permutate(l, a, n);
+	}
 
-    public static void permutate(List<String[]> l, String[] a, int n) {
+	public static void permutate(List<String[]> l, String[] a, int n) {
 
-        if (n == 1) {
-            String[] result = new String[a.length];
-            for (int i = 0; i < a.length; i++) {
-                result[i] = a[i];
-            }
-            l.add(result);
-        }
-        for (int i = 0; i < n; i++) {
-            swap(a, i, n - 1);
-            permutate(l, a, n - 1);
-            swap(a, i, n - 1);
-        }
-    }
+		if (n == 1) {
+			String[] result = new String[a.length];
+			for (int i = 0; i < a.length; i++) {
+				result[i] = a[i];
+			}
+			l.add(result);
+		}
+		for (int i = 0; i < n; i++) {
+			swap(a, i, n - 1);
+			permutate(l, a, n - 1);
+			swap(a, i, n - 1);
+		}
+	}
 
-    // swap the String at indices i and j
-    private static void swap(String[] a, int i, int j) {
-        String c = a[i];
-        a[i] = a[j];
-        a[j] = c;
-    }
+	// swap the String at indices i and j
+	private static void swap(String[] a, int i, int j) {
+		String c = a[i];
+		a[i] = a[j];
+		a[j] = c;
+	}
 }
