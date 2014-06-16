@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-
 import org.helm.notation.MonomerException;
 import org.helm.notation.MonomerFactory;
 import org.helm.notation.NotationException;
@@ -87,19 +86,46 @@ public class NucleotideTest {
 			JDOMException {
 		String notation = "[LR]([5meC])[sP]";
 		Nucleotide n = new Nucleotide("ls5C", notation);
-		System.out.println(n.getNaturalAnalog());
+
 		assertEquals("C", n.getNaturalAnalog());
 		String base = notation.substring(notation.indexOf("(") + 1,
 				notation.indexOf(")"));
 		base = base.replaceAll("\\[|\\]", "");
 		Monomer baseMonomer = MonomerFactory.getInstance().getMonomerDB()
 				.get(Monomer.NUCLIEC_ACID_POLYMER_TYPE).get(base);
-		System.out.println(baseMonomer.getNaturalAnalog());
+
 		assertEquals("C", baseMonomer.getNaturalAnalog());
+
+		n = new Nucleotide("R(A)P", Nucleotide.MIDDLE_POSITION_TYPE);
+
+		assertEquals("A", n.getNaturalAnalog());
+		n = new Nucleotide("R([Nc1ncnc2n([*])cnc12 |$;;;;;;;_R1;;;$|])P",
+				Nucleotide.MIDDLE_POSITION_TYPE);
+		assertEquals("A", n.getNaturalAnalog());
+
+		n = new Nucleotide(
+				"[CO[C@H]1[C@H]([*])O[C@H](CO[*])[C@H]1O[*] |$;;;;_R3;;;;;_R1;;;_R2$|]([Nc1ncnc2n([*])cnc12 |$;;;;;;;_R1;;;$|])P",
+				Nucleotide.MIDDLE_POSITION_TYPE);
+		assertEquals("A", n.getNaturalAnalog());
+		n = new Nucleotide(
+				"R([Cc1nc2c(nc(N)[nH]c2=O)n1[*] |$;;;;;;;;;;;;_R1$|])P",
+				Nucleotide.MIDDLE_POSITION_TYPE);
+		assertEquals("X", n.getNaturalAnalog());
+		n = new Nucleotide("RP", Nucleotide.MIDDLE_POSITION_TYPE);
+		assertEquals("X", n.getNaturalAnalog());
+
+		n = new Nucleotide("R", Nucleotide.ENDING_POSITION_TYPE);
+
+		assertEquals("X", n.getNaturalAnalog());
+		n = new Nucleotide("([Nc1ncnc2n([*])cnc12 |$;;;;;;;_R1;;;$|])P",
+				Nucleotide.STARTING_POSITION_TYPE);
+		assertEquals("A", n.getNaturalAnalog());
+
 	}
 
 	@Test
-	public void testGetComplementSequence() throws NotationException, IOException, JDOMException {
+	public void testGetComplementSequence() throws NotationException,
+			IOException, JDOMException {
 
 		String sequence = "5'-UAU GUC UCC AGA AUG UAG CdTdT-3'";
 
@@ -114,7 +140,6 @@ public class NucleotideTest {
 				"R(U)P.R(A)P.R(U)P.R(G)P.R(U)P.R(C)P.R(U)P.R(C)P.R(C)P.R(A)P.R(G)P.R(A)P.R(A)P.R(U)P.R(G)P.R(U)P.R(A)P.R(G)P.R(C)P.[dR](T)P.[dR](T)P",
 				notation);
 
-	
 		sequence = "5'-mGCU ACA UUC UGG AGA CAU AdTdT-3'";
 
 		normal = NucleotideSequenceParser.getNormalComplementSequence(sequence);
@@ -135,18 +160,15 @@ public class NucleotideTest {
 				.getReverseComplementSequence(sequence);
 		assertEquals("3'-UCGAUCCCA-5'", reverse);
 		notation = NucleotideSequenceParser.getNotation(sequence);
-		assertEquals(
-				"R(A)P.R(G)P.R(C)P.R(U)P.R(A)P.R(G)P.R(G)P.R(G)P.R(U)P",
+		assertEquals("R(A)P.R(G)P.R(C)P.R(U)P.R(A)P.R(G)P.R(G)P.R(G)P.R(U)P",
 				notation);
 
-
-
-//		Map<String, Map<String, String>> templates = NucleotideFactory
-//				.getInstance().getNucleotideTemplates();
-//		String templatesXML = NucleotideSequenceParser
-//				.getNucleotideTemplatesXML(templates);
-//		System.out.println(templatesXML);
-//		NucleotideFactory.getInstance().saveNucleotideTemplates();
+		// Map<String, Map<String, String>> templates = NucleotideFactory
+		// .getInstance().getNucleotideTemplates();
+		// String templatesXML = NucleotideSequenceParser
+		// .getNucleotideTemplatesXML(templates);
+		// System.out.println(templatesXML);
+		// NucleotideFactory.getInstance().saveNucleotideTemplates();
 
 	}
 }

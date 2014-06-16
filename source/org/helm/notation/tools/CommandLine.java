@@ -27,66 +27,74 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 
 /**
- * Commonand line tools for different conversion, this is the manin class in manifest file
+ * Commonand line tools for different conversion, this is the manin class in
+ * manifest file
+ * 
  * @author zhangtianhong
  */
 public class CommandLine {
-    public static final String[] options = {"seq2notation", "notation2property"};
+	public static final String[] options = { "seq2notation",
+			"notation2property" };
 
-    public static void main(String[] args) {
-        try {
+	public static void main(String[] args) {
+		try {
 
-            if (args.length != 3) {
-                System.out.println("Usage: java -jar NotationToolkit.jar conversion_option[seq2notation|notation2property] input_file output_file\n");
-                System.out.println("Example: java -jar NotationToolkit.jar seq2notation c:/data/seq.txt c:/data/notation.txt\n");
-                System.exit(0);
-            }
+			if (args.length != 3) {
+				System.out
+						.println("Usage: java -jar NotationToolkit.jar conversion_option[seq2notation|notation2property] input_file output_file\n");
+				System.out
+						.println("Example: java -jar NotationToolkit.jar seq2notation c:/data/seq.txt c:/data/notation.txt\n");
+				System.exit(0);
+			}
 
-            if (!isValidOption(args[0])) {
-                System.out.println("The conversion option ["+args[0]+"] is not supported");
-                System.exit(0);
-            }
+			if (!isValidOption(args[0])) {
+				System.out.println("The conversion option [" + args[0]
+						+ "] is not supported");
+				System.exit(0);
+			}
 
-            if (args[0].equalsIgnoreCase(options[0])) {
+			if (args[0].equalsIgnoreCase(options[0])) {
 
-                File infile = new File(args[1]);
-                File outfile = new File(args[2]);
+				File infile = new File(args[1]);
+				File outfile = new File(args[2]);
 
-                FileOutputStream outStream = new FileOutputStream(outfile);
-                BufferedReader inReader = new BufferedReader(new FileReader(infile));
-                String line = inReader.readLine();
-                int i=0;
-                while (null != line) {
-                    i++;
-                    String notation = "";
-                    try {
-                        notation = NucleotideSequenceParser.getNotation(line);
-                    } catch (Exception e) {
-                        notation = "Invalid Sequence";
-                    }
-                    String tmp = line + "\t" + notation + "\n";
-                    outStream.write(tmp.getBytes());
-                    System.out.print(""+i+"\t"+tmp);
-                    line = inReader.readLine();
-                }
+				FileOutputStream outStream = new FileOutputStream(outfile);
+				BufferedReader inReader = new BufferedReader(new FileReader(
+						infile));
+				String line = inReader.readLine();
+				int i = 0;
+				while (null != line) {
+					i++;
+					String notation = "";
+					try {
+						notation = NucleotideSequenceParser.getNotation(line);
+					} catch (Exception e) {
+						notation = "Invalid Sequence";
+					}
+					String tmp = line + "\t" + notation + "\n";
+					outStream.write(tmp.getBytes());
+					System.out.print("" + i + "\t" + tmp);
+					line = inReader.readLine();
+				}
 
-                inReader.close();
-                outStream.close();
-            } else {
-                System.out.println("The conversion option ["+args[0]+"] is not supported yet");
-            }
+				inReader.close();
+				outStream.close();
+			} else {
+				System.out.println("The conversion option [" + args[0]
+						+ "] is not supported yet");
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    private static boolean isValidOption(String option) {
-        for(String choice : options) {
-            if (choice.equalsIgnoreCase(option)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	private static boolean isValidOption(String option) {
+		for (String choice : options) {
+			if (choice.equalsIgnoreCase(option)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

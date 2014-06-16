@@ -26,28 +26,29 @@ import chemaxon.struc.Molecule;
 import java.util.Map;
 
 /**
- * This is the data model for a chemical structure with R groups.
- * RgroupMap key is a unique ID for the R atom, and value is the MolAtom
+ * This is the data model for a chemical structure with R groups. RgroupMap key
+ * is a unique ID for the R atom, and value is the MolAtom
+ * 
  * @author zhangtianhong
  */
 public class RgroupStructure {
-    private Molecule molecule;
-    private Map<String, MolAtom> rgroupMap;
+	private Molecule molecule;
+	private Map<String, MolAtom> rgroupMap;
 
-    public Molecule getMolecule() {
-        return molecule;
-    }
+	public Molecule getMolecule() {
+		return molecule;
+	}
 
-    public void setMolecule(Molecule molecule) {
-        this.molecule = molecule;
-    }
+	public void setMolecule(Molecule molecule) {
+		this.molecule = molecule;
+	}
 
-    public Map<String, MolAtom> getRgroupMap() {
-        return rgroupMap;
-    }
+	public Map<String, MolAtom> getRgroupMap() {
+		return rgroupMap;
+	}
 
-    public void setRgroupMap(Map<String, MolAtom> rgroupMap) {
-        this.rgroupMap = rgroupMap;
-    }
+	public void setRgroupMap(Map<String, MolAtom> rgroupMap) {
+		this.rgroupMap = rgroupMap;
+	}
 
 }

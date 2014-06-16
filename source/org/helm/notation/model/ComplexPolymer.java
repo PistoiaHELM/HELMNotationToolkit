@@ -25,50 +25,54 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This is the data model for ComplexPolymer. It contains the lists for PolymerNode, connected PolymerEdge, and base-paired PolymerEdge.
+ * This is the data model for ComplexPolymer. It contains the lists for
+ * PolymerNode, connected PolymerEdge, and base-paired PolymerEdge.
+ * 
  * @author zhangtianhong
  */
 public class ComplexPolymer {
-    private List<PolymerNode> polymerNodeList;
-    private List<PolymerEdge> polymerEdgeList;
-    private List<PolymerEdge> basePairList;
-    private Map<String, String> polymerNodeAnnotationMap;
+	private List<PolymerNode> polymerNodeList;
+	private List<PolymerEdge> polymerEdgeList;
+	private List<PolymerEdge> basePairList;
+	private Map<String, String> polymerNodeAnnotationMap;
 
-    public List<PolymerNode> getPolymerNodeList() {
-        return polymerNodeList;
-    }
+	public List<PolymerNode> getPolymerNodeList() {
+		return polymerNodeList;
+	}
 
-    public void setPolymerNodeList(List<PolymerNode> polymerNodeList) {
-        this.polymerNodeList = polymerNodeList;
-    }
+	public void setPolymerNodeList(List<PolymerNode> polymerNodeList) {
+		this.polymerNodeList = polymerNodeList;
+	}
 
-    public List<PolymerEdge> getPolymerEdgeList() {
-        return polymerEdgeList;
-    }
+	public List<PolymerEdge> getPolymerEdgeList() {
+		return polymerEdgeList;
+	}
 
-    public void setPolymerEdgeList(List<PolymerEdge> polymerEdgeList) {
-        this.polymerEdgeList = polymerEdgeList;
-    }
+	public void setPolymerEdgeList(List<PolymerEdge> polymerEdgeList) {
+		this.polymerEdgeList = polymerEdgeList;
+	}
 
-    public List<PolymerEdge> getBasePairList() {
-        return basePairList;
-    }
+	public List<PolymerEdge> getBasePairList() {
+		return basePairList;
+	}
 
-    public void setBasePairList(List<PolymerEdge> basePairList) {
-        this.basePairList = basePairList;
-    }
+	public void setBasePairList(List<PolymerEdge> basePairList) {
+		this.basePairList = basePairList;
+	}
 
-    /**
-     * @return the polymerNodeAnnotationMap
-     */
-    public Map<String, String> getPolymerNodeAnnotationMap() {
-        return polymerNodeAnnotationMap;
-    }
+	/**
+	 * @return the polymerNodeAnnotationMap
+	 */
+	public Map<String, String> getPolymerNodeAnnotationMap() {
+		return polymerNodeAnnotationMap;
+	}
 
-    /**
-     * @param polymerNodeAnnotationMap the polymerNodeAnnotationMap to set
-     */
-    public void setPolymerNodeAnnotationMap(Map<String, String> polymerNodeAnnotationMap) {
-        this.polymerNodeAnnotationMap = polymerNodeAnnotationMap;
-    }
+	/**
+	 * @param polymerNodeAnnotationMap
+	 *            the polymerNodeAnnotationMap to set
+	 */
+	public void setPolymerNodeAnnotationMap(
+			Map<String, String> polymerNodeAnnotationMap) {
+		this.polymerNodeAnnotationMap = polymerNodeAnnotationMap;
+	}
 }

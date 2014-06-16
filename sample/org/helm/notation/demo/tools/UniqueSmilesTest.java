@@ -27,61 +27,54 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 public class UniqueSmilesTest {
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
+		try {
 
-        try {
+			String smiles1 = "C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|";
+			toUniqueSmiles(smiles1);
 
-            String smiles1 = "C[C@H](N[*])C([*])=O |$;;;_R1;;_R2;$|";
-            toUniqueSmiles(smiles1);
+			String smiles2 = "C[C@H](N[*])C([*])=O";
+			toUniqueSmiles(smiles2);
 
-            String smiles2 = "C[C@H](N[*])C([*])=O";
-            toUniqueSmiles(smiles2);
+			String smiles3 = "C[C@H](N*)C(*)=O";
+			toUniqueSmiles(smiles3);
 
-            String smiles3 = "C[C@H](N*)C(*)=O";
-            toUniqueSmiles(smiles3);
+			// monomer
+			String smiles5 = "[*]NCC([*])=O |$_R1;;;;_R2;$|";
+			toCXSmiles(smiles5);
 
-  
+			String smiles4 = "[*]C(=O)CN[*] |$_R1;;;;;_R2$|";
+			toCXSmiles(smiles4);
 
-            //monomer
-            String smiles5 = "[*]NCC([*])=O |$_R1;;;;_R2;$|";
-            toCXSmiles(smiles5);
+			String smiles6 = "[*]C(=O)CN[*] |$_R4;;;;;_R3$|";
+			toCXSmiles(smiles6);
 
-            String smiles4 = "[*]C(=O)CN[*] |$_R1;;;;;_R2$|";
-            toCXSmiles(smiles4);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-            String smiles6 = "[*]C(=O)CN[*] |$_R4;;;;;_R3$|";
-            toCXSmiles(smiles6);
+	}
 
+	private static void toCXSmiles(String smiles) throws IOException {
+		System.out.println("Input:\t" + smiles);
+		InputStream is = new ByteArrayInputStream(smiles.getBytes());
+		MolImporter importer = new MolImporter(is);
+		Molecule molecule = importer.read();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		String smilesU = molecule.toFormat("cxsmiles:u");
+		System.out.println("Output:\t" + smilesU);
+	}
 
-    }
+	private static void toUniqueSmiles(String smiles) throws IOException {
+		System.out.println("Input:\t" + smiles);
+		InputStream is = new ByteArrayInputStream(smiles.getBytes());
+		MolImporter importer = new MolImporter(is, "smiles");
+		Molecule molecule = importer.read();
 
-
-    private static void toCXSmiles(String smiles) throws IOException {
-        System.out.println("Input:\t" + smiles);
-        InputStream is = new ByteArrayInputStream(smiles.getBytes());
-        MolImporter importer = new MolImporter(is);
-        Molecule molecule = importer.read();
-
-        String smilesU = molecule.toFormat("cxsmiles:u");
-        System.out.println("Output:\t" + smilesU);
-    }
-
-
-    private static void toUniqueSmiles(String smiles) throws IOException {
-        System.out.println("Input:\t" + smiles);
-        InputStream is = new ByteArrayInputStream(smiles.getBytes());
-        MolImporter importer = new MolImporter(is, "smiles");
-        Molecule molecule = importer.read();
-
-        String smilesU = molecule.toFormat("smiles:u");
-        System.out.println("Output:\t" + smilesU);
-    }
+		String smilesU = molecule.toFormat("smiles:u");
+		System.out.println("Output:\t" + smilesU);
+	}
 }

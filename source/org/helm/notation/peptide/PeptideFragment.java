@@ -26,61 +26,63 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class PeptideFragment {
 
-    private int id;
-    private int level;
-    private Molecule molecule;
-    private List<List<String>> monomerIDsList;
-    private List<List<Map<String, String>>> connectionMapsList;
+	private int id;
+	private int level;
+	private Molecule molecule;
+	private List<List<String>> monomerIDsList;
+	private List<List<Map<String, String>>> connectionMapsList;
 
-    public PeptideFragment(){}
+	public PeptideFragment() {
+	}
 
-    public PeptideFragment(int level, Molecule molecule) {
-        this.level = level;
-        this.molecule = molecule;
-    }
+	public PeptideFragment(int level, Molecule molecule) {
+		this.level = level;
+		this.molecule = molecule;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getLevel() {
-        return level;
-    }
+	public int getLevel() {
+		return level;
+	}
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+	public void setLevel(int level) {
+		this.level = level;
+	}
 
-    public Molecule getMolecule() {
-        return molecule;
-    }
+	public Molecule getMolecule() {
+		return molecule;
+	}
 
-    public void setMolecule(Molecule molecule) {
-        this.molecule = molecule;
-    }
+	public void setMolecule(Molecule molecule) {
+		this.molecule = molecule;
+	}
 
-    public List<List<Map<String, String>>> getConnectionMapsList() {
-        return connectionMapsList;
-    }
+	public List<List<Map<String, String>>> getConnectionMapsList() {
+		return connectionMapsList;
+	}
 
-    public void setConnectionMapList(List<List<Map<String, String>>> connectionMapsList) {
-        this.connectionMapsList = connectionMapsList;
-    }
+	public void setConnectionMapList(
+			List<List<Map<String, String>>> connectionMapsList) {
+		this.connectionMapsList = connectionMapsList;
+	}
 
-    public List<List<String>> getMonomerIDsList() {
-        return monomerIDsList;
-    }
+	public List<List<String>> getMonomerIDsList() {
+		return monomerIDsList;
+	}
 
-    public void setMonomerIDsList(List<List<String>> monomerIDsList) {
-        this.monomerIDsList = monomerIDsList;
-    }
+	public void setMonomerIDsList(List<List<String>> monomerIDsList) {
+		this.monomerIDsList = monomerIDsList;
+	}
 }
