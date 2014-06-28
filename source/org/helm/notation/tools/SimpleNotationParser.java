@@ -118,11 +118,11 @@ public class SimpleNotationParser {
 	 * @throws org.helm.notation.MonomerException
 	 */
 	public static String getSimplePolymerSMILES(String polymerNotation,
-			String polymerType, MonomerStore store) throws IOException,
+			String polymerType, MonomerStore monomerStore) throws IOException,
 			NotationException, StructureException, MonomerException,
 			JDOMException {
 		RgroupStructure struc = getSimplePolymerStructure(polymerNotation,
-				polymerType, store);
+				polymerType, monomerStore);
 		if (polymerType.equals(Monomer.CHEMICAL_POLYMER_TYPE)) {
 			if (struc.getMolecule() == null) {
 				throw new NotationException(
@@ -1172,7 +1172,7 @@ public class SimpleNotationParser {
 	 *            - in the format of ID or extended smiles
 	 * @param polymerType
 	 *            (RNA,CHEM,PEPTIDE)
-	 * @param natural
+	 * @param naturalAnalog
 	 *            Analog - natural analog of temporary monomer (if one is
 	 *            created)
 	 * @param monomerStore
@@ -2739,13 +2739,13 @@ public class SimpleNotationParser {
 	 * @throws IOException
 	 */
 	public static String getNotationByReplacingSmiles(String simpleNotation,
-			String polymerType, MonomerStore store) throws NotationException,
+			String polymerType, MonomerStore monomerStore) throws NotationException,
 			MonomerException, JDOMException, IOException {
 
 		List<String> monomerIDs = getMonomerIDList(simpleNotation, polymerType,
-				store);
+				monomerStore);
 
-		return getSimpleNotation(monomerIDs, polymerType, store);
+		return getSimpleNotation(monomerIDs, polymerType, monomerStore);
 
 	}
 

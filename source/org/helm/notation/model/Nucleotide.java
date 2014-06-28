@@ -381,7 +381,7 @@ public class Nucleotide implements Serializable {
 	 * find the phosphate symbol, if it is a modified monomer, the "[" and "]"
 	 * will be removed
 	 * 
-	 * @return
+	 * @return linker monomer ID
 	 */
 	private String getPhosphateSymbol() {
 		String phosphateSymbol = null;
@@ -426,7 +426,7 @@ public class Nucleotide implements Serializable {
 	 * find the sugar symbol, if it is a modified monomer, the "[" and "]" will
 	 * be removed
 	 * 
-	 * @return
+	 * @return sugar monomer ID
 	 */
 	private String getSugarSymbol() {
 		String sugarSymbol = null;
@@ -471,7 +471,7 @@ public class Nucleotide implements Serializable {
 	 * find the base symbol, if it is a modified monomer, the "[" and "]" will
 	 * be removed
 	 * 
-	 * @return
+	 * @return base monomer ID
 	 */
 	private String getBaseSymbol() {
 		String ncNotation = getNotation();

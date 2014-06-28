@@ -1,237 +1,235 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="NotationToolkit" default="package" basedir=".">
-	<description>Builds, tests, and runs the project NotationToolkit.</description>
+    <description>Builds, tests, and runs the project NotationToolkit.</description>
 
-	<!-- Initialization target  -->
-	<target name="initialization">
-		<tstamp/>
+    <!-- Initialization target  -->
+    <target name="initialization">
+        <tstamp/>
 
-		<!--  Give user a chance to override without editing this file  and without using -D arguments each time they build using build.properties files).  -->
-		<property file="${basedir}/build.properties" />
-		<property name="name" value="HELMNotationToolkit"/>
-		<property name="version" value="1.0"/>
-		<property name="version.impl" value="${version}"/>
-		<property name="version.spec" value="1.0"/>
-		<property name="year" value="2012"/>
-		<echo message="----------- ${name} ${version} ------------"/>
-		<property name="compile.debug"       value="true" />
-		<property name="compile.optimize"    value="true" />
-		<property name="compile.target"      value="1.6" />
-		<property name="compile.source"      value="1.6" />
-		<property name="compile.deprecation" value="true" />
-		<property name="src.dir" value="${basedir}/source"/>
-		<property name="lib.dir" value="${basedir}/lib"/>
-		<property name="packages" value="org.helm.notation.*"/>
-		<property name="build.dir" value="${basedir}/build"/>
-		<property name="build.src" value="${basedir}/build/src"/>
-		<property name="build.dest" value="${basedir}/build/classes"/>
-		<property name="build.javadoc" value="${basedir}/build/javadoc"/>
-		<property name="dist.dir" value="${basedir}/dist"/>
-		<property name="publish.dir" value="${basedir}/publish"/>
-		<property name="publish.jar.dir" value="${publish.dir}/jar"/>
-		<property name="publish.javadoc.dir" value="${publish.dir}/javadoc"/>
-		<property name="sample.dir" value="${basedir}/sample"/>
-		<property name="sample.dest" value="${basedir}/build/samples"/>
-		<filter token="year" value="${year}"/>
-		<filter token="version" value="${version}"/>
-		<filter token="date" value="${TODAY}"/>
-		<filter token="log" value="true"/>
-		<filter token="verbose" value="true"/>
-		<property name="marvin.dir" value="${basedir}/lib"/>
-		<property name="marvin.jar.name" value="MarvinBeans-5.0.jar"/>
-		<property name="toolkit.jar.file.name" value="${name}-${version}.jar"/>
-		<property name="test.src" value="${basedir}/test"/>
-		<property name="test.dest" value="${build.dir}/test"/>
-		<property name="reports" value="${test.dest}/reports"/>
+        <!--  Give user a chance to override without editing this file  and without using -D arguments each time they build using build.properties files).  -->
+        <property file="${basedir}/build.properties" />
+        <property name="name" value="HELMNotationToolkit"/>
+        <property name="version" value="1.0"/>
+        <property name="version.impl" value="${version}"/>
+        <property name="version.spec" value="1.1"/>
+        <property name="year" value="2012"/>
+        <echo message="----------- ${name} ${version} ------------"/>
+        <property name="compile.debug"       value="true" />
+        <property name="compile.optimize"    value="true" />
+        <property name="compile.target"      value="1.6" />
+        <property name="compile.source"      value="1.6" />
+        <property name="compile.deprecation" value="true" />
+        <property name="src.dir" value="${basedir}/source"/>
+        <property name="lib.dir" value="${basedir}/lib"/>
+        <property name="test.lib.dir" value="${lib.dir}/test"/>
+        <property name="packages" value="org.helm.notation.*"/>
+        <property name="build.dir" value="${basedir}/build"/>
+        <property name="build.src" value="${basedir}/build/src"/>
+        <property name="build.dest" value="${basedir}/build/classes"/>
+        <property name="build.javadoc" value="${basedir}/build/javadoc"/>
+        <property name="dist.dir" value="${basedir}/dist"/>
+        <property name="publish.dir" value="${basedir}/publish"/>
+        <property name="publish.jar.dir" value="${publish.dir}/jar"/>
+        <property name="publish.javadoc.dir" value="${publish.dir}/javadoc"/>
+        <property name="demo.src" value="${basedir}/demo"/>
+        <property name="demo.dest" value="${build.dir}/demo"/>
+        <filter token="year" value="${year}"/>
+        <filter token="version" value="${version}"/>
+        <filter token="date" value="${TODAY}"/>
+        <filter token="log" value="true"/>
+        <filter token="verbose" value="true"/>
+        <property name="marvin.dir" value="${basedir}/lib"/>
+        <property name="marvin.jar.name" value="MarvinBeans-5.0.jar"/>
+        <property name="toolkit.jar.file.name" value="${name}-${version}.jar"/>
+        <property name="test.src" value="${basedir}/test"/>
+        <property name="test.dest" value="${build.dir}/test"/>
+        <property name="reports" value="${test.dest}/reports"/>
 
-		<!-- Compilation class path, include every jar file in lib.dir -->
-		<path id="compile.class.path">
-			<fileset dir="${lib.dir}">
-				<include name="jdom-1.1.jar"/>
-				<include name="xerces.jar"/>
-				<include name="sdlib.jar"/>
-			</fileset>
-			<fileset dir="${marvin.dir}">
-				<include name="${marvin.jar.name}"/>
-			</fileset>
-		</path>
+        <!-- Compilation class path, include every jar file in lib.dir -->
+        <path id="compile.class.path">
+            <fileset dir="${lib.dir}">
+                <include name="jdom-1.1.jar"/>
+                <include name="xerces.jar"/>
+                <include name="sdlib.jar"/>
+            </fileset>
+            <fileset dir="${marvin.dir}">
+                <include name="${marvin.jar.name}"/>
+            </fileset>
+        </path>
+                
+        <path id="demo.class.path">
+            <path refid="compile.class.path"/>
+            <pathelement location="${build.dest}"/>
+            <pathelement location="${demo.dest}"/>
+        </path>
 
-		<!-- Run class path, include everything from compile.class.path and compiled classes -->
-		<path id="run.class.path">
-			<path refid="compile.class.path"/>
-			<fileset dir="${lib.dir}">
-			  <include name="junit-4.11.jar"/>
-			  <include name="hamcrest-core-1.3.jar"/>
-			</fileset>
-			<pathelement location="${build.dest}"/>
-			<pathelement location="${sample.dest}"/>
-			<pathelement location="${test.dest}"/>
-		</path>
-	</target>
+        <!-- Run test class path, include everything from compile.class.path and compiled classes -->
+        <path id="test.class.path">
+            <path refid="demo.class.path"/>
+            <fileset dir="${test.lib.dir}">
+                <include name="junit-4.11.jar"/>
+                <include name="hamcrest-core-1.3.jar"/>
+            </fileset>
+            <pathelement location="${test.dest}"/>
+        </path>
+    </target>
 
-	<!-- Help on usage -->
-	<target name="usage">
-		<echo message=""/>
-		<echo message=""/>
-		<echo message="NotationToolkit Build file"/>
-		<echo message="-------------------------------------------------------------"/>
-		<echo message=""/>
-		<echo message=" available targets are:"/>
-		<echo message=""/>
-		<echo message="   publish    --> publish the NotationToolkit jar and javadoc"/>
-		<echo message="   package    --> compiles the source code, and generate the NotationToolkit jar"/>
-		<echo message="   javadoc    --> generates the API documentation"/>
-		<echo message="   cleanall   --> cleans up the build and dist directory"/>
-		<echo message=""/>
-		<echo message=" See the comments inside the build.xml file for more details."/>
-		<echo message="-------------------------------------------------------------"/>
-		<echo message=""/>
-		<echo message=""/>
-	</target>
+    <!-- Help on usage -->
+    <target name="usage">
+        <echo message=""/>
+        <echo message=""/>
+        <echo message="NotationToolkit Build file"/>
+        <echo message="-------------------------------------------------------------"/>
+        <echo message=""/>
+        <echo message=" available targets are:"/>
+        <echo message=""/>
+        <echo message="   publish    --> publish the NotationToolkit jar and javadoc"/>
+        <echo message="   package    --> compiles the source code, and generate the NotationToolkit jar"/>
+        <echo message="   javadoc    --> generates the API documentation"/>
+        <echo message="   cleanall   --> cleans up the build and dist directory"/>
+        <echo message=""/>
+        <echo message=" See the comments inside the build.xml file for more details."/>
+        <echo message="-------------------------------------------------------------"/>
+        <echo message=""/>
+        <echo message=""/>
+    </target>
 
-	<!-- Prepares the build directory -->
-	<target name="prepare" depends="initialization">
-		<mkdir dir="${build.dir}"/>
-	</target>
+    <!-- Prepares the build directory -->
+    <target name="prepare" depends="initialization">
+        <mkdir dir="${build.dir}"/>
+    </target>
 
-	<!-- Prepares the source code -->
-	<target name="prepare-src" depends="prepare">
-		<!-- create directories -->
-		<mkdir dir="${build.src}"/>
-		<mkdir dir="${build.dest}"/>
+    <!-- Prepares the source code -->
+    <target name="prepare-src" depends="prepare">
+        <!-- create directories -->
+        <mkdir dir="${build.src}"/>
+        <mkdir dir="${build.dest}"/>
 
-		<!-- copy src files -->
-		<copy todir="${build.src}"   filtering="yes">
-			<fileset dir="${src.dir}"/>
-		</copy>
-	</target>
+        <!-- copy src files -->
+        <copy todir="${build.src}"   filtering="yes">
+            <fileset dir="${src.dir}"/>
+        </copy>
+    </target>
 
-	<!-- Compiles the source directory  -->
-	<target name="compile-source" depends="prepare-src"  description="Compiles the source code">
-		<javac srcdir="${build.src}" 
-            destdir="${build.dest}" 
-            debug="${compile.debug}" 
-            optimize="${compile.optimize}" 
-            target="${compile.target}" 
-            source="${compile.source}" 
-            deprecation="${compile.deprecation}">
-			<classpath refid="compile.class.path"/>
-		</javac>
-	</target>
+    <!-- Compiles the source directory  -->
+    <target name="compile-source" depends="prepare-src"  description="Compiles the source code">
+        <javac srcdir="${build.src}" 
+                       destdir="${build.dest}" 
+                       debug="${compile.debug}" 
+                       optimize="${compile.optimize}" 
+                       target="${compile.target}" 
+                       source="${compile.source}" 
+                       deprecation="${compile.deprecation}">
+            <classpath refid="compile.class.path"/>
+        </javac>
+    </target>
 
-	<!-- Creates the class package -->
-	<target name="package" depends="compile-source" description="Creates the class package, include xml and xsd files">
-		<delete dir = "${dist.dir}" />
-		<mkdir dir = "${dist.dir}" />
-		<copy todir="${build.dest}" filtering="yes">
-			<fileset dir="${build.src}">
-				<include name="**/*.xml"/>
-				<include name="**/*.xsd"/>
-				<include name="**/*.properties"/>
-			</fileset>
-		</copy>
-		<jar jarfile="${dist.dir}/${toolkit.jar.file.name}"   basedir="${build.dest}" />
-	</target>
+    <!-- Creates the class package -->
+    <target name="package" depends="compile-source" description="Creates the class package, include xml and xsd files">
+        <delete dir = "${dist.dir}" />
+        <mkdir dir = "${dist.dir}" />
+        <copy todir="${build.dest}" filtering="yes">
+            <fileset dir="${build.src}">
+                <include name="**/*.xml"/>
+                <include name="**/*.xsd"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+        <jar jarfile="${dist.dir}/${toolkit.jar.file.name}"   basedir="${build.dest}" />
+    </target>
 
-	<!-- Publish jar and javadoc -->
-	<target name="publish" depends="cleanall, package, javadoc" description="Move jar and javadoc into publish folder">
-		<copy todir="${publish.jar.dir}" >
-			<fileset dir="${dist.dir}" >
-				<include name="**/*.jar"/>
-			</fileset>
-		</copy>
+    <!-- Publish jar and javadoc -->
+    <target name="publish" depends="cleanall, package, javadoc" description="Move jar and javadoc into publish folder">
+        <copy todir="${publish.jar.dir}" >
+            <fileset dir="${dist.dir}" >
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
 
-		<jar jarfile="${dist.dir}/${name}-${version}-javadoc.zip"   basedir="${build.javadoc}" />
+        <jar jarfile="${dist.dir}/${name}-${version}-javadoc.zip"   basedir="${build.javadoc}" />
 
-		<copy todir="${publish.javadoc.dir}" >
-			<fileset  dir="${dist.dir}">
-				<include name="**/*.zip"/>
-			</fileset>
-		</copy>
-	</target>
+        <copy todir="${publish.javadoc.dir}" >
+            <fileset  dir="${dist.dir}">
+                <include name="**/*.zip"/>
+            </fileset>
+        </copy>
+    </target>
 
-	<!-- Prepares the example code -->
-	<target name="prepare-sample" depends="prepare">
-		<!-- create directories -->
-		<mkdir dir="${sample.dest}"/>
-		<!-- copy src files -->
-		<copy todir="${sample.dest}" filtering="yes">
-			<fileset dir="${sample.dir}"/>
-		</copy>
-	</target>
+    <!-- Creates the API documentation  -->
+    <target name="javadoc" depends="prepare-src"   description="Creates the API documentation">
+        <mkdir dir="${build.javadoc}"/>
+        <javadoc packagenames="${packages}"
+                         sourcepath="${build.src}"
+                         destdir="${build.javadoc}"
+                         author="true"
+                         version="true"
+                         use="true"
+                         splitindex="true"
+                         noindex="false"
+                         windowtitle="${name} v${version}"
+                         doctitle="${name} v${version}&lt;br&gt;API Specification"
+                         header="&lt;b&gt;${name}&lt;br&gt;&lt;font size='-1'&gt;${version}&lt;/font&gt;&lt;/b&gt;"
+                         bottom="Copyright &#169; ${year}, The Pistoia Alliance">
+            <classpath refid="compile.class.path"/>
+        </javadoc>
+    </target>
 
-	<!-- Compiles the samples directory -->
-	<target name="compile-sample" depends="prepare-sample,package"   description="Compiles the samples directory">
-		<javac srcdir="${sample.dest}"
-           destdir="${sample.dest}"
-           debug="${compile.debug}"
-           optimize="${compile.optimize}"
-           target="${compile.target}"
-           source="${compile.source}"
-           deprecation="${compile.deprecation}">
-			<classpath refid="run.class.path"/>
-		</javac>
-	</target>
-
-	<!-- Run sample file ToolkitSample -->
-	<target name="run-sample" depends="compile-sample" description="Run ToolkitSample class" >
-		<java classname="org.helm.notation.demo.tools.ToolkitSample">
-			<classpath refid="run.class.path"/>
-		</java>
-	</target>
-
-	<!-- Creates the API documentation  -->
-	<target name="javadoc" depends="prepare-src"   description="Creates the API documentation">
-		<mkdir dir="${build.javadoc}"/>
-		<javadoc packagenames="${packages}"
-             sourcepath="${build.src}"
-             destdir="${build.javadoc}"
-             author="true"
-             version="true"
-             use="true"
-             splitindex="true"
-             noindex="false"
-             windowtitle="${name} v${version}"
-             doctitle="${name} v${version}&lt;br&gt;API Specification"
-             header="&lt;b&gt;${name}&lt;br&gt;&lt;font size='-1'&gt;${version}&lt;/font&gt;&lt;/b&gt;"
-             bottom="Copyright &#169; ${year}, The Pistoia Alliance">
-			<classpath refid="run.class.path"/>
-		</javadoc>
-	</target>
-
-	<!-- Clean build and dist folder -->
-	<target name="cleanall" depends="initialization"  description="Removes all build and dist files">
-		<delete dir="${dist.dir}"/>
-		<delete dir="${build.dir}"/>
-	</target>
+    <!-- Clean build and dist folder -->
+    <target name="cleanall" depends="initialization"  description="Removes all build and dist files">
+        <delete dir="${dist.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+        
 
 
-	<!-- Compile JUnit test classes -->
-	<target name="javac-tests" depends="compile-sample" description="Compiles test code">
-		<mkdir dir="${test.dest}"/>
-		<mkdir dir="${reports}"/>
-		<copy todir="${test.dest}"   filtering="yes">
-			<fileset dir="${test.src}">
-				<include name="**/*.xhelm" />
-			</fileset>
-		</copy>
-		<javac srcdir="${test.src}" destdir="${test.dest}" source="1.6" target="1.6" debug="true" debuglevel="lines,vars,source">
-			<classpath refid="run.class.path"/>
-		</javac>
-	</target>
+    <!-- Compiles the demo directory -->
+    <target name="compile-demo" depends="package"   description="Compiles the demo directory">
+        <mkdir dir="${demo.dest}"/>
+        <javac srcdir="${demo.src}"
+                       destdir="${demo.dest}"
+                       debug="${compile.debug}"
+                       optimize="${compile.optimize}"
+                       target="${compile.target}"
+                       source="${compile.source}"
+                       deprecation="${compile.deprecation}">
+            <classpath refid="demo.class.path"/>
+        </javac>
+    </target>
 
-	<!-- Run JUnit tests -->
-	<target name="test" depends="javac-tests" description="Run unit tests">
-		<junit printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath refid="run.class.path"/>
-			<batchtest fork="yes" todir="${reports}">
-				<formatter type="xml"/>
-				<formatter type="plain"/>
-				<fileset dir="${test.src}">
-					<include name="**/*Test.java"/>
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
+    <!-- Run demo file ToolkitSample -->
+    <target name="run-demo" depends="compile-demo" description="Run ToolkitSample class" >
+        <java classname="org.helm.notation.demo.tools.ToolkitSample">
+            <classpath refid="demo.class.path"/>
+        </java>
+    </target>
+
+
+    <!-- Compile JUnit test classes -->
+    <target name="compile-test" depends="compile-demo" description="Compiles test code">
+        <mkdir dir="${test.dest}"/>
+        <mkdir dir="${reports}"/>
+        <copy todir="${test.dest}"   filtering="yes">
+            <fileset dir="${test.src}">
+                <include name="**/*.xhelm" />
+            </fileset>
+        </copy>
+        <javac srcdir="${test.src}" destdir="${test.dest}" source="1.6" target="1.6" debug="true" debuglevel="lines,vars,source">
+            <classpath refid="test.class.path"/>
+        </javac>
+    </target>
+
+    <!-- Run JUnit tests -->
+    <target name="run-test" depends="compile-test" description="Run unit tests">
+        <junit printsummary="yes" haltonfailure="yes" showoutput="yes">
+            <classpath refid="test.class.path"/>
+            <batchtest fork="yes" todir="${reports}">
+                <formatter type="xml"/>
+                <formatter type="plain"/>
+                <fileset dir="${test.src}">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
 
 </project>

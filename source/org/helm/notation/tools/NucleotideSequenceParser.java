@@ -233,7 +233,7 @@ public class NucleotideSequenceParser {
 	 * for non-natural ones, use 'X R(X)P"
 	 * 
 	 * @param inList
-	 * @return
+	 * @return list of Nucleotide
 	 */
 	private static List<Nucleotide> getComplementList(List<Nucleotide> inList) {
 		List<Nucleotide> outList = new ArrayList<Nucleotide>();
