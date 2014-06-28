@@ -24,94 +24,106 @@ package org.helm.notation.demo.tools;
 import org.helm.notation.tools.*;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class CalculatorSample {
 
-    public static void main(String[] args) {
-        try {
-            ExtinctionCoefficientCalculator calculator = ExtinctionCoefficientCalculator.getInstance();
-            
-            
-            String input = "AGGDDDDDDDDDDDDDDDDDDFFFFFFFFFFFFF";
-            float result = calculator.calculateFromAminoAcidSequence(input);
-            System.out.println("AA Sequence\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getPeptideUnit());
-            
-            input = "AGGCFFFFFFFFFF";
-            result = calculator.calculateFromAminoAcidSequence(input);
-            System.out.println("AA Sequence\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getPeptideUnit());
-            
-            input = "AGGYEEEEEEEEEEEEEEEEEEE";
-            result = calculator.calculateFromAminoAcidSequence(input);
-            System.out.println("AA Sequence\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getPeptideUnit());
-            
-            
-            input = "AGGWEEEEEEEEEEEEEEEEEEE";
-            result = calculator.calculateFromAminoAcidSequence(input);
-            System.out.println("AA Sequence\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getPeptideUnit());
-            
-            
-            input = "A.G.G.W.E.E.E.E.E.W";
-            result = calculator.calculateFromPeptidePolymerNotation(input);
-            System.out.println("Peptide Notation\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getPeptideUnit());
-            
-            input = "PEPTIDE1{A.G.G.W.E.E.E.E.E.W}$$$$";
-            result = calculator.calculateFromComplexNotation(input, ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
-            System.out.println("Complex notation\n"+input);
-            System.out.println("Result: "+ result + " "+calculator.getPeptideUnit());
-            
-            input = "PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
-            result = calculator.calculateFromComplexNotation(input);
-            System.out.println("Complex notation\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getDefaultUnit());
-            
-            input = "PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
-            result = calculator.calculateFromComplexNotation(input, ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
-            System.out.println("Complex notation\n"+input);
-            System.out.println("Result: "+ result+ " "+calculator.getPeptideUnit());
-            
+	public static void main(String[] args) {
+		try {
+			ExtinctionCoefficientCalculator calculator = ExtinctionCoefficientCalculator
+					.getInstance();
 
-            input = "ACGTACGT";
-            result = calculator.calculateFromNucleotideSequence(input);
-            System.out.println("Nucleotide Sequence\n"+input);
-            System.out.println("Result: "+ result+ " " + calculator.getRnaUnit());
+			String input = "AGGDDDDDDDDDDDDDDDDDDFFFFFFFFFFFFF";
+			float result = calculator.calculateFromAminoAcidSequence(input);
+			System.out.println("AA Sequence\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
 
-            input = "ACGmTACmGT";
-            result = calculator.calculateFromModifiedNucleotideSequence(input);
-            System.out.println("Modified Nucleotide Sequence\n"+input);
-            System.out.println("Result: "+ result+ " " + calculator.getRnaUnit());
+			input = "AGGCFFFFFFFFFF";
+			result = calculator.calculateFromAminoAcidSequence(input);
+			System.out.println("AA Sequence\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
 
-            input = "P.R(A)P.R(C)P.R(G)P.[mR](A)";
-            result = calculator.calculateFromRnaPolymerNotation(input);
-            System.out.println("Simple RNA notation\n"+input);
-            System.out.println("Result: "+ result+ " " + calculator.getRnaUnit());
+			input = "AGGYEEEEEEEEEEEEEEEEEEE";
+			result = calculator.calculateFromAminoAcidSequence(input);
+			System.out.println("AA Sequence\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
 
-            input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}$$$$";
-            result = calculator.calculateFromComplexNotation(input);
-            System.out.println("Complex notation\n"+input);
-            System.out.println("Result: "+ result+" "+calculator.getDefaultUnit());
-            
-            input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}$$$$";
-            result = calculator.calculateFromComplexNotation(input, ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
-            System.out.println("Complex notation\n"+input);
-            System.out.println("Result: "+ result+ " "+ calculator.getPeptideUnit());
-            
-            input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}|CHEM1{PEG3}|PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
-            result = calculator.calculateFromComplexNotation(input);
-            System.out.println("Complex notation\n"+input);
-            System.out.println("Result: "+ result+ " " + calculator.getDefaultUnit());
-            
-            
+			input = "AGGWEEEEEEEEEEEEEEEEEEE";
+			result = calculator.calculateFromAminoAcidSequence(input);
+			System.out.println("AA Sequence\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+			input = "A.G.G.W.E.E.E.E.E.W";
+			result = calculator.calculateFromPeptidePolymerNotation(input);
+			System.out.println("Peptide Notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
 
-    }
+			input = "PEPTIDE1{A.G.G.W.E.E.E.E.E.W}$$$$";
+			result = calculator.calculateFromComplexNotation(input,
+					ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
+			System.out.println("Complex notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
+
+			input = "PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
+			result = calculator.calculateFromComplexNotation(input);
+			System.out.println("Complex notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getDefaultUnit());
+
+			input = "PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
+			result = calculator.calculateFromComplexNotation(input,
+					ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
+			System.out.println("Complex notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
+
+			input = "ACGTACGT";
+			result = calculator.calculateFromNucleotideSequence(input);
+			System.out.println("Nucleotide Sequence\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getRnaUnit());
+
+			input = "ACGmTACmGT";
+			result = calculator.calculateFromModifiedNucleotideSequence(input);
+			System.out.println("Modified Nucleotide Sequence\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getRnaUnit());
+
+			input = "P.R(A)P.R(C)P.R(G)P.[mR](A)";
+			result = calculator.calculateFromRnaPolymerNotation(input);
+			System.out.println("Simple RNA notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getRnaUnit());
+
+			input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}$$$$";
+			result = calculator.calculateFromComplexNotation(input);
+			System.out.println("Complex notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getDefaultUnit());
+
+			input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}$$$$";
+			result = calculator.calculateFromComplexNotation(input,
+					ExtinctionCoefficientCalculator.PEPTIDE_UNIT_TYPE);
+			System.out.println("Complex notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getPeptideUnit());
+
+			input = "RNA1{P.R(A)P.R([5meC])P.R(G)P.[mR](A)}|CHEM1{PEG3}|PEPTIDE1{A.G.G.W.E.E.E.E.E.W}|PEPTIDE2{A.G.G.W.E.Y.E.E.E.E.W}$$$$";
+			result = calculator.calculateFromComplexNotation(input);
+			System.out.println("Complex notation\n" + input);
+			System.out.println("Result: " + result + " "
+					+ calculator.getDefaultUnit());
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
 }

@@ -22,54 +22,56 @@
 package org.helm.notation.model;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class RNAPolymerNode extends PolymerNode {
-    private String sequence;    //natural sequence
-    private String modifiedSequence;  //modified sequence
-    
-    public RNAPolymerNode(){}
-    
-    public RNAPolymerNode(PolymerNode node) {
-        super.setId(node.getId());
-        super.setLabel(node.getLabel());
-        super.setAnotation(node.getAnotation());
-    }
-    
-    public String getType() {
-        return Monomer.NUCLIEC_ACID_POLYMER_TYPE;
-    }
+	private String sequence; // natural sequence
+	private String modifiedSequence; // modified sequence
 
-    public String getSequence() {
-        return sequence;
-    }
+	public RNAPolymerNode() {
+	}
 
-    public void setSequence(String sequence) {
-        this.sequence = sequence;
-    }
-    
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(getId()+"\t");
-        sb.append(getLabel()+"\t");
-        sb.append(getAnotation()+"\t");
-        sb.append(getSequence()+"\t");
-        sb.append(getModifiedSequence());
-        return sb.toString();
-    }
+	public RNAPolymerNode(PolymerNode node) {
+		super.setId(node.getId());
+		super.setLabel(node.getLabel());
+		super.setAnotation(node.getAnotation());
+	}
 
-    /**
-     * @return the modifiedSequence
-     */
-    public String getModifiedSequence() {
-        return modifiedSequence;
-    }
+	public String getType() {
+		return Monomer.NUCLIEC_ACID_POLYMER_TYPE;
+	}
 
-    /**
-     * @param modifiedSequence the modifiedSequence to set
-     */
-    public void setModifiedSequence(String modifiedSequence) {
-        this.modifiedSequence = modifiedSequence;
-    }
+	public String getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getId() + "\t");
+		sb.append(getLabel() + "\t");
+		sb.append(getAnotation() + "\t");
+		sb.append(getSequence() + "\t");
+		sb.append(getModifiedSequence());
+		return sb.toString();
+	}
+
+	/**
+	 * @return the modifiedSequence
+	 */
+	public String getModifiedSequence() {
+		return modifiedSequence;
+	}
+
+	/**
+	 * @param modifiedSequence
+	 *            the modifiedSequence to set
+	 */
+	public void setModifiedSequence(String modifiedSequence) {
+		this.modifiedSequence = modifiedSequence;
+	}
 }

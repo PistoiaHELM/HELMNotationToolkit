@@ -33,64 +33,66 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class MonomerDBSample {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
 
-        try {
-            //show all monomers
-            Map monomerDB = MonomerFactory.getInstance().getMonomerDB();
-            showMonomerDB(monomerDB);
+		try {
+			// show all monomers
+			Map monomerDB = MonomerFactory.getInstance().getMonomerDB();
+			showMonomerDB(monomerDB);
 
-            //show all attachment
-            Map attachmentDB = MonomerFactory.getInstance().getAttachmentDB();
-            Set keyset = attachmentDB.keySet();
-            for (Iterator i = keyset.iterator(); i.hasNext();) {
-                String attachID = (String) i.next();
-                Attachment m = (Attachment) attachmentDB.get(attachID);
-                System.out.println(attachID + ": " + m.getCapGroupSMILES());
-            }
+			// show all attachment
+			Map attachmentDB = MonomerFactory.getInstance().getAttachmentDB();
+			Set keyset = attachmentDB.keySet();
+			for (Iterator i = keyset.iterator(); i.hasNext();) {
+				String attachID = (String) i.next();
+				Attachment m = (Attachment) attachmentDB.get(attachID);
+				System.out.println(attachID + ": " + m.getCapGroupSMILES());
+			}
 
-            System.out.println("Serializing monomer DB............");
-            File f = new File(MonomerFactory.NOTATION_DIRECTORY);
-            if (!f.exists()) {
-                f.mkdir();
-            }
-            MonomerFactory.getInstance().saveMonomerCache();
-            System.out.println("Serializing monomer DB............Done");
+			System.out.println("Serializing monomer DB............");
+			File f = new File(MonomerFactory.NOTATION_DIRECTORY);
+			if (!f.exists()) {
+				f.mkdir();
+			}
+			MonomerFactory.getInstance().saveMonomerCache();
+			System.out.println("Serializing monomer DB............Done");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    public static void showMonomerDB(Map monomerDB) throws StructureException, IOException {
-        Set polymerSet = monomerDB.keySet();
-        for (Iterator it = polymerSet.iterator(); it.hasNext();) {
-            String polymer = (String) it.next();
-            System.out.println("Polymer Type: " + polymer);
+	public static void showMonomerDB(Map monomerDB) throws StructureException,
+			IOException {
+		Set polymerSet = monomerDB.keySet();
+		for (Iterator it = polymerSet.iterator(); it.hasNext();) {
+			String polymer = (String) it.next();
+			System.out.println("Polymer Type: " + polymer);
 
-            Map nucMap = (Map) monomerDB.get(polymer);
+			Map nucMap = (Map) monomerDB.get(polymer);
 
-            Set keyset = nucMap.keySet();
-            for (Iterator i = keyset.iterator(); i.hasNext();) {
-                String monomerID = (String) i.next();
-                Monomer m = (Monomer) nucMap.get(monomerID);
-                String smi = m.getCanSMILES();
-                if (null != smi) {
-                    String usmi = StructureParser.getUniqueExtendedSMILES(smi);
-                    System.out.println(monomerID);
-                    System.out.println(smi);
-                    System.out.println(usmi);
-                }
-            }
+			Set keyset = nucMap.keySet();
+			for (Iterator i = keyset.iterator(); i.hasNext();) {
+				String monomerID = (String) i.next();
+				Monomer m = (Monomer) nucMap.get(monomerID);
+				String smi = m.getCanSMILES();
+				if (null != smi) {
+					String usmi = StructureParser.getUniqueExtendedSMILES(smi);
+					System.out.println(monomerID);
+					System.out.println(smi);
+					System.out.println(usmi);
+				}
+			}
 
-        }
-    }
+		}
+	}
 }

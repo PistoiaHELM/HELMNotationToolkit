@@ -27,21 +27,22 @@ import com.pfizer.pgrd.sdlib.SDEncoder;
 
 public class MolfileEncoder {
 
-    public static String encode(String string) throws EncoderException {
-        if (null != string) {
-            SDUnit unit = new SDUnit(string);
-            return SDEncoder.encode(unit, SDEncoder.TYPE_GZIP_ENCODED);
-        } else {
-            return null;
-        }
-    }
+	public static String encode(String string) throws EncoderException {
+		if (null != string) {
+			SDUnit unit = new SDUnit(string);
+			return SDEncoder.encode(unit, SDEncoder.TYPE_GZIP_ENCODED);
+		} else {
+			return null;
+		}
+	}
 
-    public static String decode(String encodedString) throws EncoderException {
-        if (null != encodedString) {
-            SDUnit decodedUnit = SDEncoder.decode(encodedString, SDEncoder.TYPE_GZIP_ENCODED);
-            return decodedUnit.getMACCSData();
-        } else {
-            return null;
-        }
-    }
+	public static String decode(String encodedString) throws EncoderException {
+		if (null != encodedString) {
+			SDUnit decodedUnit = SDEncoder.decode(encodedString,
+					SDEncoder.TYPE_GZIP_ENCODED);
+			return decodedUnit.getMACCSData();
+		} else {
+			return null;
+		}
+	}
 }

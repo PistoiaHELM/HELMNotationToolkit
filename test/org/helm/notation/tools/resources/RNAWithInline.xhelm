@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Xhelm>
+  <HelmNotation>RNA1{[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|](A)P.RP.[C[C@@]1([*])O[C@H](CO[*])[C@@H](O[*])[C@H]1O |$;;_R3;;;;;_R1;;;_R2;;$|](T)P.R([Cc1nc2c(nc(N)[nH]c2=O)n1[*] |$;;;;;;;;;;;;_R1$|])P.R([Cc1cc(N)nc(=O)n1[*] |$;;;;;;;;;_R1$|])}$$$$</HelmNotation>
+  <Monomers>
+    <Monomer>
+      <MonomerID>P</MonomerID>
+      <MonomerSmiles>OP([*])([*])=O |$;;_R1;_R2;$|</MonomerSmiles>
+      <MonomerMolFile>H4sIAAAAAAAAAJ1Quw7CMAzc/RUnwUrlpHnuRUyFqgM7IwsDA9+Pk0olRBmqnpzI8cWnswkYH+/P8wWwU5aDZuP1gBVEgAWM8EX8EGPEXTMzpRd3Svm4ZL53bsmEZUz4l2hHUjlJL3vVVJkPW1UKL6qzTpUqt81epCMa3Z5ojxeZjUMwe7zIQnS+62qfibpqmn9tXR2B+TJlhXzS2pM9nZjzdSA6CugLHPwdaigCAAA=</MonomerMolFile>
+      <MonomerType>Backbone</MonomerType>
+      <PolymerType>RNA</PolymerType>
+      <NaturalAnalog>P</NaturalAnalog>
+      <MonomerName>Phosphate</MonomerName>
+      <Attachments>
+        <Attachment>
+          <AttachmentID>R1-OH</AttachmentID>
+          <AttachmentLabel>R1</AttachmentLabel>
+          <CapGroupName>OH</CapGroupName>
+          <CapGroupSmiles>O[*] |$;_R1$|</CapGroupSmiles>
+        </Attachment>
+        <Attachment>
+          <AttachmentID>R2-OH</AttachmentID>
+          <AttachmentLabel>R2</AttachmentLabel>
+          <CapGroupName>OH</CapGroupName>
+          <CapGroupSmiles>O[*] |$;_R2$|</CapGroupSmiles>
+        </Attachment>
+      </Attachments>
+    </Monomer>
+    <Monomer>
+      <MonomerID>T</MonomerID>
+      <MonomerSmiles>Cc1cn([*])c(=O)[nH]c1=O |$;;;;_R1;;;;;$|</MonomerSmiles>
+      <MonomerMolFile>H4sIAAAAAAAAAJ2TsU7EMAyG9zyFJVgvsh3bTWYOMd2BbmBnZGFg4PlxUg4a0uFay6qav+7X304aAE5vn1/vHwBopJgZVfgIvxECENaEZf5FKQVeGRFDXWnMSuw3B45I0iox+lOEB+gR69koFtWyzRRh0t2USaRSUmSxnRTvyDjPFDOhBeW8hUKiVy+63wulcp1L6uayyUsWre8eKFIuy46eb6eIO0jlZy5Tt9MbKHW68047r/dyubuZMsVkc0ccGfOuU+efngB4VK1d/6s8qi6lkeCSjLUu6apaRtUL88jVVWfc/tRePQFcnl6aWvFAVXk8H0O49wjfl4a+fQIEAAA=</MonomerMolFile>
+      <MonomerType>Branch</MonomerType>
+      <PolymerType>RNA</PolymerType>
+      <NaturalAnalog>T</NaturalAnalog>
+      <MonomerName>Thymine</MonomerName>
+      <Attachments>
+        <Attachment>
+          <AttachmentID>R1-H</AttachmentID>
+          <AttachmentLabel>R1</AttachmentLabel>
+          <CapGroupName>H</CapGroupName>
+          <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
+        </Attachment>
+      </Attachments>
+    </Monomer>
+    <Monomer>
+      <MonomerID>A</MonomerID>
+      <MonomerSmiles>Nc1ncnc2n([*])cnc12 |$;;;;;;;_R1;;;$|</MonomerSmiles>
+      <MonomerMolFile>H4sIAAAAAAAAAKWUPY/CMAxA9/wKS9x6lu3E+ZjhxFR0Yrj9xltuYOD341SClqYDNFZUpS/Ok52qcQDD7+X69w9AkZUyR1U5wCOcA2ZgsfXZmKKUAj9CRM5ePgNSTKHOCFMqWjMIbZVgD8+K9TFaPHqVUmeMXIR6LYLEaaNl6kgwyFNHp3csKXPur+Vuac7ljVoEo8/dHTEWCdTb0WTp6ejxjereoBs7ms7Fo2iYW867Fy32p1B9LilEAGmptLlllRryrSGNdJlrKLTUkLYGHStb5po3r1G7CBqa7yXP6ABwPn6PuXULcCVfp4NzHxbuBv6B7WF0BAAA</MonomerMolFile>
+      <MonomerType>Branch</MonomerType>
+      <PolymerType>RNA</PolymerType>
+      <NaturalAnalog>A</NaturalAnalog>
+      <MonomerName>Adenine</MonomerName>
+      <Attachments>
+        <Attachment>
+          <AttachmentID>R1-H</AttachmentID>
+          <AttachmentLabel>R1</AttachmentLabel>
+          <CapGroupName>H</CapGroupName>
+          <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
+        </Attachment>
+      </Attachments>
+    </Monomer>
+    <Monomer>
+      <MonomerID>R</MonomerID>
+      <MonomerSmiles>O[C@H]1[C@H]([*])O[C@H](CO[*])[C@H]1O[*] |$;;;_R3;;;;;_R1;;;_R2$|</MonomerSmiles>
+      <MonomerMolFile>H4sIAAAAAAAAAJ2UMW/EIAyFd36Fpd5aZBsweO5Vna6tbujesUuHDv39xdDc5ZJI0YEY4OXx6dmgOIDT58/v1zcACiUsjDHxES7DOSC2CTib16Gq8MGI6GxHPgplW7Hngm2Fvn5FeINbxPZ0/USOWTuvSOYZ5elCoT0Ke8pSJopuU3g/iwqnTsF8U9EdFKqUGCcK01hFliX8J+CYBrtrWZJMlExjFPRJNfY+14Jks6Jdit1Rz8JeEeOMcn64Iwtxfy+hdjfxUEWP6EV7N4Jn1jKWhbxIws4LWMIIhdqLorUa1mo1xk21NJXmaj2e1t6q6tobN71VlabKXK3GvFal/TWWhAK0fOrOJKKlegI4v7y3fBawFW/XY0a7YjbH8+vRuUMd7g/o8iW5ygQAAA==</MonomerMolFile>
+      <MonomerType>Backbone</MonomerType>
+      <PolymerType>RNA</PolymerType>
+      <NaturalAnalog>R</NaturalAnalog>
+      <MonomerName>Ribose</MonomerName>
+      <Attachments>
+        <Attachment>
+          <AttachmentID>R3-OH</AttachmentID>
+          <AttachmentLabel>R3</AttachmentLabel>
+          <CapGroupName>OH</CapGroupName>
+          <CapGroupSmiles>O[*] |$;_R3$|</CapGroupSmiles>
+        </Attachment>
+        <Attachment>
+          <AttachmentID>R1-H</AttachmentID>
+          <AttachmentLabel>R1</AttachmentLabel>
+          <CapGroupName>H</CapGroupName>
+          <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
+        </Attachment>
+        <Attachment>
+          <AttachmentID>R2-H</AttachmentID>
+          <AttachmentLabel>R2</AttachmentLabel>
+          <CapGroupName>H</CapGroupName>
+          <CapGroupSmiles>[*][H] |$_R2;$|</CapGroupSmiles>
+        </Attachment>
+      </Attachments>
+    </Monomer>
+  </Monomers>
+</Xhelm>
+

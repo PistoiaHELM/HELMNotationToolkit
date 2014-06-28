@@ -22,35 +22,35 @@
 package org.helm.notation.model;
 
 /**
- *
+ * 
  * @author zhangtianhong
  */
 public class MoleculeInfo {
-    private double molecularWeight;
-    private String molecularFormula;
-    private double exactMass;
+	private double molecularWeight;
+	private String molecularFormula;
+	private double exactMass;
 
-    public double getMolecularWeight() {
-        return molecularWeight;
-    }
+	public double getMolecularWeight() {
+		return molecularWeight;
+	}
 
-    public void setMolecularWeight(double molecularWeight) {
-        this.molecularWeight = molecularWeight;
-    }
+	public void setMolecularWeight(double molecularWeight) {
+		this.molecularWeight = molecularWeight;
+	}
 
-    public String getMolecularFormula() {
-        return molecularFormula;
-    }
+	public String getMolecularFormula() {
+		return molecularFormula;
+	}
 
-    public void setMolecularFormula(String molecularFormula) {
-        this.molecularFormula = molecularFormula;
-    }
+	public void setMolecularFormula(String molecularFormula) {
+		this.molecularFormula = molecularFormula;
+	}
 
-    public double getExactMass() {
-        return exactMass;
-    }
+	public double getExactMass() {
+		return exactMass;
+	}
 
-    public void setExactMass(double exactMass) {
-        this.exactMass = exactMass;
-    }
+	public void setExactMass(double exactMass) {
+		this.exactMass = exactMass;
+	}
 }

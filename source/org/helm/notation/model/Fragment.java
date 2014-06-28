@@ -22,63 +22,65 @@
 package org.helm.notation.model;
 
 /**
- * This is the data model for a fragment, which could contain one or more monomers
- * For example, a fragment could be nucleotide which contains two monomers, or a linker fragment which contains one monomer
+ * This is the data model for a fragment, which could contain one or more
+ * monomers For example, a fragment could be nucleotide which contains two
+ * monomers, or a linker fragment which contains one monomer
+ * 
  * @author zhangtianhong
  */
 public class Fragment {
-    public static final String[] SUPPORTED_SOURCES = {};
+	public static final String[] SUPPORTED_SOURCES = {};
 
-    private String source;
-    private String type;
-    private String symbol;
-    private String notation;
+	private String source;
+	private String type;
+	private String symbol;
+	private String notation;
 
-    public String getNotation() {
-        return notation;
-    }
+	public String getNotation() {
+		return notation;
+	}
 
-    public void setNotation(String notation) {
-        this.notation = notation;
-    }
+	public void setNotation(String notation) {
+		this.notation = notation;
+	}
 
-    public String getSource() {
-        return source;
-    }
+	public String getSource() {
+		return source;
+	}
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+	public void setSource(String source) {
+		this.source = source;
+	}
 
-    public String getSymbol() {
-        return symbol;
-    }
+	public String getSymbol() {
+		return symbol;
+	}
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public boolean isSupportedSource() {
-        return isSupportedSource(source);
-    }
+	public boolean isSupportedSource() {
+		return isSupportedSource(source);
+	}
 
-    public boolean isSupportedSource(String sourceName) {
-        if (null == sourceName)
-            return false;
+	public boolean isSupportedSource(String sourceName) {
+		if (null == sourceName)
+			return false;
 
-        for (String tmp : SUPPORTED_SOURCES) {
-            if (tmp.equalsIgnoreCase(sourceName))
-                return true;
-        }
-        return false;
-    }
+		for (String tmp : SUPPORTED_SOURCES) {
+			if (tmp.equalsIgnoreCase(sourceName))
+				return true;
+		}
+		return false;
+	}
 
 }

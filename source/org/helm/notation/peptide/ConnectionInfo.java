@@ -22,55 +22,56 @@
 package org.helm.notation.peptide;
 
 /**
- *
+ * 
  * @author zhangtianhong
  */
 class ConnectionInfo {
 
-    private int listIndex;
-    private int monomerIndex;
-    private String rgroup;
-    private String monomerID;
+	private int listIndex;
+	private int monomerIndex;
+	private String rgroup;
+	private String monomerID;
 
-    public ConnectionInfo() {
-    }
+	public ConnectionInfo() {
+	}
 
-    public ConnectionInfo(int listIndex, int monomerIndex, String monomerID, String rgroup) {
-        this.listIndex = listIndex;
-        this.monomerIndex = monomerIndex;
-        this.monomerID = monomerID;
-        this.rgroup = rgroup;
-    }
+	public ConnectionInfo(int listIndex, int monomerIndex, String monomerID,
+			String rgroup) {
+		this.listIndex = listIndex;
+		this.monomerIndex = monomerIndex;
+		this.monomerID = monomerID;
+		this.rgroup = rgroup;
+	}
 
-    public int getListIndex() {
-        return listIndex;
-    }
+	public int getListIndex() {
+		return listIndex;
+	}
 
-    public void setListIndex(int listIndex) {
-        this.listIndex = listIndex;
-    }
+	public void setListIndex(int listIndex) {
+		this.listIndex = listIndex;
+	}
 
-    public String getMonomerID() {
-        return monomerID;
-    }
+	public String getMonomerID() {
+		return monomerID;
+	}
 
-    public void setMonomerID(String monomerID) {
-        this.monomerID = monomerID;
-    }
+	public void setMonomerID(String monomerID) {
+		this.monomerID = monomerID;
+	}
 
-    public int getMonomerIndex() {
-        return monomerIndex;
-    }
+	public int getMonomerIndex() {
+		return monomerIndex;
+	}
 
-    public void setMonomerIndex(int monomerIndex) {
-        this.monomerIndex = monomerIndex;
-    }
+	public void setMonomerIndex(int monomerIndex) {
+		this.monomerIndex = monomerIndex;
+	}
 
-    public String getRgroup() {
-        return rgroup;
-    }
+	public String getRgroup() {
+		return rgroup;
+	}
 
-    public void setRgroup(String rgroup) {
-        this.rgroup = rgroup;
-    }
+	public void setRgroup(String rgroup) {
+		this.rgroup = rgroup;
+	}
 }

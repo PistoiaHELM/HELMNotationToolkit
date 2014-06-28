@@ -31,42 +31,44 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 /**
- *
+ * 
  * @author ZHANGTIANHONG
  */
 public class MonomerParserSample {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
 
-        try {
-            //monomer validation
-            InputStream in = MonomerParserSample.class.getResourceAsStream("resource/BadMonomerSample.xml");
-            SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(in);
-            Element monomerElement = doc.getRootElement();
-            XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-            System.out.println("XML read in:");
-            out.output(monomerElement, System.out);
+		try {
+			// monomer validation
+			InputStream in = MonomerParserSample.class
+					.getResourceAsStream("resource/BadMonomerSample.xml");
+			SAXBuilder builder = new SAXBuilder();
+			Document doc = builder.build(in);
+			Element monomerElement = doc.getRootElement();
+			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+			System.out.println("XML read in:");
+			out.output(monomerElement, System.out);
 
-            Monomer monomer = MonomerParser.getMonomer(monomerElement);
-            if (MonomerParser.validateMonomer(monomer)) {
-                System.out.println("Monomer is valid");
-            } else {
-                System.out.println("Monomer is invalid");
-            }
-            System.out.println("Molfile in monomer:");
-            System.out.println(monomer.getMolfile());
+			Monomer monomer = MonomerParser.getMonomer(monomerElement);
+			if (MonomerParser.validateMonomer(monomer)) {
+				System.out.println("Monomer is valid");
+			} else {
+				System.out.println("Monomer is invalid");
+			}
+			System.out.println("Molfile in monomer:");
+			System.out.println(monomer.getMolfile());
 
-            //Monomer to Element
-            System.out.println("Convert Monomer to Element:");
-            Element mElement = MonomerParser.getMonomerElement(monomer);
-            out.output(mElement, System.out);
+			// Monomer to Element
+			System.out.println("Convert Monomer to Element:");
+			Element mElement = MonomerParser.getMonomerElement(monomer);
+			out.output(mElement, System.out);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

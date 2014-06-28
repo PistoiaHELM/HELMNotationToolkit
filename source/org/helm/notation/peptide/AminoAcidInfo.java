@@ -24,35 +24,35 @@ package org.helm.notation.peptide;
 import java.util.Map;
 
 /**
- *
+ * 
  * @author zhangtianhong
  */
 public class AminoAcidInfo {
 
-    private String monomerID;
-    private Map<String, String> rgroupMap;
+	private String monomerID;
+	private Map<String, String> rgroupMap;
 
-    public AminoAcidInfo() {
-    }
+	public AminoAcidInfo() {
+	}
 
-    public AminoAcidInfo(String monomerID, Map<String, String> rgroupMap) {
-        this.monomerID = monomerID;
-        this.rgroupMap = rgroupMap;
-    }
+	public AminoAcidInfo(String monomerID, Map<String, String> rgroupMap) {
+		this.monomerID = monomerID;
+		this.rgroupMap = rgroupMap;
+	}
 
-    public String getMonomerID() {
-        return monomerID;
-    }
+	public String getMonomerID() {
+		return monomerID;
+	}
 
-    public void setMonomerID(String monomerID) {
-        this.monomerID = monomerID;
-    }
+	public void setMonomerID(String monomerID) {
+		this.monomerID = monomerID;
+	}
 
-    public Map<String, String> getRgroupMap() {
-        return rgroupMap;
-    }
+	public Map<String, String> getRgroupMap() {
+		return rgroupMap;
+	}
 
-    public void setRgroupMap(Map<String, String> rgroupMap) {
-        this.rgroupMap = rgroupMap;
-    }
+	public void setRgroupMap(Map<String, String> rgroupMap) {
+		this.rgroupMap = rgroupMap;
+	}
 }

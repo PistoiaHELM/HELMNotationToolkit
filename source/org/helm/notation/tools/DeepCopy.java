@@ -36,148 +36,140 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 
  * @author lih25
  */
 public class DeepCopy {
 
-    public static List copy(List list) throws IOException, ClassNotFoundException {
-        // serialize ArrayList into byte array
+	public static List copy(List list) throws IOException,
+			ClassNotFoundException {
+		// serialize ArrayList into byte array
 
-        ByteArrayOutputStream baos =
-                new ByteArrayOutputStream(100);
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(list);
-        byte buf[] = baos.toByteArray();
-        oos.close();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(list);
+		byte buf[] = baos.toByteArray();
+		oos.close();
 
-        // deserialize byte array into ArrayList
+		// deserialize byte array into ArrayList
 
-        ByteArrayInputStream bais =
-                new ByteArrayInputStream(buf);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        ArrayList newlist =
-                (ArrayList) ois.readObject();
-        ois.close();
+		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		ArrayList newlist = (ArrayList) ois.readObject();
+		ois.close();
 
-        return newlist;
-    }
+		return newlist;
+	}
 
-    public static ArrayList copy(ArrayList list) throws IOException, ClassNotFoundException {
-        // serialize ArrayList into byte array
+	public static ArrayList copy(ArrayList list) throws IOException,
+			ClassNotFoundException {
+		// serialize ArrayList into byte array
 
-        ByteArrayOutputStream baos =
-                new ByteArrayOutputStream(100);
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(list);
-        byte buf[] = baos.toByteArray();
-        oos.close();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(list);
+		byte buf[] = baos.toByteArray();
+		oos.close();
 
-        // deserialize byte array into ArrayList
+		// deserialize byte array into ArrayList
 
-        ByteArrayInputStream bais =
-                new ByteArrayInputStream(buf);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        ArrayList newlist =
-                (ArrayList) ois.readObject();
-        ois.close();
+		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		ArrayList newlist = (ArrayList) ois.readObject();
+		ois.close();
 
-        return newlist;
-    }
+		return newlist;
+	}
 
-    public static Monomer copy(Monomer monomer)
-            throws IOException, MonomerException {
-        ByteArrayOutputStream baos =
-                new ByteArrayOutputStream(100);
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(monomer);
-        byte buf[] = baos.toByteArray();
-        oos.close();
+	public static Monomer copy(Monomer monomer) throws IOException,
+			MonomerException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(monomer);
+		byte buf[] = baos.toByteArray();
+		oos.close();
 
-        // deserialize byte array into ArrayList
+		// deserialize byte array into ArrayList
 
-        ByteArrayInputStream bais =
-                new ByteArrayInputStream(buf);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        Monomer newMonomer;
-        try {
-            newMonomer = (Monomer) ois.readObject();
-        } catch (ClassNotFoundException cnfe) {
-            throw new MonomerException("Unable to copy Monomer");
-        }
-        ois.close();
+		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		Monomer newMonomer;
+		try {
+			newMonomer = (Monomer) ois.readObject();
+		} catch (ClassNotFoundException cnfe) {
+			throw new MonomerException("Unable to copy Monomer");
+		}
+		ois.close();
 
-        return newMonomer;
-    }
+		return newMonomer;
+	}
 
-    public static Attachment copy(Attachment attachment)
-            throws IOException, MonomerException {
-        ByteArrayOutputStream baos =
-                new ByteArrayOutputStream(100);
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(attachment);
-        byte buf[] = baos.toByteArray();
-        oos.close();
+	public static Attachment copy(Attachment attachment) throws IOException,
+			MonomerException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(attachment);
+		byte buf[] = baos.toByteArray();
+		oos.close();
 
-        // deserialize byte array into ArrayList
+		// deserialize byte array into ArrayList
 
-        ByteArrayInputStream bais =
-                new ByteArrayInputStream(buf);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        Attachment newAttachment;
-        try {
-            newAttachment = (Attachment) ois.readObject();
-        } catch (ClassNotFoundException cnfe) {
-            throw new MonomerException("Unable to copy Attachment");
-        }
+		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		Attachment newAttachment;
+		try {
+			newAttachment = (Attachment) ois.readObject();
+		} catch (ClassNotFoundException cnfe) {
+			throw new MonomerException("Unable to copy Attachment");
+		}
 
-        ois.close();
+		ois.close();
 
-        return newAttachment;
-    }
+		return newAttachment;
+	}
 
-    public static Nucleotide copy(Nucleotide nucleotide) throws IOException, NotationException {
-        ByteArrayOutputStream baos =
-                new ByteArrayOutputStream(100);
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(nucleotide);
-        byte buf[] = baos.toByteArray();
-        oos.close();
+	public static Nucleotide copy(Nucleotide nucleotide) throws IOException,
+			NotationException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(nucleotide);
+		byte buf[] = baos.toByteArray();
+		oos.close();
 
-        // deserialize byte array into ArrayList
+		// deserialize byte array into ArrayList
 
-        ByteArrayInputStream bais =
-                new ByteArrayInputStream(buf);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        Nucleotide nuc;
-        try {
-            nuc = (Nucleotide) ois.readObject();
-        } catch (ClassNotFoundException cnfe) {
-            throw new NotationException("Unable to copy Nucleotide");
-        }
+		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		Nucleotide nuc;
+		try {
+			nuc = (Nucleotide) ois.readObject();
+		} catch (ClassNotFoundException cnfe) {
+			throw new NotationException("Unable to copy Nucleotide");
+		}
 
-        ois.close();
+		ois.close();
 
-        return nuc;
-    }
+		return nuc;
+	}
 
-    public static Serializable copy(Serializable input) throws IOException, NotationException {
-        ByteArrayOutputStream baos =  new ByteArrayOutputStream(100);
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(input);
-        byte buf[] = baos.toByteArray();
-        oos.close();
+	public static Serializable copy(Serializable input) throws IOException,
+			NotationException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(100);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(input);
+		byte buf[] = baos.toByteArray();
+		oos.close();
 
-        ByteArrayInputStream bais =      new ByteArrayInputStream(buf);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        Serializable output;
-        try {
-            output = (Serializable) ois.readObject();
-        } catch (ClassNotFoundException cnfe) {
-            throw new NotationException("Unable to copy input object");
-        }
-        ois.close();
+		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		Serializable output;
+		try {
+			output = (Serializable) ois.readObject();
+		} catch (ClassNotFoundException cnfe) {
+			throw new NotationException("Unable to copy input object");
+		}
+		ois.close();
 
-        return output;
-    }
+		return output;
+	}
 }
