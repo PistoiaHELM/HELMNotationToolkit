@@ -113,7 +113,17 @@ public class PeptideStructureParserSample {
             smiles = "CC(C)C[C@H](NC(=O)[C@@H](CC1=CC=C(NC(N)=O)C=C1)NC(=O)[C@H](CC1=CC=C(NC(=O)[C@@H]2CC(=O)NC(=O)N2)C=C1)NC(=O)[C@H](CO)NC(=O)[C@@H](CC1=CC=CN=C1)NC(=O)[C@@H](CC1=CC=C(Cl)C=C1)NC(=O)[C@@H](CC1=CC=C2C=CC=CC2=C1)NC(C)=O)C(=O)N[C@@H](CCCCNC(C)C)C(=O)N1CCC[C@H]1C(=O)N[C@H](C)C(N)=O";
             notation = "CHEMBL415606";
             smiles2notation(parser, smiles, notation);
-
+            
+            //Thiol carboxylic acid
+            smiles = "OC(=O)CC[C@H](NC(=O)[C@@H]1CSSCCC(=O)NCC(=O)N1)C(=O)N[C@@H](CC1=CC=CC=C1)C(O)=O";
+            notation = "PEPTIDE1{[[*]C(=O)CCS[*] |$_R2;;;;;;_R3$|].G.C.E.F}$PEPTIDE1,PEPTIDE1,3:R3-1:R3$$$";
+            smiles2notation(parser, smiles, notation);
+            
+            //Thiol amine
+            smiles = "[H]NCC(=O)N[C@H]1CSSCCNC(=O)[C@H](CC2=CC=CC=C2)NC(=O)[C@H](CCC(O)=O)NC1=O";
+            notation = "PEPTIDE1{G.C.E.F.[[*]NCCS[*] |$_R1;;;;;_R3$|]}$PEPTIDE1,PEPTIDE1,5:R3-2:R3$$$";
+            smiles2notation(parser, smiles, notation);
+            
             // mixture
 //            smiles = "[H]N[C@@H](C)C(=O)NCC(=O)NCC(=O)N[C@@H](C)C(O)=O.[H]N[C@@H](C)C(=O)NCC(=O)NCC(=O)N[C@@H](C)C(O)=O";
 //            notation = "PEPTIDE1{A.G.G.A}|PEPTIDE1{A.G.G.A}$$$$";

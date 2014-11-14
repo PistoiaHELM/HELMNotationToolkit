@@ -423,10 +423,14 @@ public class PeptideStructureParser {
         }
 
         //map level with rgroup
+        boolean containsSulfideAttachment = false;
         List<MolAtom> rAtoms = new ArrayList<MolAtom>();
         for (MolAtom atom : molecule.getAtomArray()) {
             if (atom.getAtno() == MolAtom.RGROUP) {
                 rAtoms.add(atom);
+                if (atom.getExtraLabel().equals(SULFIDE_ATTACCHMENT_LABEL)) {
+                    containsSulfideAttachment = true;
+                }
             }
         }
 
@@ -437,26 +441,18 @@ public class PeptideStructureParser {
             } else if (label.startsWith(AMINE_ATTACHEMENT_LABEL)) {
                 //could be R1 or R3
                 MolAtom nAtom = rAtom.getBond(0).getOtherAtom(rAtom);
-                if (isAlphaAminoAcidNitrogenAtom(nAtom)) {
+                if (isAlphaAminoAcidNitrogenAtom(nAtom) || rAtoms.size() == 1 || containsSulfideAttachment) {
                     rgroupMap.put("R" + rAtom.getRgroup(), "R1");
                 } else {
-                    if (rAtoms.size() == 1) {
-                        rgroupMap.put("R" + rAtom.getRgroup(), "R1");
-                    } else {
-                        rgroupMap.put("R" + rAtom.getRgroup(), "R3");
-                    }
+                    rgroupMap.put("R" + rAtom.getRgroup(), "R3");
                 }
             } else {
                 //could be R2 or R3
                 MolAtom cAtom = rAtom.getBond(0).getOtherAtom(rAtom);
-                if (isAlphaAminoAcidCarbonylCarbonAtom(cAtom)) {
+                if (isAlphaAminoAcidCarbonylCarbonAtom(cAtom) || rAtoms.size() == 1 || containsSulfideAttachment) {
                     rgroupMap.put("R" + rAtom.getRgroup(), "R2");
                 } else {
-                    if (rAtoms.size() == 1) {
-                        rgroupMap.put("R" + rAtom.getRgroup(), "R2");
-                    } else {
-                        rgroupMap.put("R" + rAtom.getRgroup(), "R3");
-                    }
+                    rgroupMap.put("R" + rAtom.getRgroup(), "R3");
                 }
             }
         }
