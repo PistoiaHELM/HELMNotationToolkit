@@ -2106,24 +2106,24 @@
             </Monomer>
             <Monomer>
                 <MonomerID>dK</MonomerID>
-                <MonomerSmiles>NCCCC[C@@H](N[*])C([*])=O |$;;;;;;;_R1;;_R2;$|</MonomerSmiles>
-                <MonomerMolFile>H4sIAAAAAAAAAKWTva7CMAyF9zyFpcuKZTtOGs+AmPgRAzsjyx3ucJ+fJEW0tJWoihWp6ef46EQ9dQCH29///ReAPDMTq3jZwqucA2Zgyv3e6srM4CpE5PLLmlGYpHBBMrayI8xdgg28S0yvp4qJpjLLGBvTSRX+pCIYvb28CC3z4tEH33kJy1QUKaavvSg2Sb72ElCt6bxwT+W45BsRpqC6VKXLi3Hs5+U0X4XyjcJ0Xi4/s1VqXnw7q/qW3dkqVnMpA9oiHlEextjVg2mS+kpjn2ak47MZhTENdXZIM2rGNJVffkAPAJf9ub1IiW95luhw6eyOW+dWudwDVcimx1AEAAA=</MonomerMolFile>
+                <MonomerSmiles>[*]N[C@H](CCCCN[*])C([*])=O |$_R1;;;;;;;;_R3;;_R2;$|</MonomerSmiles>
+                <MonomerMolFile>H4sIAAAAAAAAAKWUP0/EMAzF93wKS7AS2Y7zxzOHmO5AN7AzsjAw8PmJU9T20kocuTRD+4v99KK+xAEc37++Pz4BiFGoPkx8gHk4VxeACABXcxmqCm+MiK5+PJBnQjbOHpXU3tDXVYRHuJTYn78qylKsl3zKKrsq9JcK+xR09sI45iX4EMPiJY6piMdUbvYiPhe+2Uv0onnxQiuV08g/Ql+iyKjKkheltM7Ly/UqWHcU9/NyvrtapeUlTL0iF9n9h0qqO6I8e0kjKtrSzR2dEG0o9YfBtcKyS0OjaU0rkm1tRXFLY+vtaUV5S0u7NXqa7Trp6BHg/Pw6mbOjYQUWS2u3cASreDodnLuvw/0AH3NhK7QEAAA=</MonomerMolFile>
                 <MonomerType>Backbone</MonomerType>
                 <PolymerType>PEPTIDE</PolymerType>
                 <NaturalAnalog>K</NaturalAnalog>
                 <MonomerName>D-Lysine</MonomerName>
                 <Attachments>
                     <Attachment>
-                        <AttachmentID>R2-OH</AttachmentID>
-                        <AttachmentLabel>R2</AttachmentLabel>
-                        <CapGroupName>OH</CapGroupName>
-                        <CapGroupSmiles>O[*] |$;_R2$|</CapGroupSmiles>
-                    </Attachment>
-                    <Attachment>
                         <AttachmentID>R1-H</AttachmentID>
                         <AttachmentLabel>R1</AttachmentLabel>
-                        <CapGroupName>H</CapGroupName>
-                        <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
+                    </Attachment>
+                    <Attachment>
+                        <AttachmentID>R2-OH</AttachmentID>
+                        <AttachmentLabel>R2</AttachmentLabel>
+                    </Attachment>
+                    <Attachment>
+                        <AttachmentID>R3-H</AttachmentID>
+                        <AttachmentLabel>R3</AttachmentLabel>
                     </Attachment>
                 </Attachments>
             </Monomer>
