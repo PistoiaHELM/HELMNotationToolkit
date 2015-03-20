@@ -2624,19 +2624,13 @@
             </Monomer>
             <Monomer>
                 <MonomerID>Hiv</MonomerID>
-                <MonomerSmiles>CC(C)[C@H](N[*])C([*])=O |r,$;;;;;_R1;;_R2;$|</MonomerSmiles>
-                <MonomerMolFile>H4sIAAAAAAAAAKWTuw7CMAxFd3+FJVipbCdNnJkiJh5iYGdkYWDg+0lSSgOtRAErUp0b++jKTQBxc7rezhdECmTZsIiRBp8BgBgQNZ4Xq48QAh6FiCDtuJK69imjygpTm8VTwiW+IsYXtB21Zel61Y1S5ANlQRV7Y55e+A8v3PKUnS0o2+mUPBd9ZNaVXnbfUIKnfi6ll8NsKqWfyyJ6EQ2/UlS9fvhHEyhGXTcX1p/uSx2b364DdBIPVTdUY6EdVU1WuVRjoR/WmvxCRtTwrm4QD+t9picr+ZseDKeT1bYBmMeAO/GMj7CYAwAA</MonomerMolFile>
+                <MonomerSmiles>CC(C)[C@H](O)C([*])=O |r,$;;;;;;_R2;$|</MonomerSmiles>
+                <MonomerMolFile>H4sIAAAAAAAAAKWSuw7CMAxFd3+FJVipbOfZmSKmAurAzsjCwMD3k6T0XalVsTw4N/GJ7QQQy8f783whkohiI6ydFNgaAKJHdGG/553leY53ISKIK87EGBcjyrQw1VHYJTziEDHvUGcYzdLkejtLkQXKgTJ2SrW18B+1cM3zbHWPcl1PSXPxv0hb3krJHXVz6ddS7dZSYh/e+YXprqAob5uO2G96aROSRw8JjcRT1U7VcFDPqiqp3FdV+sXjsyp976FaIlbnW1LjpShROV0KgH0w+AKtE1QKNAMAAA==</MonomerMolFile>
                 <MonomerType>Backbone</MonomerType>
                 <PolymerType>PEPTIDE</PolymerType>
                 <NaturalAnalog>X</NaturalAnalog>
                 <MonomerName>2-hydroxyisovaleric acid</MonomerName>
                 <Attachments>
-                    <Attachment>
-                        <AttachmentID>R1-H</AttachmentID>
-                        <AttachmentLabel>R1</AttachmentLabel>
-                        <CapGroupName>H</CapGroupName>
-                        <CapGroupSmiles>[*][H] |$_R1;$|</CapGroupSmiles>
-                    </Attachment>
                     <Attachment>
                         <AttachmentID>R2-OH</AttachmentID>
                         <AttachmentLabel>R2</AttachmentLabel>
