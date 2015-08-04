@@ -107,6 +107,11 @@ public class MonomerStore {
 		}
 
 		Monomer copyMonomer = DeepCopy.copy(monomer);
+		
+		// ensure the canonical SMILES is indexed in the monomer store
+		if (hasSmilesString) {
+			copyMonomer.setCanSMILES(smilesString);
+		}
 
 		boolean alreadyAdded = false;
 		alreadyAdded = monomerMap.containsKey(alternateId);
