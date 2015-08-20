@@ -16,8 +16,8 @@
         <echo message="----------- ${name} ${version} ------------"/>
         <property name="compile.debug"       value="true" />
         <property name="compile.optimize"    value="true" />
-        <property name="compile.target"      value="1.6" />
-        <property name="compile.source"      value="1.6" />
+        <property name="compile.target"      value="1.7" />
+        <property name="compile.source"      value="1.7" />
         <property name="compile.deprecation" value="true" />
         <property name="src.dir" value="${basedir}/source"/>
         <property name="lib.dir" value="${basedir}/lib"/>
