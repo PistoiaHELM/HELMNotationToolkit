@@ -288,6 +288,10 @@ public class MonomerFactory {
 		MonomerCache cache = null;
 		try {
 			cache = (MonomerCache) ois.readObject();
+			// ensure monomers have their canonical SMILES set to what we store
+			for (Map.Entry<String,Monomer> e : cache.getSmilesMonomerDB().entrySet()) {
+				e.getValue().setCanSMILES(e.getKey());
+			}
 		} catch (ClassNotFoundException cnfe) {
 			throw new MonomerException(
 					"Unable to deserialize monomer cache from file");
@@ -695,14 +699,13 @@ public class MonomerFactory {
 			for (Iterator it = monomerSet.iterator(); it.hasNext();) {
 				String monomerID = (String) it.next();
 				Monomer monomer = monomerMap.get(monomerID);
-				// String smiles = monomer.getCanSMILES();
-				String smiles = null;
+				String smiles = monomer.getCanSMILES();
 				try {
-					smiles = StructureParser.getUniqueExtendedSMILES(monomer
-							.getCanSMILES());
+					smiles = StructureParser.getUniqueExtendedSMILES(smiles);
 				} catch (Exception e) {
-					smiles = monomer.getCanSMILES();
+					// ignored
 				}
+				monomer.setCanSMILES(smiles);
 				map.put(smiles, monomer);
 
 			}
