@@ -130,7 +130,7 @@ public class SimpleNotationParser {
 			}
 		}
 		Molecule mol = struc.getMolecule();
-		return mol.toFormat("cxsmiles:u");
+                return StructureParser.getUniqueExtendedSMILES(mol);
 	}
 
 	/**
@@ -1321,9 +1321,19 @@ public class SimpleNotationParser {
 	private static RgroupStructure getMonomerStructure(Monomer monomer)
 			throws IOException, NotationException {
 		RgroupStructure ms = null;
-		if (null != monomer.getCanSMILES()) {
+                String structureInput = null;
+                
+                if (null != monomer.getMolfile()) {
+                    structureInput = monomer.getMolfile();
+                }
+                
+                if (null == structureInput && null != monomer.getCanSMILES()) {
+                    structureInput = monomer.getCanSMILES();
+                }
+                
+		if (null != structureInput) {
 			ms = new RgroupStructure();
-			Molecule mol = StructureParser.getMolecule(monomer.getCanSMILES());
+			Molecule mol = StructureParser.getMolecule(structureInput);
 			mol.dearomatize();
 			Map<String, MolAtom> rgroupMap = new HashMap<String, MolAtom>();
 

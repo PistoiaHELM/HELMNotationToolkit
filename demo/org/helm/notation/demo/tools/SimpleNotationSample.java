@@ -130,6 +130,10 @@ public class SimpleNotationSample {
 				outputList.append(nuc.getSymbol());
 			}
 			System.out.println("Output List: " + outputList.toString());
+                        
+                        //Test new structure merge function to preserve stereo bond on R atom
+                        notation = "R(A)P";
+			testGetSMILES(notation, Monomer.NUCLIEC_ACID_POLYMER_TYPE);
 
 		} catch (Exception e) {
 			Logger.getLogger(SimpleNotationSample.class.getName()).log(

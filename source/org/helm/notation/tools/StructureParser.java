@@ -206,17 +206,17 @@ public class StructureParser {
 	}
 
 	/**
-	 * convert SMILES to Molecule
+	 * convert SMILES or MOLFILE to Molecule
 	 * 
-	 * @param smiles
-	 *            input SMILES string
+	 * @param structureInput
+	 *            input SMILES or MOLFILE string
 	 * @return Molecule object
 	 * @throws java.io.IOException
 	 */
-	public static Molecule getMolecule(String smiles) throws IOException {
+	public static Molecule getMolecule(String structureInput) throws IOException {
 		Molecule molecule = null;
-		if (null != smiles) {
-			InputStream is = new ByteArrayInputStream(smiles.getBytes());
+		if (null != structureInput) {
+			InputStream is = new ByteArrayInputStream(structureInput.getBytes());
 			MolImporter importer = new MolImporter(is);
 			molecule = importer.read();
 		}
@@ -394,7 +394,7 @@ public class StructureParser {
 	 *            for merging
 	 * @throws org.helm.notation.StructureException
 	 */
-	public static void merge(Molecule molecule1, MolAtom molAtom1,
+	public static void mergeIgnoreStereo(Molecule molecule1, MolAtom molAtom1,
 			Molecule molecule2, MolAtom molAtom2) throws StructureException {
 
 		// cyclization is allowed
@@ -426,6 +426,77 @@ public class StructureParser {
 			molecule1.add(bond);
 		}
 	}
+        
+     /**
+     * This method merges molecule2 to molecule1, and keeps the single stereo bond.
+     * Old merge method is renamed to mergeIgnoreStereo, which does not preserve single stereo bond connected to R atom
+     * @param molecule1 base molecule to merge to
+     * @param molAtom1 R atom to be removed, connecting atom will be used for merging
+     * @param molecule2 molecule to be merged
+     * @param molAtom2 R atom to be removed
+     * @throws StructureException 
+     */
+    public static void merge(Molecule molecule1, MolAtom molAtom1, Molecule molecule2, MolAtom molAtom2) throws StructureException {
+        if (isSingleStereo(molAtom1) && isSingleStereo(molAtom2)) {
+            throw new StructureException("Both R atoms are connected to chiral centers");
+        }
+
+        molecule1.dearomatize();
+        molecule2.dearomatize();
+        MolBond mergeBond = null;
+
+        if (isSingleStereo(molAtom2)) {
+            //keep chiral bond on molAtom2
+            MolBond chiralBond = molAtom2.getBond(0);
+            MolAtom atom2 = chiralBond.getOtherAtom(molAtom2);
+            MolAtom atom1 = removeRgroup(molecule1, molAtom1);
+            mergeBond = chiralBond.cloneBond(atom1, atom2);
+            molecule1.add(mergeBond);
+            removeRgroup(molecule2, molAtom2);
+
+        } else {
+            //keep bond on molAtom1, regardless stereo type
+            MolBond keepBond = molAtom1.getBond(0);
+            MolAtom atom1 = keepBond.getOtherAtom(molAtom1);
+            MolAtom atom2 = removeRgroup(molecule2, molAtom2);
+            mergeBond = keepBond.cloneBond(atom1, atom2);
+            molecule1.add(mergeBond);
+            removeRgroup(molecule1, molAtom1);
+        }
+
+        if (molecule1 != molecule2) {
+            MolAtom[] atoms = molecule2.getAtomArray();
+            for (MolAtom atom : atoms) {
+                molecule1.add(atom);
+            }
+
+            MolBond[] bonds = molecule2.getBondArray();
+            for (MolBond bond : bonds) {
+                molecule1.add(bond);
+            }
+        }
+    }
+    
+    /**
+     * Check if the bond that R atom is part of is single stereo bond or not
+     *
+     * @param rAtom the R atom to be checked
+     * @return true or false
+     * @throws StructureException
+     */
+    protected static boolean isSingleStereo(MolAtom rAtom) throws StructureException {
+        int bondCount = rAtom.getBondCount();
+        if (bondCount != 1) {
+            throw new StructureException("RGroup is allowed to have single connection to other atom");
+        }
+
+        MolBond bond = rAtom.getBond(0);
+        int bondType = bond.getFlags() & MolBond.STEREO1_MASK;
+
+        return bondType == MolBond.UP || bondType == MolBond.DOWN || bondType == MolBond.WAVY;
+    }
+
+
 
 	/**
 	 * This method should be used by SimpleNotationParser and
