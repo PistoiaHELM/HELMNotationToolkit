@@ -22,3 +22,8 @@ HELMNotationToolkit 1.3
 -----------------------
 * Java 1.7
 * MarvinBeans 5.0
+
+HELMNotationToolkit 1.4
+-----------------------
+* Java 1.7
+* MarvinBeans 5.0
