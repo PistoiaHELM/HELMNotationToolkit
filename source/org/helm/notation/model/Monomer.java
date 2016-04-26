@@ -144,16 +144,8 @@ public class Monomer implements Serializable {
 		this.alternateId = alternateId;
 	}
 
-	/**
-	 * get the natural analog of this monomer. For standard, unmodified monomer,
-	 * the natural analog should be itself
-	 */
 	public String getNaturalAnalog() {
-		if (alternateId.length() == 1) {
-			return alternateId;
-		} else {
-			return naturalAnalog;
-		}
+            return naturalAnalog;
 	}
 
 	public void setNaturalAnalog(String naturalAnalog) {
