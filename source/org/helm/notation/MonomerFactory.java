@@ -510,7 +510,7 @@ public class MonomerFactory {
 		XMLOutputter outputer = new XMLOutputter(Format.getCompactFormat());
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><MONOMER_DB xmlns=\"lmr\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><MonomerDB xmlns=\"lmr\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
 
 		Map<String, Map<String, Monomer>> mDB = cache.getMonomerDB();
 		Element polymerListElement = new Element(POLYMER_LIST_ELEMENT);
@@ -549,7 +549,7 @@ public class MonomerFactory {
 				.outputString(attachmentListElement);
 		sb.append(attachmentListString);
 
-		sb.append("</MONOMER_DB>");
+		sb.append("</MonomerDB>");
 
 		return sb.toString();
 	}
