@@ -2773,8 +2773,8 @@
             </Monomer>
             <Monomer>
                 <MonomerID>Har</MonomerID>
-                <MonomerSmiles>NC(N)NCCCC[C@H](N[*])C([*])=O |r,$;;;;;;;;;;_R1;;_R2;$|</MonomerSmiles>
-                <MonomerMolFile>H4sIAAAAAAAAAJ2UMU/EMAyF9/wKS7AS+TlxYs8cYroD3cDOyMLAwO8naQ8o10rcJYpU9yX9ZL/EDUT714/Pt3cids5IEEB29DNCIGRCauuL+TvcnV6EmUN/qxEm2oK7EsXRI+LYVpnu6S9ie06UEpPWcqLUIpsU+Y+i0dVyp2hUzduUS3KxjE7J0XIdrKjlkoTnitzEF5TD5ZQaC5ucKrJsC8rTNRUxMPkisXixsVxKzKlOviC6M0bd5VR9pkgxjPoiBT5XxKx5lKKG2im1OZSWJ328ueKkWwPpiaKljlLcss+3DqLDfZTBUx+lFpmNUNrnOGu28C1hpQJrtW3UTTVNKpZqk/J6bzPR1qoReEslX6tK2Mh3/q+dqU3CZg5rdU90fHyerehXtz97e6KvPBx2Idy2Eb4AKg2QzWQFAAA=</MonomerMolFile>
+                <MonomerSmiles>NC(=N)NCCCC[C@H](N[*])C([*])=O |$;;;;;;;;;;_R1;;_R2;$|</MonomerSmiles>
+                <MonomerMolFile>H4sIAAAAAAAAAKWUPU/EMAxA9/wKS7Bi2c6nZw4x3YFuYGdkYWDg95/TClqaSD0uVqS2z9GT4yZxAMf3r++PTwDKwpw4cJYD/IZzwAHYW341llBVeBMicvWrYEjZ5sKDIIkPlRFaluAR/ir6Y7JkzFHKbAk+atci+xbyJYzWktCL151adi0RE+lwLUtfPIoJV5bT9RZFLtzv7sv1FrFaOHZX9I9avO2XRKPdXSwjfQnWFxpe0XICGFnL2nK+u8Hi0V5utAQsGgb3bgbgzWFzP4gbyh1qKHWpnyivqaHQzjUUW2pbWFuqwNyl1K4iTffadm6sF96WmrSlR4Dz8+vcCoH5WX8a18zT6eDcvYW7ADCnBNVkBQAA</MonomerMolFile>
                 <MonomerType>Backbone</MonomerType>
                 <PolymerType>PEPTIDE</PolymerType>
                 <NaturalAnalog>R</NaturalAnalog>
