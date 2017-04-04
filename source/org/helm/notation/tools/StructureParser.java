@@ -219,6 +219,7 @@ public class StructureParser {
 			InputStream is = new ByteArrayInputStream(structureInput.getBytes());
 			MolImporter importer = new MolImporter(is);
 			molecule = importer.read();
+			molecule.clean(2, null);
 		}
 		return molecule;
 	}
