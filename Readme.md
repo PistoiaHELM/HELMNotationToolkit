@@ -3,7 +3,7 @@
 
 The HELMNotationToolkit provides functionality to work with HELM notation and is used by the HELM editor and antibody editor.  
 
-This version supports the first version of HELM only. (i.e. without the later extensions that support ambiguity. The latest functionality can be found in the HELM2NotationToolkit. 
+This version supports the first version of HELM only. (i.e. without the later extensions that support ambiguity). The latest functionality can be found in the HELM2NotationToolkit. 
 
 
 ## Getting started ##
