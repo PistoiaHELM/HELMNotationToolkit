@@ -36,6 +36,11 @@ See the HELM [wiki](https://pistoiaalliance.atlassian.net/wiki/spaces/PUB/pages/
 
 ## Dependencies ##
 
+#### HELMNotationToolkit 1.4.1 ####
+
+- Java 1.7
+- MarvinBeans 5.0
+
 #### HELMNotationToolkit 1.4 ####
 
 - Java 1.7
