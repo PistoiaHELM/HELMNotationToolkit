@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3 -c \"from rdkit import Chem; print\\(''RDKit'', Chem.rdBase.rdkitVersion, ''available''\\)\")",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pytest tests/test_structure_parser.py -v)",
+      "Bash(python3:*)",
+      "Bash(ls -la tests/test_*.py)",
+      "Bash(ls -la helm_notation/peptide/*.py)",
+      "Bash(find helm_notation -name \"*.py\" -not -path \"*__pycache__*\" -exec cat {} +)",
+      "Bash(find tests:*)",
+      "Bash(grep -v \"^--$\")",
+      "Bash(pip install:*)",
+      "Read(//Users/tzhang/miniconda3/bin/**)",
+      "Read(//Users/tzhang/anaconda3/bin/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//Users/tzhang/.pyenv/shims/**)",
+      "Read(//Users/tzhang/.local/bin/**)",
+      "Read(//Users/tzhang/**)",
+      "Bash(export PATH=\"$PATH:/Users/tzhang/Library/Python/3.9/bin\")",
+      "Bash(helm-toolkit --version)",
+      "Bash(helm-toolkit --help)",
+      "Bash(helm-toolkit info:*)",
+      "Bash(helm-toolkit canonicalize:*)",
+      "Bash(helm-toolkit sequence:*)"
+    ]
+  }
+}

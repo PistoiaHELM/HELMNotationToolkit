@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="lmr" attributeFormDefault="unqualified" version="Id:v1.1" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"  xmlns:lmr="lmr">
+	<simpleType name="SHORT_STRING_TYPE">
+		<restriction base="string">
+			<maxLength value="50"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="MEDIUM_STRING_TYPE">
+		<restriction base="string">
+			<maxLength value="500"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="LONG_STRING_TYPE">
+		<restriction base="string">
+			<maxLength value="5000"/>
+		</restriction>
+	</simpleType>
+
+  <element name="Xhelm">
+    <complexType>
+      <sequence>
+        <element type="lmr:LONG_STRING_TYPE" name="HelmNotation"/>
+        <element name="MonomerList">
+          <complexType>
+            <sequence>
+              <element name="Monomer" maxOccurs="unbounded" minOccurs="0">
+                <complexType>
+                  <sequence>
+                    <element type="lmr:SHORT_STRING_TYPE" name="MonomerID"/>
+                    <element type="lmr:LONG_STRING_TYPE" name="MonomerSmiles"/>
+                    <element type="lmr:LONG_STRING_TYPE" name="MonomerMolFile"/>
+                    <element type="lmr:SHORT_STRING_TYPE" name="MonomerType"/>
+                    <element type="lmr:SHORT_STRING_TYPE" name="PolymerType"/>
+                    <element type="lmr:SHORT_STRING_TYPE" name="NaturalAnalog" minOccurs="0"/>
+                    <element type="lmr:MEDIUM_STRING_TYPE" name="MonomerName"/>
+                    <element name="Attachments">
+                      <complexType>
+                        <sequence>
+                          <element name="Attachment" maxOccurs="unbounded" minOccurs="0">
+                            <complexType>
+                              <sequence>
+                                <element type="lmr:MEDIUM_STRING_TYPE" name="AttachmentID"/>
+                                <element type="lmr:MEDIUM_STRING_TYPE" name="AttachmentLabel"/>
+                                <element type="lmr:MEDIUM_STRING_TYPE" name="CapGroupName"/>
+                                <element type="lmr:MEDIUM_STRING_TYPE" name="CapGroupSmiles"/>
+                              </sequence>
+                            </complexType>
+                          </element>
+                        </sequence>
+                      </complexType>
+                    </element>
+                  </sequence>
+                </complexType>
+              </element>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+</schema>

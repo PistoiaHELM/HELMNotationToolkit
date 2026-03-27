@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "helm-notation-toolkit"
+version = "2.0.0"
+description = "Python toolkit for HELM (Hierarchical Editing Language for Macromolecules) notation"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = [
+    "rdkit>=2024.3.5",
+    "lxml>=4.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+
+[project.scripts]
+helm-toolkit = "helm_notation.tools.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["helm_notation*"]
+
+[tool.setuptools.package-data]
+"helm_notation.resources" = ["*.xml", "*.xsd", "*.properties"]
