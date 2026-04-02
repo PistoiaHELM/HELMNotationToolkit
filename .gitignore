@@ -164,3 +164,9 @@ pip-log.txt
 
 # local artifacts
 local
+
+# Python virtualenv
+.venv
+
+# pytest cacche
+.pytest_cache
